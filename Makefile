@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help up down seed qa certs logs
+.PHONY: help up down seed qa certs hosts logs
 
 help:
 	@echo "Available targets:"
@@ -9,6 +9,7 @@ help:
 	@echo "  make seed     - Ejecutar migraciones y seed en el contenedor api"
 	@echo "  make qa       - Ejecutar linting/análisis estático definidos"
 	@echo "  make certs    - Generar certificados TLS de desarrollo"
+	@echo "  make hosts    - Añadir dominios locales al archivo hosts"
 	@echo "  make logs     - Ver logs del gateway nginx"
 
 up:
@@ -33,6 +34,9 @@ qa:
 
 certs:
 	./scripts/generate-dev-certs.sh
+
+hosts:
+	./scripts/add-hosts-entries.sh
 
 logs:
 	docker compose logs -f nginx

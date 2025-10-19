@@ -213,11 +213,12 @@ app/
 1. Duplica este repo como plantilla (`Use this template`).
 2. Configura `.env` en backend y frontend (`apps/backend/.env`, `apps/frontend/.env`).
 3. Sigue `docs/docker/addendum.md` para preparar hosts locales (`app.project.dev`, `api.project.dev`).
-4. `make certs` para generar certificados TLS de desarrollo (`scripts/generate-dev-certs.sh`).
-5. `make up` para levantar servicios locales.
-6. `make seed` para crear usuario + household demo (credenciales mostradas en consola).
-7. Accede a `https://app.project.dev` y `https://api.project.dev/api/v1/health`.
-8. Actualiza branding, módulos y documentación OpenAPI según tu caso de uso.
+4. `make hosts` para añadir los dominios al archivo `/etc/hosts` (Windows/macOS/Linux).
+5. `make certs` para generar certificados TLS de desarrollo.
+6. `make up` para levantar servicios locales.
+7. `make seed` para crear usuario + household demo (credenciales mostradas en consola).
+8. Accede a `https://app.project.dev` y `https://api.project.dev/api/v1/health`.
+9. Actualiza branding, módulos y documentación OpenAPI según tu caso de uso.
 
 ---
 
