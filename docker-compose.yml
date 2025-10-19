@@ -11,6 +11,31 @@ volumes:
   meili_data:
   nuxt_node_modules:
 
+x-backend-env: &backend-env
+  APP_ENV: local
+  APP_DEBUG: "true"
+  APP_URL: https://api.project.dev
+  DB_HOST: postgres
+  DB_PORT: 5432
+  DB_DATABASE: ${DB_DATABASE}
+  DB_USERNAME: ${DB_USERNAME}
+  DB_PASSWORD: ${DB_PASSWORD}
+  REDIS_CLIENT: phpredis
+  REDIS_HOST: redis
+  REDIS_PASSWORD: null
+  REDIS_PORT: 6379
+  QUEUE_CONNECTION: redis
+  CACHE_STORE: redis
+  CACHE_DRIVER: redis
+  SESSION_DRIVER: cookie
+  MAIL_MAILER: smtp
+  MAIL_HOST: mailhog
+  MAIL_PORT: 1025
+  MAIL_USERNAME: ""
+  MAIL_PASSWORD: ""
+  MAIL_FROM_ADDRESS: hello@example.com
+  MAIL_FROM_NAME: 'Laravel'
+
 services:
   nginx:
     image: nginx:1.27-alpine
@@ -37,19 +62,7 @@ services:
     depends_on:
       - postgres
       - redis
-    environment:
-      APP_ENV: local
-      APP_DEBUG: "true"
-      APP_URL: https://api.project.dev
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      REDIS_HOST: redis
-      QUEUE_CONNECTION: redis
-      CACHE_DRIVER: redis
-      SESSION_DRIVER: cookie
+    environment: *backend-env
     volumes:
       - ./backend:/var/www/html
     networks:
@@ -69,6 +82,7 @@ services:
     depends_on:
       - api
       - redis
+    environment: *backend-env
     volumes:
       - ./backend:/var/www/html
     networks:
@@ -83,6 +97,7 @@ services:
     depends_on:
       - api
       - redis
+    environment: *backend-env
     volumes:
       - ./backend:/var/www/html
     networks:
@@ -96,6 +111,7 @@ services:
     command: sh -lc "while :; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
     depends_on:
       - api
+    environment: *backend-env
     volumes:
       - ./backend:/var/www/html
     networks:
