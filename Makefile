@@ -1,11 +1,13 @@
 SHELL := /bin/bash
 
-.PHONY: help up down seed qa certs hosts logs
+.PHONY: help up down install install-backend install-frontend migrate seed qa certs hosts logs
 
 help:
 	@echo "Available targets:"
 	@echo "  make up       - Levantar stack Docker (build + up)"
 	@echo "  make down     - Detener stack y limpiar volúmenes"
+	@echo "  make install  - Instalar dependencias backend y frontend"
+	@echo "  make migrate  - Ejecutar migraciones en el contenedor api"
 	@echo "  make seed     - Ejecutar migraciones y seed en el contenedor api"
 	@echo "  make qa       - Ejecutar linting/análisis estático definidos"
 	@echo "  make certs    - Generar certificados TLS de desarrollo"
@@ -18,8 +20,18 @@ up:
 down:
 	docker compose down -v
 
-seed:
+install: install-backend install-frontend
+
+install-backend:
+	docker compose run --rm api composer install
+
+install-frontend:
+	docker compose run --rm nuxt npm install
+
+migrate:
 	docker compose exec api php artisan migrate --force
+
+seed: migrate
 	docker compose exec api php artisan db:seed --force
 
 qa:
