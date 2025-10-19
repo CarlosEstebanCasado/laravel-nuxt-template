@@ -26,11 +26,7 @@ Docker Addendum — Stack, Gateway & Deploy
 127.0.0.1 app.project.dev
 127.0.0.1 api.project.dev
 
-Genera los certificados TLS de desarrollo ejecutando:
-
-```
-./scripts/generate-dev-certs.sh
-```
+Genera los certificados TLS de desarrollo ejecutando `make certs` (que llama a `scripts/generate-dev-certs.sh`).
 
 > Si tienes `mkcert`, ejecútalo con `mkcert -install` la primera vez para confiar en la CA local.
   ```
