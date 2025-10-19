@@ -211,7 +211,7 @@ app/
 -------------------
 
 1. Duplica este repo como plantilla (`Use this template`).
-2. Configura `.env` en backend y frontend (`apps/backend/.env`, `apps/frontend/.env`).
+2. Copia `.env.example` → `.env` en la raíz y configura credenciales (Postgres, MinIO). Configura `.env` en backend/frontend (`apps/backend/.env`, `apps/frontend/.env`).
 3. Sigue `docs/docker/addendum.md` para preparar hosts locales (`app.project.dev`, `api.project.dev`).
 4. `make hosts` para añadir los dominios al archivo `/etc/hosts` (Windows/macOS/Linux).
 5. `make certs` para generar certificados TLS de desarrollo.
