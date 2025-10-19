@@ -1,8 +1,8 @@
-Generate development certificates (mkcert or openssl) and place them in this directory:
+Generate the development certificates by running `./scripts/generate-dev-certs.sh` from the project root. The script creates:
 
 - `app.project.dev.crt`
 - `app.project.dev.key`
 - `api.project.dev.crt`
 - `api.project.dev.key`
 
-Ensure the certificates are trusted by your OS to avoid browser warnings. This folder is ignored by Git to prevent committing private keys.
+If `mkcert` está disponible, se usará automáticamente (recuerda ejecutar `mkcert -install` una vez). De lo contrario, se generarán certificados autofirmados con OpenSSL. Asegúrate de confiar en los certificados para evitar advertencias del navegador.

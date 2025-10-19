@@ -25,6 +25,14 @@ Docker Addendum — Stack, Gateway & Deploy
   ```
 127.0.0.1 app.project.dev
 127.0.0.1 api.project.dev
+
+Genera los certificados TLS de desarrollo ejecutando:
+
+```
+./scripts/generate-dev-certs.sh
+```
+
+> Si tienes `mkcert`, ejecútalo con `mkcert -install` la primera vez para confiar en la CA local.
   ```
 - Para probar cookies `Secure`, expón también 443 (`"443:443"`) y monta certificados auto-firmados/mkcert en `docker/nginx/certs`. En producción usa ACME/Let’s Encrypt.
 
