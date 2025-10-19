@@ -1,0 +1,14 @@
+.env
+.DS_Store
+node_modules
+vendor
+
+apps/api/vendor
+apps/api/storage/logs
+apps/api/storage/framework/cache
+apps/api/storage/framework/sessions
+apps/api/storage/framework/views
+apps/app/node_modules
+
+docker/nginx/certs/*.crt
+docker/nginx/certs/*.key
