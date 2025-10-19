@@ -25,7 +25,7 @@ services:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./docker/nginx/certs:/etc/nginx/certs:ro
-      - ./apps/api:/var/www/html:ro
+      - ./backend:/var/www/html:ro
     networks:
       - internal
 
@@ -51,7 +51,7 @@ services:
       CACHE_DRIVER: redis
       SESSION_DRIVER: cookie
     volumes:
-      - ./apps/api:/var/www/html
+      - ./backend:/var/www/html
     networks:
       - internal
     healthcheck:
@@ -70,7 +70,7 @@ services:
       - api
       - redis
     volumes:
-      - ./apps/api:/var/www/html
+      - ./backend:/var/www/html
     networks:
       - internal
 
@@ -84,7 +84,7 @@ services:
       - api
       - redis
     volumes:
-      - ./apps/api:/var/www/html
+      - ./backend:/var/www/html
     networks:
       - internal
 
@@ -97,7 +97,7 @@ services:
     depends_on:
       - api
     volumes:
-      - ./apps/api:/var/www/html
+      - ./backend:/var/www/html
     networks:
       - internal
 
@@ -111,7 +111,7 @@ services:
       NUXT_PUBLIC_API_BASE: https://api.project.dev/api/v1
       NUXT_PUBLIC_APP_BASE_URL: https://app.project.dev
     volumes:
-      - ./apps/app:/usr/src/app
+      - ./frontend:/usr/src/app
       - nuxt_node_modules:/usr/src/app/node_modules
     expose:
       - "3000"

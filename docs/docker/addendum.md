@@ -55,9 +55,8 @@ Puedes automatizar estos pasos con:
 │  └─ nuxt/
 │     └─ Dockerfile            # node runtime/build
 ├─ docker-compose.yml
-├─ apps/
-│  ├─ api/                     # Laravel 12
-│  └─ app/                     # Nuxt 3
+├─ backend/                    # Laravel 12
+├─ frontend/                   # Nuxt 3
 └─ .env, .env.example
 ```
 
@@ -94,8 +93,7 @@ services:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./docker/nginx/certs:/etc/nginx/certs:ro
-      - ./apps/api:/var/www/html:ro   # servir assets Laravel si aplica
-      - ./apps/app/.output/public:/var/www/app/public:ro
+      - ./backend:/var/www/html:ro   # servir assets Laravel si aplica
     networks: [internal]
 
   api:
@@ -116,7 +114,7 @@ services:
       CACHE_DRIVER: redis
       SESSION_DRIVER: cookie
     volumes:
-      - ./apps/api:/var/www/html
+      - ./backend:/var/www/html
     networks: [internal]
     healthcheck:
       test: ["CMD", "php", "-r", "exit(extension_loaded('pdo_pgsql') ? 0 : 1);"]
@@ -132,7 +130,7 @@ services:
     command: php artisan queue:work --tries=3 --backoff=5
     depends_on: [api, redis]
     volumes:
-      - ./apps/api:/var/www/html
+      - ./backend:/var/www/html
     networks: [internal]
 
   horizon:
@@ -143,7 +141,7 @@ services:
     command: php artisan horizon
     depends_on: [api, redis]
     volumes:
-      - ./apps/api:/var/www/html
+      - ./backend:/var/www/html
     networks: [internal]
 
   scheduler:
@@ -154,7 +152,7 @@ services:
     command: sh -lc "while :; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
     depends_on: [api]
     volumes:
-      - ./apps/api:/var/www/html
+      - ./backend:/var/www/html
     networks: [internal]
 
   nuxt:
@@ -167,7 +165,7 @@ services:
       NUXT_PUBLIC_API_BASE: https://api.project.dev/api/v1
       NUXT_PUBLIC_APP_BASE_URL: https://app.project.dev
     volumes:
-      - ./apps/app:/usr/src/app
+      - ./frontend:/usr/src/app
       - nuxt_node_modules:/usr/src/app/node_modules
     expose:
       - "3000"

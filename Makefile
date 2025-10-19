@@ -23,12 +23,12 @@ seed:
 	docker compose exec api php artisan db:seed --force
 
 qa:
-	@if [ -f apps/api/vendor/bin/phpstan ]; then \
+	@if [ -f backend/vendor/bin/phpstan ]; then \
 		docker compose exec api vendor/bin/phpstan analyse; \
 	else \
 		docker compose exec api composer lint || echo "Define composer script 'lint' o instala phpstan"; \
 	fi
-	@if [ -f apps/app/package.json ]; then \
+	@if [ -f frontend/package.json ]; then \
 		docker compose exec nuxt npm run lint || echo "Define npm script 'lint'"; \
 	fi
 

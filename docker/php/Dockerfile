@@ -1,9 +1,9 @@
 FROM php:8.4-fpm-alpine
 
 RUN apk add --no-cache git curl libzip-dev icu-dev oniguruma-dev bash autoconf build-base postgresql-dev \
- && docker-php-ext-install intl mbstring zip pdo pdo_pgsql \
+ && docker-php-ext-install intl mbstring zip pdo pdo_pgsql bcmath \
  && pecl install redis \
- && docker-php-ext-enable redis bcmath
+ && docker-php-ext-enable redis
 
 WORKDIR /var/www/html
 
