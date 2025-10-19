@@ -204,7 +204,7 @@ services:
     networks: [internal]
 
   minio:
-    image: minio/minio:RELEASE.2024-05-10T01-41-10Z
+    image: minio/minio:latest
     container_name: minio
     command: server /data --console-address ":9001"
     environment:
@@ -437,6 +437,7 @@ queue-restart:
 - Healthchecks HTTP (`/health` en API, `/` o `/health` en Nuxt) con `start_period` adecuado.
 - Logs hacia stdout/err y agregación centralizada (ELK/Datadog/etc.).
 - Backups de Postgres y MinIO; pruebas de restore periódicas.
+- Pinea versiones exactas para servicios externos (MinIO, Meilisearch, etc.) para evitar cambios inesperados.
 - Escalado por servicio: `api`, `queue`, `horizon`, `scheduler`, `nuxt`. Idealmente base de datos/cache gestionados externamente.
 
 ---
