@@ -30,6 +30,7 @@ Puedes automatizar estos pasos con:
 
 - `make hosts` para añadir las entradas en `/etc/hosts` (detecta Linux, macOS, Windows/WSL).
 - `make certs` para generar los certificados TLS de desarrollo.
+- `make trust-ca` para instalar mkcert/certutil en `~/.local/bin`, registrar la CA en NSS y confiarla en Brave (snap).
 
 > Si tienes `mkcert`, ejecútalo con `mkcert -install` la primera vez para confiar en la CA local.
   ```

@@ -1,21 +1,26 @@
 SHELL := /bin/bash
 
-.PHONY: help up down install install-backend install-frontend migrate seed qa certs hosts logs
+.PHONY: help up up-no-build down install install-backend install-frontend migrate seed qa certs trust-ca hosts logs
 
 help:
 	@echo "Available targets:"
 	@echo "  make up       - Levantar stack Docker (build + up)"
+	@echo "  make up-no-build - Levantar stack Docker sin reconstruir"
 	@echo "  make down     - Detener stack y limpiar volúmenes"
 	@echo "  make install  - Instalar dependencias backend y frontend"
 	@echo "  make migrate  - Ejecutar migraciones en el contenedor api"
 	@echo "  make seed     - Ejecutar migraciones y seed en el contenedor api"
 	@echo "  make qa       - Ejecutar linting/análisis estático definidos"
 	@echo "  make certs    - Generar certificados TLS de desarrollo"
+	@echo "  make trust-ca - Instalar mkcert/certutil y confiar la CA local (Chrome/Firefox/Brave)"
 	@echo "  make hosts    - Añadir dominios locales al archivo hosts"
 	@echo "  make logs     - Ver logs del gateway nginx"
 
 up:
 	docker compose up -d --build
+
+up-no-build:
+	docker compose up -d
 
 down:
 	docker compose down -v
@@ -46,6 +51,9 @@ qa:
 
 certs:
 	./scripts/generate-dev-certs.sh
+
+trust-ca:
+	./scripts/install-dev-ca.sh
 
 hosts:
 	./scripts/add-hosts-entries.sh

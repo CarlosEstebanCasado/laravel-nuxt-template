@@ -214,7 +214,7 @@ app/
 2. Copia `.env.example` → `.env` en la raíz y configura credenciales (Postgres, MinIO). Configura `.env` en backend/frontend (`backend/.env`, `frontend/.env`).
 3. Sigue `docs/docker/addendum.md` para preparar hosts locales (`app.project.dev`, `api.project.dev`).
 4. `make hosts` para añadir los dominios al archivo `/etc/hosts` (Windows/macOS/Linux).
-5. `make certs` para generar certificados TLS de desarrollo.
+5. `make certs` para generar certificados TLS de desarrollo (`make trust-ca` instala mkcert/certutil y confía la CA en Chrome/Firefox/Brave).
 6. `make up` para levantar servicios locales.
 7. `make seed` para crear usuario + household demo (credenciales mostradas en consola).
 8. Accede a `https://app.project.dev` y `https://api.project.dev/api/v1/health`.
