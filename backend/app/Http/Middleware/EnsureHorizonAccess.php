@@ -33,7 +33,7 @@ class EnsureHorizonAccess
         // Opción 2: Solo usuarios con email específico (más seguro para desarrollo)
         $allowedEmails = [
             'admin@project.dev',
-            'carlos@example.com', // Cambia por tu email
+            'carlosbcn169@gmail.com', // Cambia por tu email
         ];
         
         if (!in_array($user->email, $allowedEmails)) {
