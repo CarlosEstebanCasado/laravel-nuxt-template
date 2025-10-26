@@ -17,6 +17,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Frontend URL
+    |--------------------------------------------------------------------------
+    |
+    | This value is the URL of your frontend application, used for redirects
+    | from the API to the frontend (e.g., login redirects for Horizon).
+    |
+    */
+
+    'frontend_url' => env('FRONTEND_URL', 'https://app.project.dev'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

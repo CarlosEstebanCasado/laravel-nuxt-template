@@ -12,6 +12,7 @@ SaaS Template — Laravel 12 API + Nuxt 3 SSR
 - **Arquitectura hexagonal + DDD** separada en Domain, Application e Infrastructure.
 - **API REST contract-first** (`/api/v1`) documentada con OpenAPI.
 - **Frontend SSR** con Nuxt 3, TypeScript estricto, Tailwind y composables listos para auth.
+- **Auth fullstack** lista para producción (Laravel Fortify + Sanctum + Nuxt 3) con login, registro, verificación de email y logout via cookies `SameSite=None`.
 - **Tooling DevOps**: Docker Compose, Horizon, Sentry, Prometheus, GitHub Actions base.
 - **Calidad integrada**: PHPStan máx nivel, Laravel Pint, ESLint, Vitest, Playwright.
 
@@ -218,7 +219,8 @@ app/
 6. `make up` para levantar servicios locales.
 7. `make seed` para crear usuario + household demo (credenciales mostradas en consola).
 8. Accede a `https://app.project.dev` y `https://api.project.dev/api/v1/health`.
-9. Actualiza branding, módulos y documentación OpenAPI según tu caso de uso.
+9. Usa `https://app.project.dev/auth/register` para crear una cuenta, confirma el correo desde Mailhog (`http://localhost:8025`) y entra al dashboard (`/dashboard`).
+10. Actualiza branding, módulos y documentación OpenAPI según tu caso de uso.
 
 ---
 

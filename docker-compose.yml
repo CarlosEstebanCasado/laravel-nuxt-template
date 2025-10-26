@@ -52,7 +52,9 @@ services:
       - ./docker/nginx/certs:/etc/nginx/certs:ro
       - ./backend:/var/www/html:ro
     networks:
-      - internal
+      internal:
+        aliases:
+          - gateway-api
 
   api:
     build:
@@ -124,8 +126,11 @@ services:
     container_name: nuxt
     environment:
       NITRO_PORT: 3000
-      NUXT_PUBLIC_API_BASE: https://api.project.dev/api/v1
-      NUXT_PUBLIC_APP_BASE_URL: https://app.project.dev
+      NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE:-https://api.project.dev}
+      NUXT_PUBLIC_INTERNAL_API_BASE: ${NUXT_PUBLIC_INTERNAL_API_BASE:-http://gateway-api}
+      NUXT_PUBLIC_API_PREFIX: ${NUXT_PUBLIC_API_PREFIX:-/api/v1}
+      NUXT_PUBLIC_AUTH_PREFIX: ${NUXT_PUBLIC_AUTH_PREFIX:-/auth}
+      NUXT_PUBLIC_APP_BASE_URL: ${NUXT_PUBLIC_APP_BASE_URL:-https://app.project.dev}
     volumes:
       - ./frontend:/usr/src/app
       - nuxt_node_modules:/usr/src/app/node_modules
