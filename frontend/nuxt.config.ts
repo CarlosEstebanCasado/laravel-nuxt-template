@@ -1,8 +1,17 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  srcDir: 'app',
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+  pages: true,
   ssr: false,
+  app: {
+    head: {
+      link: [
+        { rel: 'stylesheet', href: '/app.css' }
+      ]
+    }
+  },
   devServer: {
     host: '0.0.0.0'
   },

@@ -1,17 +1,12 @@
 <template>
-  <div class="app-shell">
+  <NuxtLayout>
     <NuxtLoadingIndicator color="#818cf8" />
     <NuxtRouteAnnouncer />
     <NuxtPage />
-  </div>
+  </NuxtLayout>
 </template>
 
 <style>
-:root {
-  color-scheme: dark;
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
 *,
 *::before,
 *::after {
