@@ -34,6 +34,16 @@ export const useApi = () => {
       }
 
       // Avoid forwarding host/XFH headers so internal fetches always target the API host.
+    } else {
+      // `useCookie` does not always reflect fresh HTTP-only cookies, so read from document.cookie.
+      const rawCookie = typeof document !== 'undefined'
+        ? document.cookie.split('; ').find((cookie) => cookie.startsWith('XSRF-TOKEN='))
+        : undefined
+
+      if (rawCookie) {
+        const token = decodeURIComponent(rawCookie.substring('XSRF-TOKEN='.length))
+        headers['X-XSRF-TOKEN'] = token
+      }
     }
 
     return headers
@@ -49,6 +59,7 @@ export const useApi = () => {
       credentials: 'include',
       headers: {
         Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
         ...buildHeaders(),
         ...(options.headers as MaybeHeaders ?? {})
       },
