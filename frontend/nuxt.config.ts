@@ -1,25 +1,50 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  srcDir: 'app',
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  pages: true,
   ssr: false,
-  app: {
-    head: {
-      link: [
-        { rel: 'stylesheet', href: '/app.css' }
-      ]
+
+  modules: [
+    '@nuxt/image',
+    '@nuxt/ui',
+    '@nuxt/content',
+    '@vueuse/nuxt',
+    'nuxt-og-image'
+  ],
+
+  devtools: {
+    enabled: true
+  },
+
+  css: ['~/assets/css/main.css'],
+
+  routeRules: {
+    '/docs': { redirect: '/docs/getting-started', prerender: false }
+  },
+
+  compatibilityDate: '2025-07-15',
+
+  nitro: {
+    prerender: {
+      routes: ['/'],
+      crawlLinks: true
     }
   },
+
+  colorMode: {
+    preference: 'system',
+    fallback: 'dark',
+    classSuffix: ''
+  },
+
   devServer: {
     host: '0.0.0.0'
   },
+
   vite: {
     server: {
       allowedHosts: ['nuxt', 'gateway', 'gateway-api', 'app.project.dev']
     }
   },
+
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://api.project.dev',

@@ -1,11 +1,11 @@
 SHELL := /bin/bash
 
-.PHONY: help up up-no-build down install install-backend install-frontend migrate seed qa certs trust-ca hosts logs
+.PHONY: help up up-build down install install-backend install-frontend migrate seed qa certs trust-ca hosts logs
 
 help:
 	@echo "Available targets:"
-	@echo "  make up       - Levantar stack Docker (build + up)"
-	@echo "  make up-no-build - Levantar stack Docker sin reconstruir"
+	@echo "  make up       - Levantar stack Docker sin reconstruir"
+	@echo "  make up-build - Levantar stack Docker (build + up)"
 	@echo "  make down     - Detener stack y limpiar volúmenes"
 	@echo "  make install  - Instalar dependencias backend y frontend"
 	@echo "  make migrate  - Ejecutar migraciones en el contenedor api"
@@ -17,13 +17,13 @@ help:
 	@echo "  make logs     - Ver logs del gateway nginx"
 
 up:
-	docker compose up -d --build
-
-up-no-build:
 	docker compose up -d
 
+up-build:
+	docker compose up -d --build
+
 down:
-	docker compose down -v
+	docker compose down
 
 install: install-backend install-frontend
 
