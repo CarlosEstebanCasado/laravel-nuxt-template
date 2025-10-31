@@ -24,6 +24,9 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
+const auth = useAuth()
+await auth.fetchUser()
+
 const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'), {
   transform: data => data.find(item => item.path === '/docs')?.children || []
 })

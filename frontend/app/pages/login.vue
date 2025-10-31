@@ -3,7 +3,8 @@ import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({
-  layout: 'auth'
+  layout: 'auth',
+  middleware: 'guest'
 })
 
 useSeoMeta({
@@ -12,6 +13,10 @@ useSeoMeta({
 })
 
 const toast = useToast()
+const auth = useAuth()
+const router = useRouter()
+const route = useRoute()
+const isSubmitting = ref(false)
 
 const fields = [{
   name: 'email',
@@ -33,26 +38,71 @@ const fields = [{
 const providers = [{
   label: 'Google',
   icon: 'i-simple-icons-google',
-  onClick: () => {
-    toast.add({ title: 'Google', description: 'Login with Google' })
-  }
+  onClick: () => handleProvider('google')
 }, {
   label: 'GitHub',
   icon: 'i-simple-icons-github',
-  onClick: () => {
-    toast.add({ title: 'GitHub', description: 'Login with GitHub' })
-  }
+  onClick: () => handleProvider('github')
 }]
 
 const schema = z.object({
+  remember: z.boolean().optional(),
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Must be at least 8 characters')
 })
 
 type Schema = z.output<typeof schema>
 
-function onSubmit(payload: FormSubmitEvent<Schema>) {
-  console.log('Submitted', payload)
+const handleProvider = (provider: 'google' | 'github') => {
+  auth.loginWithProvider(provider)
+}
+
+const extractErrorMessage = (error: unknown) => {
+  const data = (error as any)?.data ?? (error as any)?.response?._data
+  if (data?.errors) {
+    const firstError = Object.values(data.errors).flat()[0]
+    if (typeof firstError === 'string') {
+      return firstError
+    }
+  }
+
+  if (typeof data?.message === 'string') {
+    return data.message
+  }
+
+  if ((error as any)?.message) {
+    return (error as any).message
+  }
+
+  return 'Unable to sign in, please try again.'
+}
+
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  if (isSubmitting.value) {
+    return
+  }
+
+  isSubmitting.value = true
+
+  try {
+    await auth.login(event.data)
+
+    toast.add({
+      title: 'Welcome back!',
+      description: 'You are now signed in.',
+    })
+
+    const redirectTo = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard'
+    await router.push(redirectTo)
+  } catch (error) {
+    toast.add({
+      title: 'Unable to sign in',
+      description: extractErrorMessage(error),
+      color: 'error',
+    })
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -61,6 +111,7 @@ function onSubmit(payload: FormSubmitEvent<Schema>) {
     :fields="fields"
     :schema="schema"
     :providers="providers"
+    :loading="isSubmitting"
     title="Welcome back"
     icon="i-lucide-lock"
     @submit="onSubmit"

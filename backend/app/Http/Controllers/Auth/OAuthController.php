@@ -18,7 +18,7 @@ class OAuthController extends Controller
      *
      * @var array<int, string>
      */
-    private array $providers = ['google'];
+    private array $providers = ['google', 'github'];
 
     public function redirect(string $provider): RedirectResponse
     {
