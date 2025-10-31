@@ -31,7 +31,7 @@ install-backend:
 	docker compose run --rm api composer install
 
 install-frontend:
-	docker compose run --rm nuxt npm install
+	docker compose run --rm nuxt sh -lc "npm install && npx nuxt prepare"
 
 migrate:
 	docker compose exec api php artisan migrate --force
