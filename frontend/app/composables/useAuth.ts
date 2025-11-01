@@ -128,6 +128,37 @@ export function useAuth() {
     user.value = null
   }
 
+  const requestPasswordReset = async (payload: { email: string }) => {
+    await ensureCsrfCookie()
+
+    return withCredentials(
+      joinURL(authPrefix, '/forgot-password'),
+      {
+        method: 'POST',
+        body: payload,
+      },
+      { csrf: true }
+    )
+  }
+
+  const resetPassword = async (payload: {
+    token: string
+    email: string
+    password: string
+    password_confirmation: string
+  }) => {
+    await ensureCsrfCookie()
+
+    return withCredentials(
+      joinURL(authPrefix, '/reset-password'),
+      {
+        method: 'POST',
+        body: payload,
+      },
+      { csrf: true }
+    )
+  }
+
   const fetchUser = async (force = false) => {
     if (hasFetched.value && !force) {
       return user.value
@@ -177,6 +208,8 @@ export function useAuth() {
     login,
     register,
     logout,
+    requestPasswordReset,
+    resetPassword,
     fetchUser,
     loginWithProvider,
   }

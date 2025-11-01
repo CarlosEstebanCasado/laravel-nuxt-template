@@ -108,16 +108,10 @@ Thanks in advance.`,
   subject: 'Updated: San Francisco Conference Trip Itinerary',
   body: `Dear [Name],
 
-Please find your confirmed travel itinerary below:
-
-Please review the travel portal for flight, hotel and schedule details.`,
-
-Please let me know if you need any modifications.
+Please review the travel portal for flight, hotel and schedule details.
 
 Best regards,
-Casey Gray
-Travel Coordinator
-Office: (555) 345-6789`,
+Casey Gray`,
   date: sub(new Date(), { days: 1 }).toISOString()
 }, {
   id: 6,
