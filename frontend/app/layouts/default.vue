@@ -1,11 +1,11 @@
 <template>
-  <div class="app-shell">
-    <slot />
+  <div>
+    <AppHeader />
+
+    <UMain>
+      <slot />
+    </UMain>
+
+    <AppFooter />
   </div>
 </template>
-
-<style scoped>
-.app-shell {
-  min-height: 100vh;
-}
-</style>

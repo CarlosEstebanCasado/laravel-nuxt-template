@@ -1,75 +1,24 @@
-# Nuxt Minimal Starter
+# Nuxt SaaS Frontend
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Proyecto inicial generado a partir de `github:nuxt-ui-templates/saas`. Sirve como base limpia para volver a integrar, paso a paso, la lógica propia del SaaS (autenticación via Laravel Sanctum, dashboard privado, etc.).
 
-## Setup
+## Requisitos
+- Node.js 20.x
+- npm 10.x
 
-Make sure to install dependencies:
-
+## Uso rápido
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+npm install       # instalar dependencias
+npm run dev       # servidor en http://localhost:3000
+npm run build     # compilar para producción
+npm run preview   # previsualizar la build
 ```
 
-## Development Server
+> Dentro del stack Docker puedes seguir usando `make up` / `make up-build` para exponer la app en `https://app.project.dev`.
 
-Start the development server on `http://localhost:3000`:
+## Configuración
+- Variables públicas (`NUXT_PUBLIC_*`) definidas en el `.env` raíz del monorepo o clonadas desde `frontend/.env.example`.
+- `nuxt.config.ts` ya expone `runtimeConfig`, `devServer.host` y la lista de hosts permitidos en Vite para funcionar detrás de Docker/nginx.
 
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Próximos pasos
+Consulta `docs/dashboard-migration.md` para ver el plan de reintroducción de autenticación, rutas privadas y demás funcionalidades del proyecto.

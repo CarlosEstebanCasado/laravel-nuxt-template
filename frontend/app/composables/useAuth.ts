@@ -1,109 +1,183 @@
-interface AuthUser {
-  id: number
-  name: string
-  email: string
-  email_verified_at: string | null
-  created_at: string
-  updated_at: string
+import { joinURL } from 'ufo'
+import type { AuthResponse, AuthUser } from '~/types/auth'
+
+const CSRF_ENDPOINT = '/sanctum/csrf-cookie'
+
+const useAuthUserState = () => useState<AuthUser | null>('auth:user', () => null)
+
+const useAuthFetchedState = () => useState<boolean>('auth:fetched', () => false)
+
+const getCsrfHeader = () => {
+  if (process.server) {
+    return null
+  }
+
+  const token = useCookie<string | null>('XSRF-TOKEN')
+
+  if (!token.value) {
+    return null
+  }
+
+  try {
+    return decodeURIComponent(token.value)
+  } catch {
+    return token.value
+  }
 }
 
-interface AuthResponse {
-  data: AuthUser
-}
+export function useAuth() {
+  const config = useRuntimeConfig()
+  const apiBase = config.public.apiBase
+  const apiPrefix = config.public.apiPrefix
+  const authPrefix = config.public.authPrefix
 
-interface LoginPayload {
-  email: string
-  password: string
-  remember?: boolean
-}
+  const user = useAuthUserState()
+  const hasFetched = useAuthFetchedState()
 
-interface RegisterPayload extends LoginPayload {
-  name: string
-  password_confirmation: string
-}
-
-export const useAuth = () => {
-  const user = useState<AuthUser | null>('auth:user', () => null)
-  const fetchingUser = useState<boolean>('auth:fetching', () => false)
-  const { request, requestApi, requestAuth } = useApi()
-
-  const csrf = () => request('/sanctum/csrf-cookie', { method: 'GET' })
-
-  const fetchUser = async (options: { force?: boolean; silent?: boolean } = {}) => {
-    if (user.value && !options.force) {
-      return user.value
+  const withCredentials = <T>(
+    path: string,
+    options: Parameters<typeof $fetch<T>>[1] = {},
+    opts: { csrf?: boolean } = {}
+  ) => {
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+      ...(options?.headers as Record<string, string> | undefined),
     }
 
-    if (fetchingUser.value) {
-      return user.value
-    }
-
-    fetchingUser.value = true
-
-    try {
-      const response = await requestApi<AuthResponse>('/me', { method: 'GET' })
-      user.value = response.data
-      return user.value
-    } catch (error) {
-      user.value = null
-
-      if (!options.silent) {
-        throw error
+    if (opts.csrf) {
+      const csrf = getCsrfHeader()
+      if (csrf) {
+        headers['X-XSRF-TOKEN'] = csrf
       }
-
-      return null
-    } finally {
-      fetchingUser.value = false
     }
+
+    return $fetch<T>(path, {
+      baseURL: apiBase,
+      credentials: 'include',
+      headers,
+      ...options,
+    })
   }
 
-  const login = async (payload: LoginPayload) => {
-    await csrf()
-    await requestAuth<AuthResponse>('/login', {
-      method: 'POST',
-      body: payload
+  const ensureCsrfCookie = () =>
+    withCredentials(CSRF_ENDPOINT, {
+      method: 'GET',
+    }).catch((error) => {
+      // The endpoint returns 204 with empty body when successful.
+      // Treat any failure as fatal so the caller can surface it.
+      throw error
     })
 
-    return fetchUser({ force: true })
+  const handleAuthSuccess = (payload: AuthResponse) => {
+    user.value = payload.data
+    return user.value
   }
 
-  const register = async (payload: RegisterPayload) => {
-    await csrf()
-    await requestAuth<AuthResponse>('/register', {
-      method: 'POST',
-      body: payload
-    })
+  const login = async (payload: {
+    email: string
+    password: string
+    remember?: boolean
+  }) => {
+    await ensureCsrfCookie()
 
-    return fetchUser({ force: true })
+    const response = await withCredentials<AuthResponse>(
+      joinURL(authPrefix, '/login'),
+      {
+        method: 'POST',
+        body: {
+          ...payload,
+          remember: payload.remember ?? false,
+        },
+      },
+      { csrf: true }
+    )
+
+    return handleAuthSuccess(response)
+  }
+
+  const register = async (payload: {
+    name: string
+    email: string
+    password: string
+  }) => {
+    await ensureCsrfCookie()
+
+    const response = await withCredentials<AuthResponse>(
+      joinURL(authPrefix, '/register'),
+      {
+        method: 'POST',
+        body: payload,
+      },
+      { csrf: true }
+    )
+
+    return handleAuthSuccess(response)
   }
 
   const logout = async () => {
-    await csrf()
-    await requestAuth('/logout', {
-      method: 'POST'
-    })
+    await ensureCsrfCookie()
+
+    await withCredentials(
+      joinURL(authPrefix, '/logout'),
+      {
+        method: 'POST',
+      },
+      { csrf: true }
+    )
 
     user.value = null
   }
 
-  const resendEmailVerification = async () => {
-    await csrf()
-    await requestAuth('/email/verification-notification', {
-      method: 'POST'
-    })
+  const fetchUser = async (force = false) => {
+    if (hasFetched.value && !force) {
+      return user.value
+    }
+
+    try {
+      const response = await withCredentials<AuthResponse>(
+        joinURL(apiPrefix, '/me'),
+        {
+          method: 'GET',
+        }
+      )
+      user.value = response.data
+      return user.value
+    } catch (error: any) {
+      user.value = null
+
+      // Treat unauthenticated responses as a valid "no user" state.
+      if (
+        error?.status === 401 ||
+        error?.status === 419 ||
+        error?.response?.status === 401
+      ) {
+        return null
+      }
+
+      throw error
+    } finally {
+      hasFetched.value = true
+    }
   }
 
   const isAuthenticated = computed(() => Boolean(user.value))
-  const isVerified = computed(() => Boolean(user.value?.email_verified_at))
+
+  const loginWithProvider = (provider: 'google' | 'github') => {
+    if (process.server) {
+      return
+    }
+
+    const location = joinURL(apiBase, '/auth/oauth', provider)
+    window.location.href = location
+  }
 
   return {
     user,
     isAuthenticated,
-    isVerified,
-    fetchUser,
     login,
     register,
     logout,
-    resendEmailVerification
+    fetchUser,
+    loginWithProvider,
   }
 }

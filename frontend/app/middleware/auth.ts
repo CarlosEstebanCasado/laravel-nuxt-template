@@ -1,19 +1,19 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  if (process.server) {
+  const auth = useAuth()
+
+  try {
+    await auth.fetchUser()
+  } catch (error) {
+    console.warn('[auth middleware] Failed to fetch user session', error)
+  }
+
+  if (auth.isAuthenticated.value) {
     return
   }
 
-  const { user, fetchUser } = useAuth()
+  const redirect = to.fullPath && to.fullPath !== '/login'
+    ? `?redirect=${encodeURIComponent(to.fullPath)}`
+    : ''
 
-  if (!user.value) {
-    await fetchUser({ silent: true }).catch(() => null)
-  }
-
-  if (!user.value) {
-    return navigateTo('/auth/login')
-  }
-
-  if (!user.value.email_verified_at && to.path !== '/auth/verify-email') {
-    return navigateTo('/auth/verify-email')
-  }
+  return navigateTo(`/login${redirect}`)
 })

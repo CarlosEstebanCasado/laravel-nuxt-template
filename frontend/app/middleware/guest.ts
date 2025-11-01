@@ -1,19 +1,17 @@
-export default defineNuxtRouteMiddleware(async () => {
-  if (process.server) {
+export default defineNuxtRouteMiddleware(async (to) => {
+  const auth = useAuth()
+
+  try {
+    await auth.fetchUser()
+  } catch (error) {
+    console.warn('[guest middleware] Failed to fetch user session', error)
+  }
+
+  if (!auth.isAuthenticated.value) {
     return
   }
 
-  const { user, fetchUser } = useAuth()
+  const redirect = typeof to.query.redirect === 'string' ? to.query.redirect : '/dashboard'
 
-  if (!user.value) {
-    await fetchUser({ silent: true }).catch(() => null)
-  }
-
-  if (user.value?.email_verified_at) {
-    return navigateTo('/dashboard')
-  }
-
-  if (user.value && !user.value.email_verified_at) {
-    return navigateTo('/auth/verify-email')
-  }
+  return navigateTo(redirect, { replace: true })
 })
