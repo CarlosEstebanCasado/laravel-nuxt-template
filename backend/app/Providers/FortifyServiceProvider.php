@@ -9,6 +9,7 @@ use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Responses\LoginResponse as ApiLoginResponse;
 use App\Http\Responses\LogoutResponse as ApiLogoutResponse;
 use App\Http\Responses\RegisterResponse as ApiRegisterResponse;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -16,9 +17,13 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\FailedPasswordResetLinkRequestResponse;
+use Laravel\Fortify\Contracts\FailedPasswordResetResponse as FailedPasswordResetResponseContract;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\PasswordResetResponse as PasswordResetResponseContract;
 use Laravel\Fortify\Contracts\RegisterResponse;
+use Laravel\Fortify\Contracts\SuccessfulPasswordResetLinkRequestResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -30,6 +35,10 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(LoginResponse::class, ApiLoginResponse::class);
         $this->app->singleton(RegisterResponse::class, ApiRegisterResponse::class);
         $this->app->singleton(LogoutResponse::class, ApiLogoutResponse::class);
+        $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, \App\Http\Responses\SuccessfulPasswordResetLinkRequestResponse::class);
+        $this->app->singleton(FailedPasswordResetLinkRequestResponse::class, \App\Http\Responses\FailedPasswordResetLinkRequestResponse::class);
+        $this->app->singleton(PasswordResetResponseContract::class, \App\Http\Responses\PasswordResetResponse::class);
+        $this->app->singleton(FailedPasswordResetResponseContract::class, \App\Http\Responses\FailedPasswordResetResponse::class);
     }
 
     /**
@@ -42,6 +51,11 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
+        ResetPassword::createUrlUsing(function ($notifiable, string $token) {
+            $frontendUrl = rtrim(config('app.frontend_url'), '/');
+
+            return $frontendUrl.'/reset-password/'.$token.'?email='.urlencode($notifiable->getEmailForPasswordReset());
+        });
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
