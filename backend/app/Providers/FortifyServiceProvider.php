@@ -16,9 +16,13 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\FailedPasswordResetLinkRequestResponse;
+use Laravel\Fortify\Contracts\FailedPasswordResetResponse as FailedPasswordResetResponseContract;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\PasswordResetResponse as PasswordResetResponseContract;
 use Laravel\Fortify\Contracts\RegisterResponse;
+use Laravel\Fortify\Contracts\SuccessfulPasswordResetLinkRequestResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -30,6 +34,10 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(LoginResponse::class, ApiLoginResponse::class);
         $this->app->singleton(RegisterResponse::class, ApiRegisterResponse::class);
         $this->app->singleton(LogoutResponse::class, ApiLogoutResponse::class);
+        $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, \App\Http\Responses\SuccessfulPasswordResetLinkRequestResponse::class);
+        $this->app->singleton(FailedPasswordResetLinkRequestResponse::class, \App\Http\Responses\FailedPasswordResetLinkRequestResponse::class);
+        $this->app->singleton(PasswordResetResponseContract::class, \App\Http\Responses\PasswordResetResponse::class);
+        $this->app->singleton(FailedPasswordResetResponseContract::class, \App\Http\Responses\FailedPasswordResetResponse::class);
     }
 
     /**
