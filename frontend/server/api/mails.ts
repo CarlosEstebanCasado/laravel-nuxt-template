@@ -20,12 +20,7 @@ Agenda:
 - Budget Allocation for Q2
 - Team Resource Planning
 
-Please come prepared with your department updates. I've attached the preliminary deck for your review.
-
-Best regards,
-Alex Smith
-Senior Marketing Director
-Tel: (555) 123-4567`,
+Please come prepared with your department updates. I've attached the preliminary deck for your review.`,
   date: new Date().toISOString()
 }, {
   id: 2,
@@ -54,12 +49,7 @@ Key metrics:
 Please review the attached report for detailed analysis. Let's discuss any blockers in tomorrow's stand-up.
 
 Regards,
-Jordan
-
---
-Jordan Brown
-Lead Developer | Tech Solutions
-Mobile: +1 (555) 234-5678`,
+Jordan`,
   date: sub(new Date(), { minutes: 7 }).toISOString()
 }, {
   id: 3,
@@ -107,11 +97,7 @@ I'm particularly excited about our innovative approach to the user engagement co
 
 Could you please review and provide feedback by EOD Friday? I'd like to present this to the steering committee next week.
 
-Thanks in advance,
-
-Morgan White
-Senior Project Manager
-Tel: (555) 234-5678`,
+Thanks in advance.`,
   date: sub(new Date(), { days: 1 }).toISOString()
 }, {
   id: 5,
@@ -124,22 +110,7 @@ Tel: (555) 234-5678`,
 
 Please find your confirmed travel itinerary below:
 
-FLIGHT DETAILS:
-Outbound: AA 1234
-Date: March 15, 2024
-DEP: JFK 09:30 AM
-ARR: SFO 12:45 PM
-
-HOTEL:
-Marriott San Francisco
-Check-in: March 15
-Check-out: March 18
-Confirmation #: MR123456
-
-SCHEDULE:
-March 15 - Evening: Welcome Reception (6 PM)
-March 16 - Conference Day 1 (9 AM - 5 PM)
-March 17 - Conference Day 2 (9 AM - 4 PM)
+Please review the travel portal for flight, hotel and schedule details.`,
 
 Please let me know if you need any modifications.
 
