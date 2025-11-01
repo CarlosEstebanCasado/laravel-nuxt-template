@@ -1,7 +1,11 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const auth = useAuth()
 
-  await auth.fetchUser()
+  try {
+    await auth.fetchUser()
+  } catch (error) {
+    console.warn('[guest middleware] Failed to fetch user session', error)
+  }
 
   if (!auth.isAuthenticated.value) {
     return

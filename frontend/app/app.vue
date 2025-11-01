@@ -25,9 +25,14 @@ useSeoMeta({
 })
 
 const auth = useAuth()
-await auth.fetchUser()
 
-const { data: navigation } = await useAsyncData('navigation', () => queryCollectionNavigation('docs'), {
+if (process.client) {
+  auth.fetchUser().catch(() => {
+    /* swallow errors so the app can render */
+  })
+}
+
+const { data: navigation } = useAsyncData('navigation', () => queryCollectionNavigation('docs'), {
   transform: data => data.find(item => item.path === '/docs')?.children || []
 })
 const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSections('docs'), {

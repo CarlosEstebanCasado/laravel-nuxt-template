@@ -55,6 +55,8 @@ services:
       internal:
         aliases:
           - gateway-api
+          - api.project.dev
+          - app.project.dev
 
   api:
     build:
