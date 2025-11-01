@@ -9,6 +9,7 @@ use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Responses\LoginResponse as ApiLoginResponse;
 use App\Http\Responses\LogoutResponse as ApiLogoutResponse;
 use App\Http\Responses\RegisterResponse as ApiRegisterResponse;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -50,6 +51,11 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
+        ResetPassword::createUrlUsing(function ($notifiable, string $token) {
+            $frontendUrl = rtrim(config('app.frontend_url'), '/');
+
+            return $frontendUrl.'/reset-password/'.$token.'?email='.urlencode($notifiable->getEmailForPasswordReset());
+        });
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
