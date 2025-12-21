@@ -24,6 +24,39 @@ const sessions = ref<SessionInfo[]>([])
 const isSessionsLoading = ref(true)
 const sessionsError = ref<string | null>(null)
 
+const parseUserAgent = (ua: string | null) => {
+  const value = ua ?? ''
+  const browser = value.includes('Edg/')
+    ? 'Edge'
+    : value.includes('Chrome/')
+      ? 'Chrome'
+      : value.includes('Firefox/')
+        ? 'Firefox'
+        : value.includes('Safari/') && !value.includes('Chrome/')
+          ? 'Safari'
+          : 'Browser'
+
+  const os = value.includes('Windows')
+    ? 'Windows'
+    : value.includes('Mac OS X') && !value.includes('iPhone') && !value.includes('iPad')
+      ? 'macOS'
+      : value.includes('Linux')
+        ? 'Linux'
+        : value.includes('Android')
+          ? 'Android'
+          : value.includes('iPhone') || value.includes('iPad')
+            ? 'iOS'
+            : 'OS'
+
+  const isMobile = value.includes('Mobile') || value.includes('Android') || value.includes('iPhone') || value.includes('iPad')
+
+  return { browser, os, isMobile }
+}
+
+const formatLastActivity = (unixSeconds: number) => format(new Date(unixSeconds * 1000), 'yyyy-MM-dd HH:mm:ss')
+const formatLastActivityRelative = (unixSeconds: number) =>
+  formatDistanceToNow(new Date(unixSeconds * 1000), { addSuffix: true })
+
 const refreshSessions = async () => {
   isSessionsLoading.value = true
   sessionsError.value = null
@@ -220,12 +253,27 @@ const confirmDelete = async () => {
 
   <UPageCard
     title="Sessions"
-    description="Active sessions for your account."
-    variant="subtle"
-    class="mt-6"
+    description="Where your account is currently signed in."
+    variant="naked"
+    orientation="horizontal"
+    class="mt-6 mb-4"
   >
-    <div v-if="isSessionsLoading" class="text-sm text-muted">
-      Loading sessions…
+    <UButton
+      label="Refresh"
+      icon="i-lucide-refresh-cw"
+      color="neutral"
+      variant="ghost"
+      size="sm"
+      class="w-fit lg:ms-auto"
+      :loading="isSessionsLoading"
+      @click="refreshSessions"
+    />
+  </UPageCard>
+
+  <UPageCard variant="subtle" :ui="{ container: 'gap-3' }">
+    <div v-if="isSessionsLoading" class="space-y-2">
+      <div class="h-16 rounded-lg border border-default bg-elevated/30 animate-pulse" />
+      <div class="h-16 rounded-lg border border-default bg-elevated/20 animate-pulse" />
     </div>
 
     <UAlert
@@ -236,48 +284,62 @@ const confirmDelete = async () => {
       variant="subtle"
     />
 
-    <div v-else>
-      <div v-if="sessions.length === 0" class="text-sm text-muted">
-        No sessions found. If you want to track sessions per device, set `SESSION_DRIVER=database` and restart the API container.
-      </div>
+    <UAlert
+      v-else-if="sessions.length === 0"
+      title="No active sessions"
+      description="We couldn't find any active sessions for your account."
+      icon="i-lucide-monitor"
+      color="neutral"
+      variant="subtle"
+    />
 
-      <div v-else class="space-y-2">
-        <div class="flex justify-end">
-          <UButton
-            label="Refresh"
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            @click="refreshSessions"
+    <div v-else class="space-y-2">
+      <div
+        v-for="session in sessions"
+        :key="session.id"
+        class="flex items-start gap-4 rounded-lg border border-default p-4 bg-elevated/10"
+      >
+        <div class="mt-0.5 shrink-0">
+          <UIcon
+            :name="parseUserAgent(session.user_agent).isMobile ? 'i-lucide-smartphone' : 'i-lucide-monitor'"
+            class="size-5 text-muted"
           />
         </div>
 
-        <div
-          v-for="session in sessions"
-          :key="session.id"
-          class="flex items-start justify-between gap-4 rounded-lg border border-default p-3"
-        >
-          <div class="min-w-0">
-            <div class="flex items-center gap-2">
-              <span class="font-medium truncate">
-                {{ session.ip_address || 'Unknown IP' }}
-              </span>
-              <UBadge v-if="session.is_current" color="success" variant="subtle">
-                Current
-              </UBadge>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2">
+            <div class="font-medium truncate">
+              {{ parseUserAgent(session.user_agent).browser }} · {{ parseUserAgent(session.user_agent).os }}
             </div>
-            <div class="text-xs text-muted truncate">
-              {{ session.user_agent || 'Unknown device' }}
-            </div>
-            <div class="text-xs text-muted">
-              Active {{ formatDistanceToNow(new Date(session.last_activity * 1000), { addSuffix: true }) }}
-            </div>
-            <div class="text-xs text-muted">
-              Last activity: {{ format(new Date(session.last_activity * 1000), 'yyyy-MM-dd HH:mm:ss') }}
-            </div>
+            <UBadge v-if="session.is_current" color="success" variant="subtle">
+              Current session
+            </UBadge>
           </div>
 
-          <div />
+          <div class="text-xs text-muted truncate">
+            {{ session.user_agent || 'Unknown device' }}
+          </div>
+
+          <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs text-muted">
+            <div class="flex items-center gap-2">
+              <UIcon name="i-lucide-network" class="size-4" />
+              <span class="truncate">
+                IP: <span class="font-medium text-default">{{ session.ip_address || 'Unknown' }}</span>
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <UIcon name="i-lucide-clock" class="size-4" />
+              <span class="truncate">
+                Last active: <span class="font-medium text-default">{{ formatLastActivityRelative(session.last_activity) }}</span>
+              </span>
+            </div>
+            <div class="flex items-center gap-2 sm:col-span-2">
+              <UIcon name="i-lucide-calendar" class="size-4" />
+              <span class="truncate">
+                {{ formatLastActivity(session.last_activity) }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
