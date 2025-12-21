@@ -251,32 +251,25 @@ const confirmDelete = async () => {
     </UForm>
   </UPageCard>
 
-  <UPageCard variant="subtle" class="mt-6" :ui="{ container: 'p-0 sm:p-0 gap-y-0', wrapper: 'items-stretch', header: 'p-4 mb-0 border-b border-default' }">
-    <template #header>
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <h3 class="text-base font-semibold">
-            Sessions
-          </h3>
-          <p class="text-sm text-muted">
-            Where your account is currently signed in.
-          </p>
-        </div>
-
+  <UPageCard
+    title="Sessions"
+    description="Where your account is currently signed in."
+    variant="subtle"
+    class="mt-6"
+  >
+    <div class="flex flex-col gap-3 max-w-2xl">
+      <div class="flex justify-end">
         <UButton
           label="Refresh"
           icon="i-lucide-refresh-cw"
           color="neutral"
           variant="ghost"
           size="sm"
-          class="w-fit"
           :loading="isSessionsLoading"
           @click="refreshSessions"
         />
       </div>
-    </template>
 
-    <div class="p-4">
       <div v-if="isSessionsLoading" class="space-y-2">
         <div class="h-16 rounded-lg border border-default bg-elevated/30 animate-pulse" />
         <div class="h-16 rounded-lg border border-default bg-elevated/20 animate-pulse" />
@@ -323,7 +316,7 @@ const confirmDelete = async () => {
             </div>
 
             <UTooltip :text="session.user_agent || 'Unknown device'" :content="{ align: 'start', collisionPadding: 16 }">
-              <div class="text-xs text-muted truncate max-w-full">
+              <div class="text-xs text-muted line-clamp-2">
                 {{ session.user_agent || 'Unknown device' }}
               </div>
             </UTooltip>
