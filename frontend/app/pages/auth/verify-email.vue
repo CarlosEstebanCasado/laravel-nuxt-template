@@ -22,9 +22,25 @@ const redirectTo = computed(() => {
 })
 
 const refreshUser = async () => {
-  await auth.fetchUser(true)
-  if (auth.user.value?.email_verified_at) {
-    await router.replace(redirectTo.value)
+  if (isSubmitting.value) {
+    return
+  }
+
+  isSubmitting.value = true
+  try {
+    await auth.fetchUser(true)
+    if (auth.user.value?.email_verified_at) {
+      await router.replace(redirectTo.value)
+    }
+  } catch (error: any) {
+    const message = error?.data?.message || error?.message || 'Unable to refresh your account status, please try again.'
+    toast.add({
+      title: 'Request failed',
+      description: message,
+      color: 'error'
+    })
+  } finally {
+    isSubmitting.value = false
   }
 }
 
@@ -54,7 +70,10 @@ const resend = async () => {
 
 onMounted(async () => {
   try {
-    await refreshUser()
+    await auth.fetchUser(true)
+    if (auth.user.value?.email_verified_at) {
+      await router.replace(redirectTo.value)
+    }
   } catch {
     // If fetch fails, auth middleware will already handle redirecting.
   }

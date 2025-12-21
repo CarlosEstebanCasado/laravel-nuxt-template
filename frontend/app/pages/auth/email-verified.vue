@@ -22,6 +22,17 @@ const redirectTo = computed(() => {
 onMounted(async () => {
   try {
     await auth.fetchUser(true)
+
+    // Guard: only treat this as "verified" once the backend confirms it.
+    // Unverified users may navigate here directly (auth middleware allows this path),
+    // and we should not show a misleading success message.
+    if (!auth.user.value?.email_verified_at) {
+      const redirect = typeof route.query.redirect === 'string' ? route.query.redirect : ''
+      const qs = redirect ? `?redirect=${encodeURIComponent(redirect)}` : ''
+      await router.replace(`/auth/verify-email${qs}`)
+      return
+    }
+
     toast.add({
       title: 'Email verified',
       description: 'Thanks! Your account is now active.'
