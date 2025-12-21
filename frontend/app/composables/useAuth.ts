@@ -45,9 +45,31 @@ export function useAuth() {
   const apiBase = config.public.apiBase
   const apiPrefix = config.public.apiPrefix
   const authPrefix = config.public.authPrefix
+  const router = useRouter()
+  const route = useRoute()
 
   const user = useAuthUserState()
   const hasFetched = useAuthFetchedState()
+
+  const handleInvalidSession = async () => {
+    user.value = null
+    hasFetched.value = true
+
+    if (process.server) {
+      return
+    }
+
+    // Avoid redirect loops on guest/auth pages.
+    const path = route.path
+    const isGuestPage =
+      path === '/login' ||
+      path === '/signup' ||
+      path.startsWith('/auth/')
+
+    if (!isGuestPage) {
+      await router.replace('/login')
+    }
+  }
 
   const withCredentials = <T>(
     path: string,
@@ -71,6 +93,16 @@ export function useAuth() {
       credentials: 'include',
       headers,
       ...options,
+    }).catch(async (error: any) => {
+      const status = error?.status ?? error?.response?.status
+
+      // If the session was revoked elsewhere, the SPA can be left in a "zombie" state:
+      // user state is still set, but API calls start failing with 401/419.
+      if (status === 401 || status === 419) {
+        await handleInvalidSession()
+      }
+
+      throw error
     })
   }
 
