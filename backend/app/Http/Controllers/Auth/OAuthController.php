@@ -46,6 +46,8 @@ class OAuthController extends Controller
         if (! $user->exists) {
             $user->name = $socialUser->getName() ?: $socialUser->getNickname() ?: $socialUser->getEmail();
             $user->password = Hash::make(Str::random(32));
+            $user->auth_provider = $provider;
+            $user->password_set_at = null;
         }
 
         if (is_null($user->email_verified_at)) {
