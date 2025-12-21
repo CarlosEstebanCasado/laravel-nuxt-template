@@ -11,6 +11,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return
   }
 
+  const isVerified = Boolean(auth.user.value?.email_verified_at)
+  if (!isVerified) {
+    const redirect = typeof to.query.redirect === 'string' ? to.query.redirect : '/dashboard'
+    const qs = redirect ? `?redirect=${encodeURIComponent(redirect)}` : ''
+    return navigateTo(`/auth/verify-email${qs}`, { replace: true })
+  }
+
   const redirect = typeof to.query.redirect === 'string' ? to.query.redirect : '/dashboard'
 
   return navigateTo(redirect, { replace: true })

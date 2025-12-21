@@ -8,6 +8,20 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   if (auth.isAuthenticated.value) {
+    const allowedUnverifiedPaths = new Set([
+      '/auth/verify-email',
+      '/auth/email-verified',
+      '/auth/callback',
+    ])
+
+    const isVerified = Boolean(auth.user.value?.email_verified_at)
+    if (!isVerified && !allowedUnverifiedPaths.has(to.path)) {
+      const redirect = to.fullPath
+        ? `?redirect=${encodeURIComponent(to.fullPath)}`
+        : ''
+      return navigateTo(`/auth/verify-email${redirect}`)
+    }
+
     return
   }
 

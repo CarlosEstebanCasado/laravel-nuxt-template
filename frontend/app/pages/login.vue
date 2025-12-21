@@ -85,7 +85,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   isSubmitting.value = true
 
   try {
-    await auth.login(event.data)
+    const user = await auth.login(event.data)
 
     toast.add({
       title: 'Welcome back!',
@@ -93,6 +93,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     })
 
     const redirectTo = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard'
+    if (!user?.email_verified_at) {
+      const qs = redirectTo ? `?redirect=${encodeURIComponent(redirectTo)}` : ''
+      await router.push(`/auth/verify-email${qs}`)
+      return
+    }
+
     await router.push(redirectTo)
   } catch (error) {
     toast.add({
