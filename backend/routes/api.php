@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\CurrentUserController;
+use App\Http\Controllers\Api\Auth\DeleteAccountController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,6 @@ Route::prefix('v1')->group(function (): void {
 
     // Protected API endpoints (verified email required).
     Route::middleware(['auth:sanctum', 'verified'])->group(function (): void {
-        // Add verified-only routes here.
+        Route::delete('/account', DeleteAccountController::class);
     });
 });

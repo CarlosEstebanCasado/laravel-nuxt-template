@@ -115,6 +115,42 @@ export function useAuth() {
     return handleAuthSuccess(response)
   }
 
+  const updateProfile = async (payload: { name: string, email: string }) => {
+    await ensureCsrfCookie()
+
+    const response = await withCredentials<AuthResponse>(
+      joinURL(authPrefix, '/user/profile-information'),
+      {
+        method: 'PUT',
+        body: payload,
+      },
+      { csrf: true }
+    )
+
+    // Fortify returns the updated user in our API response contract.
+    return handleAuthSuccess(response)
+  }
+
+  const updatePassword = async (payload: {
+    current_password: string
+    password: string
+    password_confirmation: string
+  }) => {
+    await ensureCsrfCookie()
+
+    // Fortify's default password update response is empty, but we don't rely on it.
+    await withCredentials(
+      joinURL(authPrefix, '/user/password'),
+      {
+        method: 'PUT',
+        body: payload,
+      },
+      { csrf: true }
+    )
+
+    return true
+  }
+
   const resendEmailVerification = async () => {
     await ensureCsrfCookie()
 
@@ -125,6 +161,23 @@ export function useAuth() {
       },
       { csrf: true }
     )
+  }
+
+  const deleteAccount = async (payload: { confirmation: 'DELETE', password?: string }) => {
+    await ensureCsrfCookie()
+
+    await withCredentials(
+      joinURL(apiPrefix, '/account'),
+      {
+        method: 'DELETE',
+        body: payload,
+      },
+      { csrf: true }
+    )
+
+    // Server invalidates the session; clear client state too.
+    user.value = null
+    hasFetched.value = true
   }
 
   const logout = async () => {
@@ -187,14 +240,14 @@ export function useAuth() {
       user.value = response.data
       return user.value
     } catch (error: any) {
-      user.value = null
-
       // Treat unauthenticated responses as a valid "no user" state.
       if (
         error?.status === 401 ||
+        error?.status === 403 ||
         error?.status === 419 ||
         error?.response?.status === 401
       ) {
+        user.value = null
         return null
       }
 
@@ -220,7 +273,10 @@ export function useAuth() {
     isAuthenticated,
     login,
     register,
+    updateProfile,
+    updatePassword,
     resendEmailVerification,
+    deleteAccount,
     logout,
     requestPasswordReset,
     resetPassword,

@@ -1,30 +1,145 @@
 <script setup lang="ts">
 import * as z from 'zod'
-import type { FormError } from '@nuxt/ui'
+import type { FormError, FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'
 })
 
+const auth = useAuth()
+const toast = useToast()
+const router = useRouter()
+
 const passwordSchema = z.object({
-  current: z.string().min(8, 'Must be at least 8 characters'),
-  new: z.string().min(8, 'Must be at least 8 characters')
+  current_password: z.string().min(8, 'Must be at least 8 characters'),
+  password: z.string().min(8, 'Must be at least 8 characters'),
+  password_confirmation: z.string().min(8, 'Must be at least 8 characters')
 })
 
 type PasswordSchema = z.output<typeof passwordSchema>
 
 const password = reactive<Partial<PasswordSchema>>({
-  current: undefined,
-  new: undefined
+  current_password: undefined,
+  password: undefined,
+  password_confirmation: undefined
 })
 
 const validate = (state: Partial<PasswordSchema>): FormError[] => {
   const errors: FormError[] = []
-  if (state.current && state.new && state.current === state.new) {
-    errors.push({ name: 'new', message: 'Passwords must be different' })
+  if (state.current_password && state.password && state.current_password === state.password) {
+    errors.push({ name: 'password', message: 'Passwords must be different' })
+  }
+  if (state.password && state.password_confirmation && state.password !== state.password_confirmation) {
+    errors.push({ name: 'password_confirmation', message: 'Passwords do not match' })
   }
   return errors
+}
+
+const extractErrorMessage = (error: unknown) => {
+  const data = (error as any)?.data ?? (error as any)?.response?._data
+  if (data?.errors) {
+    const firstError = Object.values(data.errors).flat()[0]
+    if (typeof firstError === 'string') {
+      return firstError
+    }
+  }
+  if (typeof data?.message === 'string') {
+    return data.message
+  }
+  return (error as any)?.message || 'Unable to update your password, please try again.'
+}
+
+const isSubmitting = ref(false)
+const isDeleteOpen = ref(false)
+const isDeleting = ref(false)
+
+const deleteState = reactive<{ confirmation: string, password?: string }>({
+  confirmation: '',
+  password: ''
+})
+
+async function onSubmit(event: FormSubmitEvent<PasswordSchema>) {
+  if (isSubmitting.value) {
+    return
+  }
+
+  isSubmitting.value = true
+  try {
+    await auth.updatePassword(event.data)
+    toast.add({
+      title: 'Password updated',
+      description: 'Your password has been changed successfully.',
+      color: 'success',
+      icon: 'i-lucide-check'
+    })
+
+    password.current_password = undefined
+    password.password = undefined
+    password.password_confirmation = undefined
+  } catch (error) {
+    toast.add({
+      title: 'Update failed',
+      description: extractErrorMessage(error),
+      color: 'error',
+    })
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+const extractDeleteErrorMessage = (error: unknown) => {
+  const data = (error as any)?.data ?? (error as any)?.response?._data
+  if (data?.errors) {
+    const firstError = Object.values(data.errors).flat()[0]
+    if (typeof firstError === 'string') {
+      return firstError
+    }
+  }
+  if (typeof data?.message === 'string') {
+    return data.message
+  }
+  return (error as any)?.message || 'Unable to delete your account, please try again.'
+}
+
+const confirmDelete = async () => {
+  if (isDeleting.value) {
+    return
+  }
+
+  if (deleteState.confirmation !== 'DELETE') {
+    toast.add({
+      title: 'Confirmation required',
+      description: 'Type DELETE to confirm account deletion.',
+      color: 'error'
+    })
+    return
+  }
+
+  isDeleting.value = true
+  try {
+    await auth.deleteAccount({
+      confirmation: 'DELETE',
+      password: deleteState.password?.trim() ? deleteState.password.trim() : undefined,
+    })
+
+    toast.add({
+      title: 'Account deleted',
+      description: 'Your account has been removed.',
+      color: 'success'
+    })
+
+    isDeleteOpen.value = false
+    await router.replace('/signup')
+  } catch (error) {
+    toast.add({
+      title: 'Delete failed',
+      description: extractDeleteErrorMessage(error),
+      color: 'error'
+    })
+  } finally {
+    isDeleting.value = false
+  }
 }
 </script>
 
@@ -39,26 +154,36 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
       :state="password"
       :validate="validate"
       class="flex flex-col gap-4 max-w-xs"
+      @submit="onSubmit"
     >
-      <UFormField name="current">
+      <UFormField name="current_password">
         <UInput
-          v-model="password.current"
+          v-model="password.current_password"
           type="password"
           placeholder="Current password"
           class="w-full"
         />
       </UFormField>
 
-      <UFormField name="new">
+      <UFormField name="password">
         <UInput
-          v-model="password.new"
+          v-model="password.password"
           type="password"
           placeholder="New password"
           class="w-full"
         />
       </UFormField>
 
-      <UButton label="Update" class="w-fit" type="submit" />
+      <UFormField name="password_confirmation">
+        <UInput
+          v-model="password.password_confirmation"
+          type="password"
+          placeholder="Confirm new password"
+          class="w-full"
+        />
+      </UFormField>
+
+      <UButton label="Update" class="w-fit" type="submit" :loading="isSubmitting" />
     </UForm>
   </UPageCard>
 
@@ -68,7 +193,44 @@ const validate = (state: Partial<PasswordSchema>): FormError[] => {
     class="bg-gradient-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
-      <UButton label="Delete account" color="error" />
+      <UModal v-model:open="isDeleteOpen" title="Delete account" description="This action is permanent.">
+        <UButton label="Delete account" color="error" />
+
+        <template #body>
+          <div class="space-y-4">
+            <UAlert
+              title="This cannot be undone"
+              description="Type DELETE to confirm. If you created your account with email/password, you can also enter your password for extra safety."
+              color="error"
+              variant="subtle"
+            />
+
+            <UFormField name="confirmation" label="Type DELETE to confirm">
+              <UInput v-model="deleteState.confirmation" placeholder="DELETE" />
+            </UFormField>
+
+            <UFormField name="password" label="Password (optional)">
+              <UInput v-model="deleteState.password" type="password" placeholder="Your current password" />
+            </UFormField>
+
+            <div class="flex justify-end gap-2">
+              <UButton
+                label="Cancel"
+                color="neutral"
+                variant="subtle"
+                :disabled="isDeleting"
+                @click="isDeleteOpen = false"
+              />
+              <UButton
+                label="Delete permanently"
+                color="error"
+                :loading="isDeleting"
+                @click="confirmDelete"
+              />
+            </div>
+          </div>
+        </template>
+      </UModal>
     </template>
   </UPageCard>
 </template>
