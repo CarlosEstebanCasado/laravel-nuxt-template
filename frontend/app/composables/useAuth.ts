@@ -7,21 +7,36 @@ const useAuthUserState = () => useState<AuthUser | null>('auth:user', () => null
 
 const useAuthFetchedState = () => useState<boolean>('auth:fetched', () => false)
 
+const readCookie = (name: string) => {
+  if (typeof document === 'undefined') {
+    return null
+  }
+
+  const prefix = `${name}=`
+  const parts = document.cookie.split('; ')
+  for (const part of parts) {
+    if (part.startsWith(prefix)) {
+      return part.slice(prefix.length)
+    }
+  }
+
+  return null
+}
+
 const getCsrfHeader = () => {
   if (process.server) {
     return null
   }
 
-  const token = useCookie<string | null>('XSRF-TOKEN')
-
-  if (!token.value) {
+  const raw = readCookie('XSRF-TOKEN')
+  if (!raw) {
     return null
   }
 
   try {
-    return decodeURIComponent(token.value)
+    return decodeURIComponent(raw)
   } catch {
-    return token.value
+    return raw
   }
 }
 
@@ -118,7 +133,9 @@ export function useAuth() {
   const updateProfile = async (payload: { name: string, email: string }) => {
     await ensureCsrfCookie()
 
-    const response = await withCredentials<AuthResponse>(
+    // Fortify's profile update endpoint returns an empty response by default.
+    // Refresh the session user via /api/v1/me after a successful update.
+    await withCredentials(
       joinURL(authPrefix, '/user/profile-information'),
       {
         method: 'PUT',
@@ -127,8 +144,7 @@ export function useAuth() {
       { csrf: true }
     )
 
-    // Fortify returns the updated user in our API response contract.
-    return handleAuthSuccess(response)
+    return await fetchUser(true)
   }
 
   const updatePassword = async (payload: {
