@@ -8,6 +8,7 @@ use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Session\Middleware\AuthenticateSession;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->statefulApi();
+
+        // Keep the current session active but invalidate other browser sessions
+        // when the user's password changes (used by Auth::logoutOtherDevices()).
+        $middleware->web(append: [
+            AuthenticateSession::class,
+        ]);
 
         $middleware->alias([
             'verified' => EnsureEmailIsVerified::class,
