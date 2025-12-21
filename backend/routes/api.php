@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\CurrentUserController;
+use App\Http\Controllers\Api\Auth\DeleteSessionController;
 use App\Http\Controllers\Api\Auth\DeleteAccountController;
+use App\Http\Controllers\Api\Auth\RevokeOtherSessionsController;
 use App\Http\Controllers\Api\Auth\SessionsController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
@@ -25,5 +27,7 @@ Route::prefix('v1')->group(function (): void {
     Route::middleware(['auth:sanctum', 'verified'])->group(function (): void {
         Route::delete('/account', DeleteAccountController::class);
         Route::get('/sessions', SessionsController::class);
+        Route::post('/sessions/revoke-others', RevokeOtherSessionsController::class);
+        Route::delete('/sessions/{id}', DeleteSessionController::class);
     });
 });
