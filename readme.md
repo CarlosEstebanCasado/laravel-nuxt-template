@@ -152,8 +152,14 @@ app/
 - Sanitización/validación estricta, límites de tamaño (`max_input_vars`, `post_max_size`).
 - Alineado OWASP: baseline en OWASP Top 10, ASVS nivel 2 y cheatsheets de referencia para cada módulo (auth, storage, logging). Checklist operativa en `docs/security/owasp-asvs.md` y regla detallada para Cursor en `.cursor/rules/security.md`.
 - Secretos via `.env` (12-factor). Sin secretos en el repo. Compatibilidad con Doppler/Vault.
-- Auditoría con `spatie/laravel-activitylog`.
+- Auditoría con `owen-it/laravel-auditing` ([docs](https://laravel-auditing.com/guide/introduction.html)).
 - Logs JSON con correlación `X-Request-Id`. Integrado con Sentry (frontend + backend).
+
+**Nota importante (dev)**:
+
+- La app usa **Sanctum (SPA) + cookies**, así que la gestión multi-dispositivo depende del `SESSION_DRIVER`.
+- El `SESSION_DRIVER` del contenedor se toma del **`.env` del proyecto (root)** vía `docker-compose.yml` (`SESSION_DRIVER: ${SESSION_DRIVER:-database}`).
+- Si cambias variables de entorno en local, ejecuta `php artisan optimize:clear` dentro del contenedor para evitar configs cacheadas causando comportamientos raros (p.ej. 500 sin respuesta o logout que no funciona).
 
 ---
 
