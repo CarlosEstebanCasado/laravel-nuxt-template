@@ -99,6 +99,7 @@ export function useAuth() {
     name: string
     email: string
     password: string
+    password_confirmation: string
   }) => {
     await ensureCsrfCookie()
 
@@ -112,6 +113,18 @@ export function useAuth() {
     )
 
     return handleAuthSuccess(response)
+  }
+
+  const resendEmailVerification = async () => {
+    await ensureCsrfCookie()
+
+    return withCredentials(
+      joinURL(authPrefix, '/email/verification-notification'),
+      {
+        method: 'POST',
+      },
+      { csrf: true }
+    )
   }
 
   const logout = async () => {
@@ -207,6 +220,7 @@ export function useAuth() {
     isAuthenticated,
     login,
     register,
+    resendEmailVerification,
     logout,
     requestPasswordReset,
     resetPassword,

@@ -20,5 +20,11 @@
       "frontend/node_modules/.cache"
     ]
   },
-  "typescript.tsserver.maxTsServerMemory": 4096
+  "typescript.tsserver.maxTsServerMemory": 4096,
+  "[vue]": {
+    "editor.codeActionsOnSave": {
+      "source.addMissingImports": "never",
+      "source.organizeImports": "never"
+    }
+  }
 }

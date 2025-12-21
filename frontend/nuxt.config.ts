@@ -33,7 +33,8 @@ export default defineNuxtConfig({
   },
 
   devServer: {
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    hmr: false
   },
   compatibilityDate: '2025-07-15',
 
@@ -46,7 +47,8 @@ export default defineNuxtConfig({
 
   vite: {
     server: {
-      allowedHosts: ['nuxt', 'gateway', 'gateway-api', 'app.project.dev']
+      allowedHosts: ['nuxt', 'gateway', 'gateway-api', 'app.project.dev'],
+      hmr: false
     }
   }
 })

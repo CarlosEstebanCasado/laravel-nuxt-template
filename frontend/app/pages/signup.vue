@@ -33,6 +33,11 @@ const fields = [{
   label: 'Password',
   type: 'password' as const,
   placeholder: 'Enter your password'
+}, {
+  name: 'password_confirmation',
+  label: 'Confirm Password',
+  type: 'password' as const,
+  placeholder: 'Confirm your password'
 }]
 
 const providers = [{
@@ -48,7 +53,11 @@ const providers = [{
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email'),
-  password: z.string().min(8, 'Must be at least 8 characters')
+  password: z.string().min(8, 'Must be at least 8 characters'),
+  password_confirmation: z.string().min(8, 'Must be at least 8 characters')
+}).refine((data) => data.password === data.password_confirmation, {
+  message: 'Passwords do not match',
+  path: ['password_confirmation'],
 })
 
 type Schema = z.output<typeof schema>
@@ -85,7 +94,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   isSubmitting.value = true
 
   try {
-    await auth.register(event.data)
+    const user = await auth.register(event.data)
 
     toast.add({
       title: 'Account created',
@@ -93,6 +102,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     })
 
     const redirectTo = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard'
+    if (!user?.email_verified_at) {
+      const qs = redirectTo ? `?redirect=${encodeURIComponent(redirectTo)}` : ''
+      await router.push(`/auth/verify-email${qs}`)
+      return
+    }
+
     await router.push(redirectTo)
   } catch (error) {
     toast.add({
