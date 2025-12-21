@@ -251,93 +251,102 @@ const confirmDelete = async () => {
     </UForm>
   </UPageCard>
 
-  <UPageCard
-    title="Sessions"
-    description="Where your account is currently signed in."
-    variant="naked"
-    orientation="horizontal"
-    class="mt-6 mb-4"
-  >
-    <UButton
-      label="Refresh"
-      icon="i-lucide-refresh-cw"
-      color="neutral"
-      variant="ghost"
-      size="sm"
-      class="w-fit lg:ms-auto"
-      :loading="isSessionsLoading"
-      @click="refreshSessions"
-    />
-  </UPageCard>
-
-  <UPageCard variant="subtle" :ui="{ container: 'gap-3' }">
-    <div v-if="isSessionsLoading" class="space-y-2">
-      <div class="h-16 rounded-lg border border-default bg-elevated/30 animate-pulse" />
-      <div class="h-16 rounded-lg border border-default bg-elevated/20 animate-pulse" />
-    </div>
-
-    <UAlert
-      v-else-if="sessionsError"
-      title="Unable to load sessions"
-      :description="sessionsError"
-      color="warning"
-      variant="subtle"
-    />
-
-    <UAlert
-      v-else-if="sessions.length === 0"
-      title="No active sessions"
-      description="We couldn't find any active sessions for your account."
-      icon="i-lucide-monitor"
-      color="neutral"
-      variant="subtle"
-    />
-
-    <div v-else class="space-y-2">
-      <div
-        v-for="session in sessions"
-        :key="session.id"
-        class="flex items-start gap-4 rounded-lg border border-default p-4 bg-elevated/10"
-      >
-        <div class="mt-0.5 shrink-0">
-          <UIcon
-            :name="parseUserAgent(session.user_agent).isMobile ? 'i-lucide-smartphone' : 'i-lucide-monitor'"
-            class="size-5 text-muted"
-          />
+  <UPageCard variant="subtle" class="mt-6" :ui="{ container: 'p-0 sm:p-0 gap-y-0', wrapper: 'items-stretch', header: 'p-4 mb-0 border-b border-default' }">
+    <template #header>
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h3 class="text-base font-semibold">
+            Sessions
+          </h3>
+          <p class="text-sm text-muted">
+            Where your account is currently signed in.
+          </p>
         </div>
 
-        <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-2">
-            <div class="font-medium truncate">
-              {{ parseUserAgent(session.user_agent).browser }} · {{ parseUserAgent(session.user_agent).os }}
-            </div>
-            <UBadge v-if="session.is_current" color="success" variant="subtle">
-              Current session
-            </UBadge>
+        <UButton
+          label="Refresh"
+          icon="i-lucide-refresh-cw"
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          class="w-fit"
+          :loading="isSessionsLoading"
+          @click="refreshSessions"
+        />
+      </div>
+    </template>
+
+    <div class="p-4">
+      <div v-if="isSessionsLoading" class="space-y-2">
+        <div class="h-16 rounded-lg border border-default bg-elevated/30 animate-pulse" />
+        <div class="h-16 rounded-lg border border-default bg-elevated/20 animate-pulse" />
+      </div>
+
+      <UAlert
+        v-else-if="sessionsError"
+        title="Unable to load sessions"
+        :description="sessionsError"
+        color="warning"
+        variant="subtle"
+      />
+
+      <UAlert
+        v-else-if="sessions.length === 0"
+        title="No active sessions"
+        description="We couldn't find any active sessions for your account."
+        icon="i-lucide-monitor"
+        color="neutral"
+        variant="subtle"
+      />
+
+      <div v-else class="space-y-2">
+        <div
+          v-for="session in sessions"
+          :key="session.id"
+          class="flex min-w-0 items-start gap-4 rounded-lg border border-default p-4 bg-elevated/10 overflow-hidden"
+        >
+          <div class="mt-0.5 shrink-0">
+            <UIcon
+              :name="parseUserAgent(session.user_agent).isMobile ? 'i-lucide-smartphone' : 'i-lucide-monitor'"
+              class="size-5 text-muted"
+            />
           </div>
 
-          <div class="text-xs text-muted truncate">
-            {{ session.user_agent || 'Unknown device' }}
-          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="font-medium truncate max-w-full">
+                {{ parseUserAgent(session.user_agent).browser }} · {{ parseUserAgent(session.user_agent).os }}
+              </div>
+              <UBadge v-if="session.is_current" color="success" variant="subtle">
+                Current session
+              </UBadge>
+            </div>
 
-          <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs text-muted">
-            <div class="flex items-center gap-2">
-              <UIcon name="i-lucide-network" class="size-4" />
-              <span class="truncate">
-                IP: <span class="font-medium text-default">{{ session.ip_address || 'Unknown' }}</span>
-              </span>
-            </div>
-            <div class="flex items-center gap-2">
-              <UIcon name="i-lucide-clock" class="size-4" />
-              <span class="truncate">
-                Last active: <span class="font-medium text-default">{{ formatLastActivityRelative(session.last_activity) }}</span>
-              </span>
-            </div>
-            <div class="flex items-center gap-2 sm:col-span-2">
-              <UIcon name="i-lucide-calendar" class="size-4" />
-              <span class="truncate">
-                {{ formatLastActivity(session.last_activity) }}
-              </span>
+            <UTooltip :text="session.user_agent || 'Unknown device'" :content="{ align: 'start', collisionPadding: 16 }">
+              <div class="text-xs text-muted truncate max-w-full">
+                {{ session.user_agent || 'Unknown device' }}
+              </div>
+            </UTooltip>
+
+            <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs text-muted">
+              <div class="flex items-center gap-2 min-w-0">
+                <UIcon name="i-lucide-network" class="size-4 shrink-0" />
+                <span class="truncate">
+                  IP: <span class="font-medium text-default">{{ session.ip_address || 'Unknown' }}</span>
+                </span>
+              </div>
+              <div class="flex items-center gap-2 min-w-0">
+                <UIcon name="i-lucide-clock" class="size-4 shrink-0" />
+                <span class="truncate">
+                  Last active: <span class="font-medium text-default">{{ formatLastActivityRelative(session.last_activity) }}</span>
+                </span>
+              </div>
+              <div class="flex items-center gap-2 sm:col-span-2 min-w-0">
+                <UIcon name="i-lucide-calendar" class="size-4 shrink-0" />
+                <span class="truncate">
+                  {{ formatLastActivity(session.last_activity) }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
