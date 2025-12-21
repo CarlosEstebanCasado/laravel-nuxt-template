@@ -273,6 +273,22 @@ export function useAuth() {
     }
   }
 
+  type SessionInfo = {
+    id: string
+    ip_address: string | null
+    user_agent: string | null
+    last_activity: number
+    is_current: boolean
+  }
+
+  const listSessions = async () => {
+    const response = await withCredentials<{ data: SessionInfo[] }>(
+      joinURL(apiPrefix, '/sessions'),
+      { method: 'GET' }
+    )
+    return response.data
+  }
+
   const isAuthenticated = computed(() => Boolean(user.value))
 
   const loginWithProvider = (provider: 'google' | 'github') => {
@@ -291,6 +307,7 @@ export function useAuth() {
     register,
     updateProfile,
     updatePassword,
+    listSessions,
     resendEmailVerification,
     deleteAccount,
     logout,

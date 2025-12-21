@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\CurrentUserController;
 use App\Http\Controllers\Api\Auth\DeleteAccountController;
+use App\Http\Controllers\Api\Auth\SessionsController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,6 @@ Route::prefix('v1')->group(function (): void {
     // Protected API endpoints (verified email required).
     Route::middleware(['auth:sanctum', 'verified'])->group(function (): void {
         Route::delete('/account', DeleteAccountController::class);
+        Route::get('/sessions', SessionsController::class);
     });
 });

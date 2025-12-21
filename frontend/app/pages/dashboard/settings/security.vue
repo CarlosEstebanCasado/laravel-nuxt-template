@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import type { FormError, FormSubmitEvent } from '@nuxt/ui'
+import { formatDistanceToNow } from 'date-fns'
 
 definePageMeta({
   layout: 'dashboard',
@@ -10,6 +11,36 @@ definePageMeta({
 const auth = useAuth()
 const toast = useToast()
 const router = useRouter()
+
+type SessionInfo = {
+  id: string
+  ip_address: string | null
+  user_agent: string | null
+  last_activity: number
+  is_current: boolean
+}
+
+const sessions = ref<SessionInfo[]>([])
+const isSessionsLoading = ref(true)
+const sessionsError = ref<string | null>(null)
+
+const refreshSessions = async () => {
+  isSessionsLoading.value = true
+  sessionsError.value = null
+  try {
+    sessions.value = await auth.listSessions()
+  } catch (error: any) {
+    // If sessions are not enabled (SESSION_DRIVER not database/redis) or user not verified, show a friendly message.
+    sessions.value = []
+    sessionsError.value = error?.data?.message || error?.message || 'Unable to load sessions.'
+  } finally {
+    isSessionsLoading.value = false
+  }
+}
+
+onMounted(() => {
+  refreshSessions()
+})
 
 const passwordSchema = z.object({
   current_password: z.string().min(8, 'Must be at least 8 characters'),
@@ -185,6 +216,68 @@ const confirmDelete = async () => {
 
       <UButton label="Update" class="w-fit" type="submit" :loading="isSubmitting" />
     </UForm>
+  </UPageCard>
+
+  <UPageCard
+    title="Sessions"
+    description="Active sessions for your account."
+    variant="subtle"
+    class="mt-6"
+  >
+    <div v-if="isSessionsLoading" class="text-sm text-muted">
+      Loading sessions…
+    </div>
+
+    <UAlert
+      v-else-if="sessionsError"
+      title="Unable to load sessions"
+      :description="sessionsError"
+      color="warning"
+      variant="subtle"
+    />
+
+    <div v-else>
+      <div v-if="sessions.length === 0" class="text-sm text-muted">
+        No sessions found. If you want to track sessions per device, set `SESSION_DRIVER=database` and restart the API container.
+      </div>
+
+      <div v-else class="space-y-2">
+        <div class="flex justify-end">
+          <UButton
+            label="Refresh"
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            @click="refreshSessions"
+          />
+        </div>
+
+        <div
+          v-for="session in sessions"
+          :key="session.id"
+          class="flex items-start justify-between gap-4 rounded-lg border border-default p-3"
+        >
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="font-medium truncate">
+                {{ session.ip_address || 'Unknown IP' }}
+              </span>
+              <UBadge v-if="session.is_current" color="success" variant="subtle">
+                Current
+              </UBadge>
+            </div>
+            <div class="text-xs text-muted truncate">
+              {{ session.user_agent || 'Unknown device' }}
+            </div>
+            <div class="text-xs text-muted">
+              Active {{ formatDistanceToNow(new Date(session.last_activity * 1000), { addSuffix: true }) }}
+            </div>
+          </div>
+
+          <div />
+        </div>
+      </div>
+    </div>
   </UPageCard>
 
   <UPageCard

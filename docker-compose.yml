@@ -27,7 +27,9 @@ x-backend-env: &backend-env
   QUEUE_CONNECTION: redis
   CACHE_STORE: redis
   CACHE_DRIVER: redis
-  SESSION_DRIVER: cookie
+  # Use the top-level .env (project root) to configure the session driver.
+  # For multi-device session management, set SESSION_DRIVER=database (or redis).
+  SESSION_DRIVER: ${SESSION_DRIVER:-database}
   MAIL_MAILER: smtp
   MAIL_HOST: mailhog
   MAIL_PORT: 1025
