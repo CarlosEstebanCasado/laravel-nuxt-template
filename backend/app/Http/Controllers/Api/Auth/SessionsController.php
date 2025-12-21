@@ -11,6 +11,12 @@ class SessionsController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
+        if (! $request->hasSession()) {
+            return response()->json([
+                'message' => 'Session store is not available for this request.',
+            ], 422);
+        }
+
         $userId = $request->user()->getAuthIdentifier();
         $currentSessionId = $request->session()->getId();
 
