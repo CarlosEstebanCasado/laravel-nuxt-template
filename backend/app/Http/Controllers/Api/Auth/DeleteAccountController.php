@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Support\AuditEvent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,12 @@ class DeleteAccountController extends Controller
         ]);
 
         $user = $request->user();
+
+        AuditEvent::record(
+            user: $user,
+            event: 'account_deleted',
+            newValues: ['confirmation' => $validated['confirmation']]
+        );
 
         // Best-effort: revoke Sanctum personal access tokens if the app uses them.
         if (method_exists($user, 'tokens')) {

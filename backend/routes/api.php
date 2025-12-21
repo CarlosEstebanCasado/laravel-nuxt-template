@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\CurrentUserController;
+use App\Http\Controllers\Api\Auth\AuditsController;
 use App\Http\Controllers\Api\Auth\DeleteSessionController;
 use App\Http\Controllers\Api\Auth\DeleteAccountController;
 use App\Http\Controllers\Api\Auth\RevokeOtherSessionsController;
@@ -29,5 +30,6 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/sessions', SessionsController::class);
         Route::post('/sessions/revoke-others', RevokeOtherSessionsController::class);
         Route::delete('/sessions/{id}', DeleteSessionController::class);
+        Route::get('/audits', AuditsController::class);
     });
 });

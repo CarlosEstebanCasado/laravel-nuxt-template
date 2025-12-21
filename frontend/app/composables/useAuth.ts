@@ -351,6 +351,25 @@ export function useAuth() {
     return true
   }
 
+  type AuditEntry = {
+    id: number
+    event: string
+    created_at: string
+    old_values: Record<string, any> | null
+    new_values: Record<string, any> | null
+    ip_address: string | null
+    user_agent: string | null
+    tags: string | null
+  }
+
+  const listAudits = async (page = 1) => {
+    const response = await withCredentials<{ data: AuditEntry[], meta: any }>(
+      joinURL(apiPrefix, '/audits'),
+      { method: 'GET', query: { page } }
+    )
+    return response
+  }
+
   const isAuthenticated = computed(() => Boolean(user.value))
 
   const loginWithProvider = (provider: 'google' | 'github') => {
@@ -372,6 +391,7 @@ export function useAuth() {
     listSessions,
     revokeOtherSessions,
     revokeSession,
+    listAudits,
     resendEmailVerification,
     deleteAccount,
     logout,

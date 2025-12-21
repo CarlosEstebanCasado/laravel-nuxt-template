@@ -28,6 +28,7 @@ class UpdateUserPassword implements UpdatesUserPasswords
 
         $user->forceFill([
             'password' => Hash::make($input['password']),
+            'password_set_at' => now(),
         ])->save();
 
         // Keep this session, invalidate other sessions/devices.

@@ -24,6 +24,22 @@ const sessions = ref<SessionInfo[]>([])
 const isSessionsLoading = ref(true)
 const sessionsError = ref<string | null>(null)
 
+type AuditEntry = {
+  id: number
+  event: string
+  created_at: string
+  old_values: Record<string, any> | null
+  new_values: Record<string, any> | null
+  ip_address: string | null
+  user_agent: string | null
+  tags: string | null
+}
+
+const audits = ref<AuditEntry[]>([])
+const auditsMeta = ref<{ current_page: number, last_page: number, total: number } | null>(null)
+const isAuditsLoading = ref(true)
+const auditsError = ref<string | null>(null)
+
 const requiresPasswordForSensitiveActions = computed(() => auth.user.value?.auth_provider === 'password')
 const hasOtherSessions = computed(() => sessions.value.some((session) => !session.is_current))
 
@@ -159,8 +175,55 @@ const confirmRevokeSession = async () => {
   }
 }
 
+const formatAuditTime = (iso: string) => format(new Date(iso), 'yyyy-MM-dd HH:mm:ss')
+const formatAuditRelative = (iso: string) => formatDistanceToNow(new Date(iso), { addSuffix: true })
+
+const auditTitle = (audit: AuditEntry) => {
+  const event = audit.event
+
+  if (event === 'sessions_revoked') {
+    const n = Number((audit.new_values as any)?.revoked ?? 0)
+    return n > 0 ? `Closed ${n} other session${n === 1 ? '' : 's'}` : 'Closed other sessions'
+  }
+  if (event === 'session_revoked') {
+    return 'Closed a session'
+  }
+  if (event === 'account_deleted') {
+    return 'Account deleted'
+  }
+
+  // Model events
+  if (event === 'updated') {
+    if ((audit.new_values as any)?.password_set_at) return 'Password changed'
+    if ((audit.new_values as any)?.email) return 'Email changed'
+    if ((audit.new_values as any)?.name) return 'Profile updated'
+    return 'Account updated'
+  }
+  if (event === 'created') return 'Account created'
+  if (event === 'deleted') return 'Account deleted'
+
+  return event
+}
+
+const refreshAudits = async (page = 1) => {
+  isAuditsLoading.value = true
+  auditsError.value = null
+  try {
+    const response = await auth.listAudits(page)
+    audits.value = response.data
+    auditsMeta.value = response.meta
+  } catch (error: any) {
+    audits.value = []
+    auditsMeta.value = null
+    auditsError.value = error?.data?.message || error?.message || 'Unable to load activity.'
+  } finally {
+    isAuditsLoading.value = false
+  }
+}
+
 onMounted(() => {
   refreshSessions()
+  refreshAudits()
 })
 
 const passwordSchema = z.object({
@@ -541,6 +604,95 @@ const confirmDelete = async () => {
         </div>
       </template>
     </UModal>
+  </UPageCard>
+
+  <UPageCard
+    title="Recent activity"
+    description="Security-related actions on your account."
+    variant="subtle"
+    class="mt-6"
+  >
+    <div class="flex flex-col gap-3 max-w-2xl">
+      <div class="flex justify-end">
+        <UButton
+          label="Refresh"
+          icon="i-lucide-refresh-cw"
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          :loading="isAuditsLoading"
+          @click="refreshAudits()"
+        />
+      </div>
+
+      <div v-if="isAuditsLoading" class="space-y-2">
+        <div class="h-12 rounded-lg border border-default bg-elevated/30 animate-pulse" />
+        <div class="h-12 rounded-lg border border-default bg-elevated/20 animate-pulse" />
+        <div class="h-12 rounded-lg border border-default bg-elevated/10 animate-pulse" />
+      </div>
+
+      <UAlert
+        v-else-if="auditsError"
+        title="Unable to load activity"
+        :description="auditsError"
+        color="warning"
+        variant="subtle"
+      />
+
+      <UAlert
+        v-else-if="audits.length === 0"
+        title="No activity yet"
+        description="When you perform actions like changing your password or closing sessions, they will appear here."
+        icon="i-lucide-activity"
+        color="neutral"
+        variant="subtle"
+      />
+
+      <div v-else class="space-y-2">
+        <div
+          v-for="audit in audits"
+          :key="audit.id"
+          class="flex min-w-0 items-start justify-between gap-4 rounded-lg border border-default p-4 bg-elevated/10 overflow-hidden"
+        >
+          <div class="min-w-0">
+            <div class="font-medium truncate">
+              {{ auditTitle(audit) }}
+            </div>
+            <div class="mt-1 text-xs text-muted flex flex-wrap gap-x-4 gap-y-1">
+              <span class="inline-flex items-center gap-1">
+                <UIcon name="i-lucide-clock" class="size-3.5" />
+                {{ formatAuditRelative(audit.created_at) }}
+              </span>
+              <span class="inline-flex items-center gap-1">
+                <UIcon name="i-lucide-calendar" class="size-3.5" />
+                {{ formatAuditTime(audit.created_at) }}
+              </span>
+              <span v-if="audit.ip_address" class="inline-flex items-center gap-1">
+                <UIcon name="i-lucide-network" class="size-3.5" />
+                {{ audit.ip_address }}
+              </span>
+            </div>
+          </div>
+
+          <UTooltip v-if="audit.user_agent" :text="audit.user_agent" :content="{ align: 'end', collisionPadding: 16 }">
+            <div class="shrink-0 text-xs text-muted max-w-40 truncate">
+              {{ audit.user_agent }}
+            </div>
+          </UTooltip>
+        </div>
+
+        <div v-if="auditsMeta && auditsMeta.total > audits.length" class="flex justify-end">
+          <UButton
+            label="Load more"
+            color="neutral"
+            variant="subtle"
+            size="sm"
+            :disabled="auditsMeta.current_page >= auditsMeta.last_page"
+            @click="refreshAudits((auditsMeta?.current_page || 1) + 1)"
+          />
+        </div>
+      </div>
+    </div>
   </UPageCard>
 
   <UPageCard

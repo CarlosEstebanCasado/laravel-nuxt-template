@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Support\AuditEvent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,12 @@ class DeleteSessionController extends Controller
                 'message' => 'Session not found.',
             ], 404);
         }
+
+        AuditEvent::record(
+            user: $request->user(),
+            event: 'session_revoked',
+            newValues: ['session_id' => $id]
+        );
 
         return response()->json(status: 204);
     }
