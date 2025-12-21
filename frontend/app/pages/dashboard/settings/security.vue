@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import type { FormError, FormSubmitEvent } from '@nuxt/ui'
-import { formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 
 definePageMeta({
   layout: 'dashboard',
@@ -271,6 +271,9 @@ const confirmDelete = async () => {
             </div>
             <div class="text-xs text-muted">
               Active {{ formatDistanceToNow(new Date(session.last_activity * 1000), { addSuffix: true }) }}
+            </div>
+            <div class="text-xs text-muted">
+              Last activity: {{ format(new Date(session.last_activity * 1000), 'yyyy-MM-dd HH:mm:ss') }}
             </div>
           </div>
 
