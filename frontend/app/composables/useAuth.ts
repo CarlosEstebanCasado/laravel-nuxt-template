@@ -289,6 +289,36 @@ export function useAuth() {
     return response.data
   }
 
+  const revokeOtherSessions = async (payload?: { current_password?: string }) => {
+    await ensureCsrfCookie()
+
+    const response = await withCredentials<{ data: { revoked: number } }>(
+      joinURL(apiPrefix, '/sessions/revoke-others'),
+      {
+        method: 'POST',
+        body: payload ?? {},
+      },
+      { csrf: true }
+    )
+
+    return response.data
+  }
+
+  const revokeSession = async (id: string, payload?: { current_password?: string }) => {
+    await ensureCsrfCookie()
+
+    await withCredentials(
+      joinURL(apiPrefix, `/sessions/${encodeURIComponent(id)}`),
+      {
+        method: 'DELETE',
+        body: payload ?? {},
+      },
+      { csrf: true }
+    )
+
+    return true
+  }
+
   const isAuthenticated = computed(() => Boolean(user.value))
 
   const loginWithProvider = (provider: 'google' | 'github') => {
@@ -308,6 +338,8 @@ export function useAuth() {
     updateProfile,
     updatePassword,
     listSessions,
+    revokeOtherSessions,
+    revokeSession,
     resendEmailVerification,
     deleteAccount,
     logout,

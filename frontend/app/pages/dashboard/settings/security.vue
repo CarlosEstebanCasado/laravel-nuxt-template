@@ -24,6 +24,18 @@ const sessions = ref<SessionInfo[]>([])
 const isSessionsLoading = ref(true)
 const sessionsError = ref<string | null>(null)
 
+const requiresPasswordForSensitiveActions = computed(() => auth.user.value?.auth_provider === 'password')
+const hasOtherSessions = computed(() => sessions.value.some((session) => !session.is_current))
+
+const isRevokeOthersOpen = ref(false)
+const isRevokingOthers = ref(false)
+const revokeOthersPassword = ref('')
+
+const isRevokeSessionOpen = ref(false)
+const isRevokingSession = ref(false)
+const revokeSessionPassword = ref('')
+const sessionToRevoke = ref<SessionInfo | null>(null)
+
 const parseUserAgent = (ua: string | null) => {
   const value = ua ?? ''
   const browser = value.includes('Edg/')
@@ -68,6 +80,82 @@ const refreshSessions = async () => {
     sessionsError.value = error?.data?.message || error?.message || 'Unable to load sessions.'
   } finally {
     isSessionsLoading.value = false
+  }
+}
+
+const confirmRevokeOtherSessions = async () => {
+  if (isRevokingOthers.value) {
+    return
+  }
+
+  isRevokingOthers.value = true
+  try {
+    const payload =
+      requiresPasswordForSensitiveActions.value && revokeOthersPassword.value.trim()
+        ? { current_password: revokeOthersPassword.value.trim() }
+        : undefined
+
+    const result = await auth.revokeOtherSessions(payload)
+
+    toast.add({
+      title: 'Sessions updated',
+      description: `Signed out from ${result.revoked} other session${result.revoked === 1 ? '' : 's'}.`,
+      color: 'success',
+      icon: 'i-lucide-check',
+    })
+
+    revokeOthersPassword.value = ''
+    isRevokeOthersOpen.value = false
+    await refreshSessions()
+  } catch (error) {
+    toast.add({
+      title: 'Action failed',
+      description: extractErrorMessage(error),
+      color: 'error',
+    })
+  } finally {
+    isRevokingOthers.value = false
+  }
+}
+
+const openRevokeSession = (session: SessionInfo) => {
+  sessionToRevoke.value = session
+  revokeSessionPassword.value = ''
+  isRevokeSessionOpen.value = true
+}
+
+const confirmRevokeSession = async () => {
+  if (isRevokingSession.value || !sessionToRevoke.value) {
+    return
+  }
+
+  isRevokingSession.value = true
+  try {
+    const payload =
+      requiresPasswordForSensitiveActions.value && revokeSessionPassword.value.trim()
+        ? { current_password: revokeSessionPassword.value.trim() }
+        : undefined
+
+    await auth.revokeSession(sessionToRevoke.value.id, payload)
+
+    toast.add({
+      title: 'Session closed',
+      description: 'That session has been signed out.',
+      color: 'success',
+      icon: 'i-lucide-check',
+    })
+
+    isRevokeSessionOpen.value = false
+    sessionToRevoke.value = null
+    await refreshSessions()
+  } catch (error) {
+    toast.add({
+      title: 'Action failed',
+      description: extractErrorMessage(error),
+      color: 'error',
+    })
+  } finally {
+    isRevokingSession.value = false
   }
 }
 
@@ -258,7 +346,17 @@ const confirmDelete = async () => {
     class="mt-6"
   >
     <div class="flex flex-col gap-3 max-w-2xl">
-      <div class="flex justify-end">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <UButton
+          label="Close other sessions"
+          icon="i-lucide-log-out"
+          color="neutral"
+          variant="subtle"
+          size="sm"
+          :disabled="!hasOtherSessions || isSessionsLoading"
+          @click="isRevokeOthersOpen = true"
+        />
+
         <UButton
           label="Refresh"
           icon="i-lucide-refresh-cw"
@@ -342,9 +440,107 @@ const confirmDelete = async () => {
               </div>
             </div>
           </div>
+
+          <div class="shrink-0">
+            <UButton
+              v-if="!session.is_current"
+              label="Sign out"
+              icon="i-lucide-log-out"
+              color="neutral"
+              variant="ghost"
+              size="sm"
+              @click="openRevokeSession(session)"
+            />
+          </div>
         </div>
       </div>
     </div>
+
+    <UModal
+      v-model:open="isRevokeOthersOpen"
+      title="Close other sessions"
+      description="This will sign you out from other browsers/devices where your account is currently active."
+    >
+      <template #body>
+        <div class="space-y-4">
+          <UAlert
+            title="You will stay signed in on this device"
+            description="If you think someone else has access, closing other sessions is a good first step."
+            icon="i-lucide-shield"
+            color="neutral"
+            variant="subtle"
+          />
+
+          <UFormField
+            v-if="requiresPasswordForSensitiveActions"
+            name="current_password"
+            label="Current password"
+            description="Required for accounts created with email/password."
+          >
+            <UInput v-model="revokeOthersPassword" type="password" placeholder="Your current password" />
+          </UFormField>
+
+          <div class="flex justify-end gap-2">
+            <UButton
+              label="Cancel"
+              color="neutral"
+              variant="subtle"
+              :disabled="isRevokingOthers"
+              @click="isRevokeOthersOpen = false"
+            />
+            <UButton
+              label="Close other sessions"
+              color="neutral"
+              :loading="isRevokingOthers"
+              @click="confirmRevokeOtherSessions"
+            />
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <UModal
+      v-model:open="isRevokeSessionOpen"
+      title="Sign out session"
+      description="This will sign out the selected session."
+    >
+      <template #body>
+        <div class="space-y-4">
+          <UAlert
+            title="This session will be signed out"
+            :description="sessionToRevoke?.user_agent || 'Unknown device'"
+            icon="i-lucide-log-out"
+            color="neutral"
+            variant="subtle"
+          />
+
+          <UFormField
+            v-if="requiresPasswordForSensitiveActions"
+            name="current_password"
+            label="Current password"
+            description="Required for accounts created with email/password."
+          >
+            <UInput v-model="revokeSessionPassword" type="password" placeholder="Your current password" />
+          </UFormField>
+
+          <div class="flex justify-end gap-2">
+            <UButton
+              label="Cancel"
+              color="neutral"
+              variant="subtle"
+              :disabled="isRevokingSession"
+              @click="isRevokeSessionOpen = false"
+            />
+            <UButton
+              label="Sign out session"
+              color="neutral"
+              :loading="isRevokingSession"
+              @click="confirmRevokeSession"
+            />
+          </div>
+        </div>
+      </template>
+    </UModal>
   </UPageCard>
 
   <UPageCard
