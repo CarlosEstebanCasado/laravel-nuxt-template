@@ -194,16 +194,47 @@ const auditTitle = (audit: AuditEntry) => {
 }
 
 const refreshAudits = async (page = 1) => {
+  // Prevent accidental double-clicks from interleaving pages and causing duplicates.
+  if (isAuditsLoading.value) {
+    return
+  }
+
+  const isLoadMore = page > 1
+
   isAuditsLoading.value = true
-  auditsError.value = null
+  if (!isLoadMore) {
+    auditsError.value = null
+  }
+
   try {
     const response = await auth.listAudits(page)
-    audits.value = response.data
+
+    if (isLoadMore) {
+      const existingIds = new Set(audits.value.map((a) => a.id))
+      const next = (response.data || []).filter((a) => !existingIds.has(a.id))
+      audits.value = [...audits.value, ...next]
+    } else {
+      audits.value = response.data
+    }
+
     auditsMeta.value = response.meta
   } catch (error: any) {
+    const message = error?.data?.message || error?.message || 'Unable to load activity.'
+
+    // For "Load more", keep already-loaded items visible and just surface the error.
+    if (isLoadMore) {
+      toast.add({
+        title: 'Unable to load more activity',
+        description: message,
+        color: 'warning',
+        icon: 'i-lucide-alert-triangle',
+      })
+      return
+    }
+
     audits.value = []
     auditsMeta.value = null
-    auditsError.value = error?.data?.message || error?.message || 'Unable to load activity.'
+    auditsError.value = message
   } finally {
     isAuditsLoading.value = false
   }
