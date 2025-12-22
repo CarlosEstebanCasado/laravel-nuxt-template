@@ -85,6 +85,6 @@ jobs:
         run: php artisan key:generate --force
 
       - name: Run tests (PHPUnit)
-        run: php artisan test --no-interaction
+        run: php artisan test
 
 
