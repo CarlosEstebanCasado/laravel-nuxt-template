@@ -15,7 +15,8 @@ class SuccessfulPasswordResetLinkRequestResponse implements SuccessfulPasswordRe
     public function toResponse($request): JsonResponse
     {
         return response()->json([
-            'message' => trans($this->status),
+            // Avoid account enumeration: do not reveal whether the email exists.
+            'message' => __('If an account exists for that email, you will receive a password reset link.'),
         ]);
     }
 }
