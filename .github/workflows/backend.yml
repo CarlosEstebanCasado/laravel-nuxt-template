@@ -15,7 +15,9 @@ jobs:
         env:
           POSTGRES_DB: testing
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          # GitGuardian can flag hardcoded passwords; for CI we can safely use trust auth
+          # because the service is only reachable inside the GitHub Actions runner network.
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
@@ -44,7 +46,7 @@ jobs:
       DB_PORT: "5432"
       DB_DATABASE: testing
       DB_USERNAME: postgres
-      DB_PASSWORD: postgres
+      DB_PASSWORD: ""
       REDIS_HOST: 127.0.0.1
       REDIS_PORT: "6379"
       SESSION_DRIVER: array
