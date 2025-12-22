@@ -75,6 +75,12 @@ jobs:
       - name: Security audit (composer)
         run: composer audit --no-interaction
 
+      - name: Prepare .env for CI
+        run: |
+          if [ ! -f .env ]; then
+            cp .env.example .env
+          fi
+
       - name: Generate app key
         run: php artisan key:generate --force
 
