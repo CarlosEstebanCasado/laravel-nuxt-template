@@ -69,7 +69,7 @@ onMounted(async () => {
     })
 
     finish('/dashboard')
-  } catch (error) {
+  } catch (_error) {
     toast.add({
       title: 'Sign in failed',
       description: resolveErrorMessage(),
