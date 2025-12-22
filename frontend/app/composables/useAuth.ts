@@ -52,6 +52,7 @@ export function useAuth() {
   const hasFetched = useAuthFetchedState()
 
   const handleInvalidSession = async () => {
+    const hadUser = Boolean(user.value)
     user.value = null
     hasFetched.value = true
 
@@ -64,9 +65,13 @@ export function useAuth() {
     const isGuestPage =
       path === '/login' ||
       path === '/signup' ||
+      path === '/forgot-password' ||
+      path.startsWith('/reset-password') ||
       path.startsWith('/auth/')
 
-    if (!isGuestPage) {
+    // Only force-redirect when we believed the user was authenticated (zombie dashboard case).
+    // For guest flows (forgot/reset password), a 401 is expected and should not hijack navigation.
+    if (hadUser && !isGuestPage) {
       await router.replace('/login')
     }
   }
@@ -162,7 +167,7 @@ export function useAuth() {
     return handleAuthSuccess(response)
   }
 
-  const updateProfile = async (payload: { name: string, email: string }) => {
+  const updateProfile = async (payload: { name: string, email: string, current_password?: string }) => {
     await ensureCsrfCookie()
 
     // Fortify's profile update endpoint returns an empty response by default.
@@ -171,7 +176,13 @@ export function useAuth() {
       joinURL(authPrefix, '/user/profile-information'),
       {
         method: 'PUT',
-        body: payload,
+        body: {
+          name: payload.name,
+          email: payload.email,
+          ...(payload.current_password?.trim()
+            ? { current_password: payload.current_password.trim() }
+            : {}),
+        },
       },
       { csrf: true }
     )

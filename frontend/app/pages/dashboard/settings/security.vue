@@ -40,7 +40,9 @@ const auditsMeta = ref<{ current_page: number, last_page: number, total: number 
 const isAuditsLoading = ref(true)
 const auditsError = ref<string | null>(null)
 
-const requiresPasswordForSensitiveActions = computed(() => auth.user.value?.auth_provider === 'password')
+const requiresPasswordForSensitiveActions = computed(() =>
+  auth.user.value?.auth_provider === 'password' || !!auth.user.value?.password_set_at
+)
 const hasOtherSessions = computed(() => sessions.value.some((session) => !session.is_current))
 
 const isRevokeOthersOpen = ref(false)
@@ -327,6 +329,15 @@ const confirmDelete = async () => {
       title: 'Confirmation required',
       description: 'Type DELETE to confirm account deletion.',
       color: 'error'
+    })
+    return
+  }
+
+  if (requiresPasswordForSensitiveActions.value && !deleteState.password?.trim()) {
+    toast.add({
+      title: 'Password required',
+      description: 'Please confirm your password to delete your account.',
+      color: 'error',
     })
     return
   }
@@ -698,7 +709,7 @@ const confirmDelete = async () => {
   <UPageCard
     title="Account"
     description="No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently."
-    class="bg-gradient-to-tl from-error/10 from-5% to-default"
+    class="bg-linear-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
       <UModal v-model:open="isDeleteOpen" title="Delete account" description="This action is permanent.">
@@ -708,7 +719,7 @@ const confirmDelete = async () => {
           <div class="space-y-4">
             <UAlert
               title="This cannot be undone"
-              description="Type DELETE to confirm. If you created your account with email/password, you can also enter your password for extra safety."
+              description="Type DELETE to confirm. If your account has a password, you'll be asked to confirm it."
               color="error"
               variant="subtle"
             />
@@ -717,7 +728,12 @@ const confirmDelete = async () => {
               <UInput v-model="deleteState.confirmation" placeholder="DELETE" />
             </UFormField>
 
-            <UFormField name="password" label="Password (optional)">
+            <UFormField
+              v-if="requiresPasswordForSensitiveActions"
+              name="password"
+              label="Password"
+              required
+            >
               <UInput v-model="deleteState.password" type="password" placeholder="Your current password" />
             </UFormField>
 

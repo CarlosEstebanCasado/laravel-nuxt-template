@@ -17,9 +17,13 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
-        Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+        $isEmailChanging = isset($input['email']) && $input['email'] !== $user->email;
+        $requiresPassword =
+            ($user->auth_provider === 'password') ||
+            (! is_null($user->password_set_at));
 
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',
@@ -27,6 +31,16 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'max:255',
                 Rule::unique('users')->ignore($user->id),
             ],
+        ];
+
+        // Step-up auth: require current password when changing email for password-based accounts.
+        if ($isEmailChanging && $requiresPassword) {
+            $rules['current_password'] = ['required', 'string', 'current_password:web'];
+        }
+
+        Validator::make($input, $rules, [
+            'current_password.required' => __('Please confirm your password to change email.'),
+            'current_password.current_password' => __('The provided password does not match your current password.'),
         ])->validateWithBag('updateProfileInformation');
 
         if ($input['email'] !== $user->email &&

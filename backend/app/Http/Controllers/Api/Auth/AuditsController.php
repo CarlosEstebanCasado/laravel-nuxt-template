@@ -30,5 +30,3 @@ class AuditsController extends Controller
         ]);
     }
 }
-
-

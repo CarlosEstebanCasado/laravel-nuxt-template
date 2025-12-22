@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import type { FormError, FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({
   layout: 'dashboard',
@@ -20,10 +20,37 @@ const profileSchema = z.object({
 
 type ProfileSchema = z.output<typeof profileSchema>
 
-const profile = reactive<Partial<ProfileSchema>>({
+type ProfileState = Partial<ProfileSchema> & { current_password?: string }
+
+const profile = reactive<ProfileState>({
   name: undefined,
   email: undefined,
+  current_password: undefined,
 })
+
+const requiresPasswordForEmailChange = computed(() => {
+  const user = auth.user.value
+  if (!user) return false
+
+  const hasPassword = user.auth_provider === 'password' || !!user.password_set_at
+  const currentEmail = user.email ?? ''
+  const nextEmail = profile.email ?? ''
+
+  return hasPassword && nextEmail !== '' && nextEmail !== currentEmail
+})
+
+const validateProfile = (state: ProfileState): FormError[] => {
+  const errors: FormError[] = []
+
+  if (requiresPasswordForEmailChange.value && !state.current_password?.trim()) {
+    errors.push({
+      name: 'current_password',
+      message: 'Please confirm your password to change email',
+    })
+  }
+
+  return errors
+}
 
 const extractErrorMessage = (error: unknown) => {
   const data = (error as any)?.data ?? (error as any)?.response?._data
@@ -43,6 +70,7 @@ const syncFromUser = () => {
   const user = auth.user.value
   profile.name = user?.name ?? ''
   profile.email = user?.email ?? ''
+  profile.current_password = ''
 }
 
 onMounted(async () => {
@@ -64,6 +92,7 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
     const user = await auth.updateProfile({
       name: event.data.name,
       email: event.data.email,
+      current_password: requiresPasswordForEmailChange.value ? profile.current_password : undefined,
     })
 
     toast.add({
@@ -82,6 +111,8 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
       await router.push(`/auth/verify-email?redirect=${encodeURIComponent('/dashboard/settings')}`)
       return
     }
+
+    profile.current_password = ''
   } catch (error) {
     toast.add({
       title: 'Update failed',
@@ -99,6 +130,7 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
     id="settings"
     :schema="profileSchema"
     :state="profile"
+    :validate="validateProfile"
     @submit="onSubmit"
   >
     <UPageCard
@@ -144,6 +176,23 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
           v-model="profile.email"
           type="email"
           autocomplete="off"
+          :disabled="isLoading"
+        />
+      </UFormField>
+
+      <USeparator v-if="requiresPasswordForEmailChange" />
+      <UFormField
+        v-if="requiresPasswordForEmailChange"
+        name="current_password"
+        label="Confirm password"
+        description="Required to change your email."
+        required
+        class="flex max-sm:flex-col justify-between items-start gap-4"
+      >
+        <UInput
+          v-model="profile.current_password"
+          type="password"
+          autocomplete="current-password"
           :disabled="isLoading"
         />
       </UFormField>
