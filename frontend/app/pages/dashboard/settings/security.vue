@@ -40,6 +40,9 @@ const auditsMeta = ref<{ current_page: number, last_page: number, total: number 
 const isAuditsLoading = ref(true)
 const auditsError = ref<string | null>(null)
 
+const isAuditsInitialLoading = computed(() => isAuditsLoading.value && audits.value.length === 0)
+const isAuditsLoadingMore = computed(() => isAuditsLoading.value && audits.value.length > 0)
+
 const requiresPasswordForSensitiveActions = computed(() =>
   auth.user.value?.auth_provider === 'password' || !!auth.user.value?.password_set_at
 )
@@ -635,7 +638,7 @@ const confirmDelete = async () => {
         />
       </div>
 
-      <div v-if="isAuditsLoading" class="space-y-2">
+      <div v-if="isAuditsInitialLoading" class="space-y-2">
         <div class="h-12 rounded-lg border border-default bg-elevated/30 animate-pulse" />
         <div class="h-12 rounded-lg border border-default bg-elevated/20 animate-pulse" />
         <div class="h-12 rounded-lg border border-default bg-elevated/10 animate-pulse" />
@@ -697,7 +700,8 @@ const confirmDelete = async () => {
             color="neutral"
             variant="subtle"
             size="sm"
-            :disabled="auditsMeta.current_page >= auditsMeta.last_page"
+            :loading="isAuditsLoadingMore"
+            :disabled="isAuditsLoading || auditsMeta.current_page >= auditsMeta.last_page"
             @click="refreshAudits((auditsMeta?.current_page || 1) + 1)"
           />
         </div>
