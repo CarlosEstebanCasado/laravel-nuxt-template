@@ -7,21 +7,36 @@ const useAuthUserState = () => useState<AuthUser | null>('auth:user', () => null
 
 const useAuthFetchedState = () => useState<boolean>('auth:fetched', () => false)
 
+const readCookie = (name: string) => {
+  if (typeof document === 'undefined') {
+    return null
+  }
+
+  const prefix = `${name}=`
+  const parts = document.cookie.split('; ')
+  for (const part of parts) {
+    if (part.startsWith(prefix)) {
+      return part.slice(prefix.length)
+    }
+  }
+
+  return null
+}
+
 const getCsrfHeader = () => {
   if (process.server) {
     return null
   }
 
-  const token = useCookie<string | null>('XSRF-TOKEN')
-
-  if (!token.value) {
+  const raw = readCookie('XSRF-TOKEN')
+  if (!raw) {
     return null
   }
 
   try {
-    return decodeURIComponent(token.value)
+    return decodeURIComponent(raw)
   } catch {
-    return token.value
+    return raw
   }
 }
 
@@ -30,9 +45,36 @@ export function useAuth() {
   const apiBase = config.public.apiBase
   const apiPrefix = config.public.apiPrefix
   const authPrefix = config.public.authPrefix
+  const router = useRouter()
+  const route = useRoute()
 
   const user = useAuthUserState()
   const hasFetched = useAuthFetchedState()
+
+  const handleInvalidSession = async () => {
+    const hadUser = Boolean(user.value)
+    user.value = null
+    hasFetched.value = true
+
+    if (process.server) {
+      return
+    }
+
+    // Avoid redirect loops on guest/auth pages.
+    const path = route.path
+    const isGuestPage =
+      path === '/login' ||
+      path === '/signup' ||
+      path === '/forgot-password' ||
+      path.startsWith('/reset-password') ||
+      path.startsWith('/auth/')
+
+    // Only force-redirect when we believed the user was authenticated (zombie dashboard case).
+    // For guest flows (forgot/reset password), a 401 is expected and should not hijack navigation.
+    if (hadUser && !isGuestPage) {
+      await router.replace('/login')
+    }
+  }
 
   const withCredentials = <T>(
     path: string,
@@ -56,6 +98,16 @@ export function useAuth() {
       credentials: 'include',
       headers,
       ...options,
+    }).catch(async (error: any) => {
+      const status = error?.status ?? error?.response?.status
+
+      // If the session was revoked elsewhere, the SPA can be left in a "zombie" state:
+      // user state is still set, but API calls start failing with 401/419.
+      if (status === 401 || status === 419) {
+        await handleInvalidSession()
+      }
+
+      throw error
     })
   }
 
@@ -115,6 +167,49 @@ export function useAuth() {
     return handleAuthSuccess(response)
   }
 
+  const updateProfile = async (payload: { name: string, email: string, current_password?: string }) => {
+    await ensureCsrfCookie()
+
+    // Fortify's profile update endpoint returns an empty response by default.
+    // Refresh the session user via /api/v1/me after a successful update.
+    await withCredentials(
+      joinURL(authPrefix, '/user/profile-information'),
+      {
+        method: 'PUT',
+        body: {
+          name: payload.name,
+          email: payload.email,
+          ...(payload.current_password?.trim()
+            ? { current_password: payload.current_password.trim() }
+            : {}),
+        },
+      },
+      { csrf: true }
+    )
+
+    return await fetchUser(true)
+  }
+
+  const updatePassword = async (payload: {
+    current_password: string
+    password: string
+    password_confirmation: string
+  }) => {
+    await ensureCsrfCookie()
+
+    // Fortify's default password update response is empty, but we don't rely on it.
+    await withCredentials(
+      joinURL(authPrefix, '/user/password'),
+      {
+        method: 'PUT',
+        body: payload,
+      },
+      { csrf: true }
+    )
+
+    return true
+  }
+
   const resendEmailVerification = async () => {
     await ensureCsrfCookie()
 
@@ -125,6 +220,23 @@ export function useAuth() {
       },
       { csrf: true }
     )
+  }
+
+  const deleteAccount = async (payload: { confirmation: 'DELETE', password?: string }) => {
+    await ensureCsrfCookie()
+
+    await withCredentials(
+      joinURL(apiPrefix, '/account'),
+      {
+        method: 'DELETE',
+        body: payload,
+      },
+      { csrf: true }
+    )
+
+    // Server invalidates the session; clear client state too.
+    user.value = null
+    hasFetched.value = true
   }
 
   const logout = async () => {
@@ -187,14 +299,14 @@ export function useAuth() {
       user.value = response.data
       return user.value
     } catch (error: any) {
-      user.value = null
-
       // Treat unauthenticated responses as a valid "no user" state.
       if (
         error?.status === 401 ||
+        error?.status === 403 ||
         error?.status === 419 ||
         error?.response?.status === 401
       ) {
+        user.value = null
         return null
       }
 
@@ -202,6 +314,71 @@ export function useAuth() {
     } finally {
       hasFetched.value = true
     }
+  }
+
+  type SessionInfo = {
+    id: string
+    ip_address: string | null
+    user_agent: string | null
+    last_activity: number
+    is_current: boolean
+  }
+
+  const listSessions = async () => {
+    const response = await withCredentials<{ data: SessionInfo[] }>(
+      joinURL(apiPrefix, '/sessions'),
+      { method: 'GET' }
+    )
+    return response.data
+  }
+
+  const revokeOtherSessions = async () => {
+    await ensureCsrfCookie()
+
+    const response = await withCredentials<{ data: { revoked: number } }>(
+      joinURL(apiPrefix, '/sessions/revoke-others'),
+      {
+        method: 'POST',
+        body: {},
+      },
+      { csrf: true }
+    )
+
+    return response.data
+  }
+
+  const revokeSession = async (id: string) => {
+    await ensureCsrfCookie()
+
+    await withCredentials(
+      joinURL(apiPrefix, `/sessions/${encodeURIComponent(id)}`),
+      {
+        method: 'DELETE',
+        body: {},
+      },
+      { csrf: true }
+    )
+
+    return true
+  }
+
+  type AuditEntry = {
+    id: number
+    event: string
+    created_at: string
+    old_values: Record<string, any> | null
+    new_values: Record<string, any> | null
+    ip_address: string | null
+    user_agent: string | null
+    tags: string | null
+  }
+
+  const listAudits = async (page = 1) => {
+    const response = await withCredentials<{ data: AuditEntry[], meta: any }>(
+      joinURL(apiPrefix, '/audits'),
+      { method: 'GET', query: { page } }
+    )
+    return response
   }
 
   const isAuthenticated = computed(() => Boolean(user.value))
@@ -220,7 +397,14 @@ export function useAuth() {
     isAuthenticated,
     login,
     register,
+    updateProfile,
+    updatePassword,
+    listSessions,
+    revokeOtherSessions,
+    revokeSession,
+    listAudits,
     resendEmailVerification,
+    deleteAccount,
     logout,
     requestPasswordReset,
     resetPassword,

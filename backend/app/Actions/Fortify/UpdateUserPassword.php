@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\UpdatesUserPasswords;
@@ -27,6 +28,11 @@ class UpdateUserPassword implements UpdatesUserPasswords
 
         $user->forceFill([
             'password' => Hash::make($input['password']),
+            'password_set_at' => now(),
         ])->save();
+
+        // Keep this session, invalidate other sessions/devices.
+        // Requires AuthenticateSession middleware in the 'web' group.
+        Auth::logoutOtherDevices($input['password']);
     }
 }

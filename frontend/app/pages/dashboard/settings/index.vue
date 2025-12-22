@@ -1,54 +1,127 @@
 <script setup lang="ts">
 import * as z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import type { FormError, FormSubmitEvent } from '@nuxt/ui'
 
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'
 })
 
-const fileRef = ref<HTMLInputElement>()
+const auth = useAuth()
+const router = useRouter()
+const toast = useToast()
+const isSubmitting = ref(false)
+const isLoading = ref(true)
 
 const profileSchema = z.object({
   name: z.string().min(2, 'Too short'),
   email: z.string().email('Invalid email'),
-  username: z.string().min(2, 'Too short'),
-  avatar: z.string().optional(),
-  bio: z.string().optional()
 })
 
 type ProfileSchema = z.output<typeof profileSchema>
 
-const profile = reactive<Partial<ProfileSchema>>({
-  name: 'Benjamin Canac',
-  email: 'ben@nuxtlabs.com',
-  username: 'benjamincanac',
-  avatar: undefined,
-  bio: undefined
+type ProfileState = Partial<ProfileSchema> & { current_password?: string }
+
+const profile = reactive<ProfileState>({
+  name: undefined,
+  email: undefined,
+  current_password: undefined,
 })
-const toast = useToast()
-async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
-  toast.add({
-    title: 'Success',
-    description: 'Your settings have been updated.',
-    icon: 'i-lucide-check',
-    color: 'success'
-  })
-  console.log(event.data)
+
+const requiresPasswordForEmailChange = computed(() => {
+  const user = auth.user.value
+  if (!user) return false
+
+  const hasPassword = user.auth_provider === 'password' || !!user.password_set_at
+  const currentEmail = user.email ?? ''
+  const nextEmail = profile.email ?? ''
+
+  return hasPassword && nextEmail !== '' && nextEmail !== currentEmail
+})
+
+const validateProfile = (state: ProfileState): FormError[] => {
+  const errors: FormError[] = []
+
+  if (requiresPasswordForEmailChange.value && !state.current_password?.trim()) {
+    errors.push({
+      name: 'current_password',
+      message: 'Please confirm your password to change email',
+    })
+  }
+
+  return errors
 }
 
-function onFileChange(e: Event) {
-  const input = e.target as HTMLInputElement
+const extractErrorMessage = (error: unknown) => {
+  const data = (error as any)?.data ?? (error as any)?.response?._data
+  if (data?.errors) {
+    const firstError = Object.values(data.errors).flat()[0]
+    if (typeof firstError === 'string') {
+      return firstError
+    }
+  }
+  if (typeof data?.message === 'string') {
+    return data.message
+  }
+  return (error as any)?.message || 'Unable to update your profile, please try again.'
+}
 
-  if (!input.files?.length) {
+const syncFromUser = () => {
+  const user = auth.user.value
+  profile.name = user?.name ?? ''
+  profile.email = user?.email ?? ''
+  profile.current_password = ''
+}
+
+onMounted(async () => {
+  try {
+    await auth.fetchUser(true)
+    syncFromUser()
+  } finally {
+    isLoading.value = false
+  }
+})
+
+async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
+  if (isSubmitting.value) {
     return
   }
 
-  profile.avatar = URL.createObjectURL(input.files[0]!)
-}
+  isSubmitting.value = true
+  try {
+    const user = await auth.updateProfile({
+      name: event.data.name,
+      email: event.data.email,
+      current_password: requiresPasswordForEmailChange.value ? profile.current_password : undefined,
+    })
 
-function onFileClick() {
-  fileRef.value?.click()
+    toast.add({
+      title: 'Profile updated',
+      description: 'Your settings have been saved.',
+      icon: 'i-lucide-check',
+      color: 'success'
+    })
+
+    // If the email changed, Fortify will set email_verified_at = null and send a new verification email.
+    if (!user?.email_verified_at) {
+      toast.add({
+        title: 'Verify your email',
+        description: 'We sent a verification link to your email. Please verify to continue.',
+      })
+      await router.push(`/auth/verify-email?redirect=${encodeURIComponent('/dashboard/settings')}`)
+      return
+    }
+
+    profile.current_password = ''
+  } catch (error) {
+    toast.add({
+      title: 'Update failed',
+      description: extractErrorMessage(error),
+      color: 'error',
+    })
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
@@ -57,6 +130,7 @@ function onFileClick() {
     id="settings"
     :schema="profileSchema"
     :state="profile"
+    :validate="validateProfile"
     @submit="onSubmit"
   >
     <UPageCard
@@ -70,6 +144,7 @@ function onFileClick() {
         form="settings"
         label="Save changes"
         color="neutral"
+        :loading="isSubmitting || isLoading"
         type="submit"
         class="w-fit lg:ms-auto"
       />
@@ -86,6 +161,7 @@ function onFileClick() {
         <UInput
           v-model="profile.name"
           autocomplete="off"
+          :disabled="isLoading"
         />
       </UFormField>
       <USeparator />
@@ -100,62 +176,24 @@ function onFileClick() {
           v-model="profile.email"
           type="email"
           autocomplete="off"
+          :disabled="isLoading"
         />
       </UFormField>
-      <USeparator />
+
+      <USeparator v-if="requiresPasswordForEmailChange" />
       <UFormField
-        name="username"
-        label="Username"
-        description="Your unique username for logging in and your profile URL."
+        v-if="requiresPasswordForEmailChange"
+        name="current_password"
+        label="Confirm password"
+        description="Required to change your email."
         required
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
         <UInput
-          v-model="profile.username"
-          type="username"
-          autocomplete="off"
-        />
-      </UFormField>
-      <USeparator />
-      <UFormField
-        name="avatar"
-        label="Avatar"
-        description="JPG, GIF or PNG. 1MB Max."
-        class="flex max-sm:flex-col justify-between sm:items-center gap-4"
-      >
-        <div class="flex flex-wrap items-center gap-3">
-          <UAvatar
-            :src="profile.avatar"
-            :alt="profile.name"
-            size="lg"
-          />
-          <UButton
-            label="Choose"
-            color="neutral"
-            @click="onFileClick"
-          />
-          <input
-            ref="fileRef"
-            type="file"
-            class="hidden"
-            accept=".jpg, .jpeg, .png, .gif"
-            @change="onFileChange"
-          >
-        </div>
-      </UFormField>
-      <USeparator />
-      <UFormField
-        name="bio"
-        label="Bio"
-        description="Brief description for your profile. URLs are hyperlinked."
-        class="flex max-sm:flex-col justify-between items-start gap-4"
-        :ui="{ container: 'w-full' }"
-      >
-        <UTextarea
-          v-model="profile.bio"
-          :rows="5"
-          autoresize
-          class="w-full"
+          v-model="profile.current_password"
+          type="password"
+          autocomplete="current-password"
+          :disabled="isLoading"
         />
       </UFormField>
     </UPageCard>

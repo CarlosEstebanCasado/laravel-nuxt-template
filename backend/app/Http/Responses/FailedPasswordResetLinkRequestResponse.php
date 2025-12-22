@@ -15,13 +15,9 @@ class FailedPasswordResetLinkRequestResponse implements FailedPasswordResetLinkR
 
     public function toResponse($request): JsonResponse
     {
-        $message = trans($this->status);
-
+        // Avoid account enumeration: do not reveal whether the email exists.
         return response()->json([
-            'message' => $message,
-            'errors' => [
-                Fortify::email() => [$message],
-            ],
-        ], 422);
+            'message' => __('If an account exists for that email, you will receive a password reset link.'),
+        ]);
     }
 }
