@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // when the user's password changes (used by Auth::logoutOtherDevices()).
         $middleware->web(append: [
             AuthenticateSession::class,
+            \App\Http\Middleware\ThrottleAuthEndpoints::class,
         ]);
 
         $middleware->alias([

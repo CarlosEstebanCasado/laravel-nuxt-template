@@ -47,11 +47,9 @@ const hasOtherSessions = computed(() => sessions.value.some((session) => !sessio
 
 const isRevokeOthersOpen = ref(false)
 const isRevokingOthers = ref(false)
-const revokeOthersPassword = ref('')
 
 const isRevokeSessionOpen = ref(false)
 const isRevokingSession = ref(false)
-const revokeSessionPassword = ref('')
 const sessionToRevoke = ref<SessionInfo | null>(null)
 
 const parseUserAgent = (ua: string | null) => {
@@ -108,12 +106,7 @@ const confirmRevokeOtherSessions = async () => {
 
   isRevokingOthers.value = true
   try {
-    const payload =
-      requiresPasswordForSensitiveActions.value && revokeOthersPassword.value.trim()
-        ? { current_password: revokeOthersPassword.value.trim() }
-        : undefined
-
-    const result = await auth.revokeOtherSessions(payload)
+    const result = await auth.revokeOtherSessions()
 
     toast.add({
       title: 'Sessions updated',
@@ -122,7 +115,6 @@ const confirmRevokeOtherSessions = async () => {
       icon: 'i-lucide-check',
     })
 
-    revokeOthersPassword.value = ''
     isRevokeOthersOpen.value = false
     await refreshSessions()
   } catch (error) {
@@ -138,7 +130,6 @@ const confirmRevokeOtherSessions = async () => {
 
 const openRevokeSession = (session: SessionInfo) => {
   sessionToRevoke.value = session
-  revokeSessionPassword.value = ''
   isRevokeSessionOpen.value = true
 }
 
@@ -149,12 +140,7 @@ const confirmRevokeSession = async () => {
 
   isRevokingSession.value = true
   try {
-    const payload =
-      requiresPasswordForSensitiveActions.value && revokeSessionPassword.value.trim()
-        ? { current_password: revokeSessionPassword.value.trim() }
-        : undefined
-
-    await auth.revokeSession(sessionToRevoke.value.id, payload)
+    await auth.revokeSession(sessionToRevoke.value.id)
 
     toast.add({
       title: 'Session closed',
@@ -545,15 +531,6 @@ const confirmDelete = async () => {
             variant="subtle"
           />
 
-          <UFormField
-            v-if="requiresPasswordForSensitiveActions"
-            name="current_password"
-            label="Current password"
-            description="Required for accounts created with email/password."
-          >
-            <UInput v-model="revokeOthersPassword" type="password" placeholder="Your current password" />
-          </UFormField>
-
           <div class="flex justify-end gap-2">
             <UButton
               label="Cancel"
@@ -587,15 +564,6 @@ const confirmDelete = async () => {
             color="neutral"
             variant="subtle"
           />
-
-          <UFormField
-            v-if="requiresPasswordForSensitiveActions"
-            name="current_password"
-            label="Current password"
-            description="Required for accounts created with email/password."
-          >
-            <UInput v-model="revokeSessionPassword" type="password" placeholder="Your current password" />
-          </UFormField>
 
           <div class="flex justify-end gap-2">
             <UButton

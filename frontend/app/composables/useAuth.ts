@@ -332,14 +332,14 @@ export function useAuth() {
     return response.data
   }
 
-  const revokeOtherSessions = async (payload?: { current_password?: string }) => {
+  const revokeOtherSessions = async () => {
     await ensureCsrfCookie()
 
     const response = await withCredentials<{ data: { revoked: number } }>(
       joinURL(apiPrefix, '/sessions/revoke-others'),
       {
         method: 'POST',
-        body: payload ?? {},
+        body: {},
       },
       { csrf: true }
     )
@@ -347,14 +347,14 @@ export function useAuth() {
     return response.data
   }
 
-  const revokeSession = async (id: string, payload?: { current_password?: string }) => {
+  const revokeSession = async (id: string) => {
     await ensureCsrfCookie()
 
     await withCredentials(
       joinURL(apiPrefix, `/sessions/${encodeURIComponent(id)}`),
       {
         method: 'DELETE',
-        body: payload ?? {},
+        body: {},
       },
       { csrf: true }
     )
