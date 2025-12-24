@@ -30,7 +30,7 @@
     "@nuxt/eslint": "^1.9.0",
     "eslint": "^9.38.0",
     "typescript": "^5.9.3",
-    "vue-tsc": "^3.1.2"
+    "vue-tsc": "^3.2.1"
   },
   "overrides": {
     "unimport": "4.1.1"
