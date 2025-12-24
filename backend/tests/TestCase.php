@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
             $this->setEnv('DB_CONNECTION', 'sqlite');
         }
 
-        if (getenv('DB_CONNECTION') === 'sqlite') {
+        if ($this->envGet('DB_CONNECTION') === 'sqlite') {
             if (! $this->envIsSet('DB_DATABASE')) {
                 $this->setEnv('DB_DATABASE', ':memory:');
             }
@@ -39,21 +39,22 @@ abstract class TestCase extends BaseTestCase
 
     private function envIsSet(string $key): bool
     {
+        return $this->envGet($key) !== null;
+    }
+
+    private function envGet(string $key): ?string
+    {
         $value = getenv($key);
 
-        if ($value !== false && $value !== '') {
-            return true;
+        if ($value === false || $value === '') {
+            $value = $_ENV[$key] ?? $_SERVER[$key] ?? null;
         }
 
-        if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
-            return true;
+        if ($value === null || $value === '') {
+            return null;
         }
 
-        if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
-            return true;
-        }
-
-        return false;
+        return $value;
     }
 
     private function setEnv(string $key, string $value): void

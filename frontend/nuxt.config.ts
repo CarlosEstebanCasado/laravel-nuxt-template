@@ -45,6 +45,34 @@ export default defineNuxtConfig({
       ssr: false,
       prerender: false,
       headers: { 'x-robots-tag': 'noindex, nofollow' }
+    },
+
+    // Auth pages rely on a purely client-side session fetch (cookies + XSRF),
+    // so SSR would render incomplete UI (e.g. missing user email) before hydration.
+    '/login': {
+      ssr: false,
+      prerender: false,
+      headers: { 'x-robots-tag': 'noindex, nofollow' }
+    },
+    '/signup': {
+      ssr: false,
+      prerender: false,
+      headers: { 'x-robots-tag': 'noindex, nofollow' }
+    },
+    '/forgot-password': {
+      ssr: false,
+      prerender: false,
+      headers: { 'x-robots-tag': 'noindex, nofollow' }
+    },
+    '/reset-password/**': {
+      ssr: false,
+      prerender: false,
+      headers: { 'x-robots-tag': 'noindex, nofollow' }
+    },
+    '/auth/**': {
+      ssr: false,
+      prerender: false,
+      headers: { 'x-robots-tag': 'noindex, nofollow' }
     }
   } as any,
 

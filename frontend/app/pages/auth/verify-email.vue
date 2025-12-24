@@ -16,6 +16,8 @@ const toast = useToast()
 
 const isSubmitting = ref(false)
 
+const userEmail = computed(() => auth.user.value?.email || '')
+
 const redirectTo = computed(() => {
   const redirect = route.query.redirect
   return typeof redirect === 'string' ? redirect : '/dashboard'
@@ -87,7 +89,8 @@ onMounted(async () => {
     class="text-center"
   >
     <p class="text-sm text-muted">
-      We've sent a verification link to <span class="font-medium">{{ auth.user.value?.email }}</span>.
+      We've sent a verification link to
+      <span class="font-medium">{{ userEmail || 'your email address' }}</span>.
       Please open it to activate your account.
     </p>
 
