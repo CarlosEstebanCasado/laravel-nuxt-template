@@ -28,6 +28,13 @@ SaaS Template — Laravel 12 API + Nuxt 4 (SSR público + SPA privado)
 
 ---
 
+2.1) Fork / Customization checklist
+-----------------------------------
+
+Si vas a usar esto como template, sigue el checklist en `docs/forking.md` para renombrar dominios, variables y branding sin romper el stack.
+
+---
+
 3) Arquitectura (Hexagonal + DDD)
 ---------------------------------
 
