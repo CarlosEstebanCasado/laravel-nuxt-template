@@ -76,7 +76,7 @@ useSeoMeta({
         >
           <template #footer>
             <UUser
-              v-bind="testimonial.user"
+              v-bind="testimonial.user as any"
               size="lg"
             />
           </template>
