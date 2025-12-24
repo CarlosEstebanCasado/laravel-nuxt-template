@@ -1,7 +1,7 @@
-SaaS Template — Laravel 12 API + Nuxt 3 SSR
+SaaS Template — Laravel 12 API + Nuxt 4 (SSR público + SPA privado)
 ==========================================
 
-> Plantilla opinionada para lanzar aplicaciones SaaS fullstack con **Laravel 12 / PHP 8.4** en el backend y **Nuxt 3** SSR en el frontend. Integra multitenancy ligero por **household/team**, autenticación con **Sanctum**, y una arquitectura hexagonal lista para escalar sin empezar desde cero cada proyecto.
+> Plantilla opinionada para lanzar aplicaciones SaaS fullstack con **Laravel 12 / PHP 8.4** en el backend y **Nuxt 4** en el frontend con un enfoque **híbrido**: **SSR para páginas públicas (SEO)** y **SPA/CSR para el dashboard privado** (no indexable). Integra multitenancy ligero por **household/team**, autenticación con **Sanctum**, y una arquitectura hexagonal lista para escalar sin empezar desde cero cada proyecto.
 
 ---
 
@@ -11,8 +11,8 @@ SaaS Template — Laravel 12 API + Nuxt 3 SSR
 - **Core multitenant** por household/team (selector, invitaciones, roles).
 - **Arquitectura hexagonal + DDD** separada en Domain, Application e Infrastructure.
 - **API REST contract-first** (`/api/v1`) documentada con OpenAPI.
-- **Frontend SSR** con Nuxt 3, TypeScript estricto, Tailwind y composables listos para auth.
-- **Auth fullstack** lista para producción (Laravel Fortify + Sanctum + Nuxt 3) con login, registro, verificación de email y logout via cookies `SameSite=None`.
+- **Frontend híbrido** con Nuxt 4: SSR público (SEO) + SPA privada (`/dashboard/**`).
+- **Auth fullstack** lista para producción (Laravel Fortify + Sanctum + Nuxt) con login, registro, verificación de email y logout via cookies `SameSite=None`.
 - **Tooling DevOps**: Docker Compose, Horizon, Sentry, Prometheus, GitHub Actions base.
 - **Calidad integrada**: PHPStan máx nivel, Laravel Pint, ESLint, Vitest, Playwright.
 
@@ -54,7 +54,7 @@ SaaS Template — Laravel 12 API + Nuxt 3 SSR
 - **Storage**: S3-compatible (MinIO local, S3/Wasabi en prod).
 - **Observabilidad**: logs JSON, Sentry, exporter Prometheus.
 - **Infra**: Docker Compose con gateway Nginx/Traefik (ver `docs/docker/addendum.md`); despliegue en Fly.io/Render/Kubernetes según fase.
-- **Frontend**: Nuxt 3 SSR/ISR, TypeScript strict, Pinia, Vue Query opcional, Tailwind + Radix/HeadlessUI, i18n.
+- **Frontend**: Nuxt 4 (SSR público + SPA privado), TypeScript strict, Pinia, Vue Query opcional, Tailwind + Radix/HeadlessUI, i18n.
 - **Auth**: Laravel Sanctum con cookies, CSRF automático, dominios configurables.
 - **Qualidad**: PHPStan, Laravel Pint, Rector safe rules, Infection opcional, ESLint + Prettier, Vitest/Playwright.
 
@@ -133,11 +133,11 @@ app/
 
 ---
 
-9) Frontend (Nuxt 3)
+9) Frontend (Nuxt 4, SSR híbrido)
 --------------------
 
 - **Pública**: landing, pricing, blog → SSG/ISR, sitemap, robots, schema.org.
-- **Privada**: dashboard SSR con middleware server-side (`/api/me`).
+- **Privada**: dashboard **SPA/CSR** (sin SSR) y marcado como **noindex** (`robots` + `X-Robots-Tag`).
 - **Composables**: `useApi`, `useAuth`, `useHousehold` listos para extender.
 - **Selector de household**: UI y store base incluida.
 - **UI**: Tailwind + HeadlessUI, dark mode opcional, componentes accesibles.
@@ -248,7 +248,7 @@ app/
 5. Migrations con índices y `unique(household_id, ...)` cuando aplique.
 6. Endpoints con prefijo `/api/v1`, respuestas `{ data, meta }`.
 7. Errores: `422` validación, `403` permisos, `404` recurso ajeno al household.
-8. Frontend: composables `useApi`/`useAuth`, middleware SSR para sesión, componentes accesibles.
+8. Frontend: composables `useApi`/`useAuth`, middleware de auth en cliente (dashboard SPA), componentes accesibles.
 9. No dejar bindings faltantes; si se añade un UseCase/DTO/Provider, agregarlo al contenedor.
 10. Actualizar OpenAPI y documentación cuando cambien endpoints.
 11. Evaluar nuevas funcionalidades contra la checklist OWASP ASVS (L2) y documentar mitigaciones para riesgos del OWASP Top 10.
