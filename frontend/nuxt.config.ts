@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     '@vueuse/nuxt'
   ],
 
-  ssr: false,
+  // SSR enabled by default (good for SEO on public pages).
+  // We selectively disable SSR for private areas via routeRules below.
 
   devtools: {
     enabled: true
@@ -29,9 +30,23 @@ export default defineNuxtConfig({
     }
   },
 
+  // Nuxt supports `ssr: false` inside routeRules at runtime, but Nuxt 4 typings
+  // currently don't include it in the route rules type. Cast to keep TS happy.
   routeRules: {
-    '/docs': { redirect: '/docs/getting-started', prerender: false }
-  },
+    '/docs': { redirect: '/docs/getting-started', prerender: false },
+
+    // Private area: keep it SPA/CSR only (avoid SSR + keep auth purely client-side).
+    '/dashboard': {
+      ssr: false,
+      prerender: false,
+      headers: { 'x-robots-tag': 'noindex, nofollow' }
+    },
+    '/dashboard/**': {
+      ssr: false,
+      prerender: false,
+      headers: { 'x-robots-tag': 'noindex, nofollow' }
+    }
+  } as any,
 
   devServer: {
     host: '0.0.0.0'
