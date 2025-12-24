@@ -37,7 +37,9 @@ type AuditEntry = {
 
 const audits = ref<AuditEntry[]>([])
 const auditsMeta = ref<{ current_page: number, last_page: number, total: number } | null>(null)
-const isAuditsLoading = ref(true)
+// Start as not-loading; `refreshAudits()` flips this while the request is in flight.
+// If this starts as true, the first `refreshAudits()` call will early-return and never load.
+const isAuditsLoading = ref(false)
 const auditsError = ref<string | null>(null)
 
 const isAuditsInitialLoading = computed(() => isAuditsLoading.value && audits.value.length === 0)
