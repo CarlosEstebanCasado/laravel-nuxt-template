@@ -10,11 +10,13 @@ volumes:
   minio_data:
   meili_data:
   nuxt_node_modules:
+  mailhog_data:
 
 x-backend-env: &backend-env
   APP_ENV: local
   APP_DEBUG: "true"
   APP_URL: https://api.project.dev
+  DB_CONNECTION: pgsql
   DB_HOST: postgres
   DB_PORT: 5432
   DB_DATABASE: ${DB_DATABASE}
@@ -194,6 +196,12 @@ services:
   mailhog:
     image: mailhog/mailhog:v1.0.1
     container_name: mailhog
+    user: "0:0"
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /mailhog/data
+    volumes:
+      - mailhog_data:/mailhog/data
     ports:
       - "8025:8025"
     networks:

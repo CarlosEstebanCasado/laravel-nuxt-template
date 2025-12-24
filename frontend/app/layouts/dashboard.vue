@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
 
+// Private area should not be indexed by search engines.
+useSeoMeta({
+  robots: 'noindex, nofollow'
+})
+
 const route = useRoute()
 const toast = useToast()
 

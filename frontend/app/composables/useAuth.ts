@@ -24,7 +24,7 @@ const readCookie = (name: string) => {
 }
 
 const getCsrfHeader = () => {
-  if (process.server) {
+  if (import.meta.server) {
     return null
   }
 
@@ -56,7 +56,7 @@ export function useAuth() {
     user.value = null
     hasFetched.value = true
 
-    if (process.server) {
+    if (import.meta.server) {
       return
     }
 
@@ -384,7 +384,7 @@ export function useAuth() {
   const isAuthenticated = computed(() => Boolean(user.value))
 
   const loginWithProvider = (provider: 'google' | 'github') => {
-    if (process.server) {
+    if (import.meta.server) {
       return
     }
 

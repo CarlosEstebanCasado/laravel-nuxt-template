@@ -26,7 +26,7 @@ useSeoMeta({
 
 const auth = useAuth()
 
-if (process.client) {
+if (import.meta.client) {
   auth.fetchUser().catch(() => {
     /* swallow errors so the app can render */
   })

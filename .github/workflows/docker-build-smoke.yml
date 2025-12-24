@@ -1,0 +1,36 @@
+name: Docker build smoke
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  docker-compose-build:
+    runs-on: ubuntu-latest
+
+    env:
+      # docker-compose.yml interpolates these variables even for build-only runs.
+      # Provide safe dummy values so `docker compose config` and `docker compose build` are stable.
+      DB_DATABASE: testing
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123456
+      SESSION_DRIVER: array
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Compose config (validate)
+        run: docker compose -f docker-compose.yml config
+
+      - name: Build images (smoke)
+        run: |
+          docker compose -f docker-compose.yml build --pull --progress=plain api nuxt
+
+

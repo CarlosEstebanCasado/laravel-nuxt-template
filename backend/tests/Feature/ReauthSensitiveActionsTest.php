@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class ReauthSensitiveActionsTest extends TestCase
@@ -77,6 +79,10 @@ class ReauthSensitiveActionsTest extends TestCase
             'email' => 'old@example.com',
         ]);
 
+        // This action triggers an email verification notification. We don't want CI
+        // to depend on any mail transport, so fake notifications.
+        Notification::fake();
+
         // Fortify profile update is a web route that normally requires CSRF.
         // CSRF is not relevant to the re-auth rule we want to test here.
         $this->withoutMiddleware(ValidateCsrfToken::class);
@@ -110,6 +116,8 @@ class ReauthSensitiveActionsTest extends TestCase
             'id' => $user->id,
             'email' => 'new@example.com',
         ]);
+
+        Notification::assertSentTo($user, VerifyEmail::class);
     }
 }
 

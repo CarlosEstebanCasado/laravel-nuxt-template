@@ -1,4 +1,10 @@
 export default defineNuxtRouteMiddleware(async (to) => {
+  // When SSR is enabled globally, route middleware can execute on the server.
+  // Our auth session relies on browser cookies + client fetch; avoid doing it server-side.
+  if (import.meta.server) {
+    return
+  }
+
   const auth = useAuth()
 
   try {

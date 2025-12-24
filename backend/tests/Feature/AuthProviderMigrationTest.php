@@ -9,6 +9,18 @@ use Tests\TestCase;
 
 class AuthProviderMigrationTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        // This test manually creates/drops tables to simulate a legacy schema.
+        // Ensure we always clean up so other tests (using RefreshDatabase) don't
+        // collide when running against Postgres in CI.
+        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
+
+        parent::tearDown();
+    }
+
     /**
      * This test simulates a pre-migration database (no auth_provider/password_set_at columns),
      * inserts legacy users, then runs the migration and asserts the backfill is correct.
