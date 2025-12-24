@@ -190,6 +190,14 @@ app/
   5. Deploy: migraciones (`php artisan migrate --force`) con backups y `php artisan down --secret`.
 - Estrategia sugerida: blue/green o canary; healthchecks `/health`.
 
+**CI en local (misma lógica que GitHub Actions)**:
+
+- `make ci`: ejecuta backend + frontend (audit + lint/typecheck + build + tests).
+- `make ci-parallel`: lo mismo, pero en paralelo.
+- `make ci-backend`: solo backend (Postgres/Redis del docker-compose).
+- `make ci-frontend`: solo frontend.
+- `make test`: alias de `make ci` (por compatibilidad con el README).
+
 ---
 
 13) Makefile / Scripts
@@ -197,7 +205,7 @@ app/
 
 - `make up`: levanta stack local (Docker Compose + Traefik).
 - `make seed`: migraciones + seed household/usuario demo.
-- `make test`: suite completa.
+- `make test`: suite completa (alias de `make ci`).
 - `make qa`: Pint + PHPStan + ESLint + Typecheck.
 - Scripts adicionales para sync de assets, tareas Horizon y limpieza de colas.
 

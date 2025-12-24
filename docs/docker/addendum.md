@@ -421,6 +421,9 @@ logs: ## Logs de nginx
 	docker compose logs -f nginx
 
 down: ## Parar y limpiar
+	docker compose down
+
+down-v: ## Parar y limpiar volúmenes (⚠️ borra Postgres/Redis/MinIO/Meili)
 	docker compose down -v
 
 queue-restart:

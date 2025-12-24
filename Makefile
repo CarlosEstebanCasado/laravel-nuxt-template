@@ -1,16 +1,18 @@
 SHELL := /bin/bash
 
-.PHONY: help up up-build down install install-backend install-frontend migrate seed qa certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel
+.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed qa test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel
 
 help:
 	@echo "Available targets:"
 	@echo "  make up       - Levantar stack Docker sin reconstruir"
 	@echo "  make up-build - Levantar stack Docker (build + up)"
-	@echo "  make down     - Detener stack y limpiar volúmenes"
+	@echo "  make down     - Detener stack Docker (mantiene volúmenes/datos)"
+	@echo "  make down-v   - Detener stack y limpiar volúmenes (⚠️ borra datos)"
 	@echo "  make install  - Instalar dependencias backend y frontend"
 	@echo "  make migrate  - Ejecutar migraciones en el contenedor api"
 	@echo "  make seed     - Ejecutar migraciones y seed en el contenedor api"
 	@echo "  make qa       - Ejecutar linting/análisis estático definidos"
+	@echo "  make test     - Alias de CI local (equivalente a make ci)"
 	@echo "  make ci       - Ejecutar CI local (backend + frontend)"
 	@echo "  make ci-backend   - Backend CI local (composer audit + tests con Postgres/Redis)"
 	@echo "  make ci-frontend  - Frontend CI local (npm audit + eslint + vue-tsc + build)"
@@ -28,6 +30,9 @@ up-build:
 
 down:
 	docker compose down
+
+down-v:
+	docker compose down -v
 
 install: install-backend install-frontend
 
@@ -52,6 +57,9 @@ qa:
 	@if [ -f frontend/package.json ]; then \
 		docker compose exec nuxt npm run lint || echo "Define npm script 'lint'"; \
 	fi
+
+# Backwards-compatible alias mentioned in README
+test: ci
 
 certs:
 	./scripts/generate-dev-certs.sh
