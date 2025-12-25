@@ -80,10 +80,16 @@ test-db:
 	if [ -z "$$TEST_DB" ]; then \
 		TEST_DB="$$(docker compose exec -T postgres sh -lc 'echo "$${POSTGRES_DB}_test"')"; \
 	fi; \
+	# Normalize to lowercase so existence checks / creation / connections are consistent (Postgres folds unquoted identifiers). \
+	TEST_DB="$$(printf "%s" "$$TEST_DB" | tr "[:upper:]" "[:lower:]")"; \
 	echo "Ensuring test database exists: $$TEST_DB"; \
 	docker compose exec -T -e TEST_DB="$$TEST_DB" postgres sh -lc '\
-		psql -U "$$POSTGRES_USER" -d postgres -Atc "SELECT 1 FROM pg_database WHERE datname = '\''$$TEST_DB'\'';" | grep -q 1 || \
-			psql -U "$$POSTGRES_USER" -d postgres -c "CREATE DATABASE $$TEST_DB;"; \
+		psql -U "$$POSTGRES_USER" -d postgres -v ON_ERROR_STOP=1 -v test_db="$$TEST_DB" -c "\
+			DO \$$\$$BEGIN \
+				IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = :'\''test_db'\'' ) THEN \
+					EXECUTE format('\''CREATE DATABASE %I'\'', :'\''test_db'\'' ); \
+				END IF; \
+			END\$$\$$;"; \
 	'
 
 # CI helpers (local)
@@ -104,6 +110,7 @@ ci-backend:
 		php artisan optimize:clear && \
 		APP_KEY="$$(php -r '\''echo "base64:".base64_encode(random_bytes(32));'\'' )" && \
 		TEST_DB="$${DB_DATABASE_TEST:-$${DB_DATABASE}_test}" && \
+		TEST_DB="$$(printf "%s" "$$TEST_DB" | tr "[:upper:]" "[:lower:]")" && \
 		APP_ENV=testing \
 		APP_KEY=$$APP_KEY \
 		DB_CONNECTION=pgsql \
