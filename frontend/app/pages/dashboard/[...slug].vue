@@ -29,13 +29,6 @@ const error = computed(() => ({
               variant="solid"
               label="Back to dashboard"
             />
-            <UButton
-              to="/"
-              size="lg"
-              color="neutral"
-              variant="outline"
-              label="Back to home"
-            />
           </div>
         </template>
       </UError>
