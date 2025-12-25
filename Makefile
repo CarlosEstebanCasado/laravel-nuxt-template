@@ -76,9 +76,12 @@ logs:
 
 # Create a dedicated test database so running PHPUnit never wipes the dev DB.
 test-db:
-	docker compose exec -T postgres sh -lc '\
-		TEST_DB="$${DB_DATABASE_TEST:-$${POSTGRES_DB}_test}"; \
-		echo "Ensuring test database exists: $$TEST_DB"; \
+	@TEST_DB="$$(docker compose exec -T api sh -lc 'echo "$${DB_DATABASE_TEST:-$${DB_DATABASE}_test}"' 2>/dev/null || true)"; \
+	if [ -z "$$TEST_DB" ]; then \
+		TEST_DB="$$(docker compose exec -T postgres sh -lc 'echo "$${POSTGRES_DB}_test"')"; \
+	fi; \
+	echo "Ensuring test database exists: $$TEST_DB"; \
+	docker compose exec -T -e TEST_DB="$$TEST_DB" postgres sh -lc '\
 		psql -U "$$POSTGRES_USER" -d postgres -Atc "SELECT 1 FROM pg_database WHERE datname = '\''$$TEST_DB'\'';" | grep -q 1 || \
 			psql -U "$$POSTGRES_USER" -d postgres -c "CREATE DATABASE $$TEST_DB;"; \
 	'
@@ -102,6 +105,7 @@ ci-backend:
 		APP_KEY="$$(php -r '\''echo "base64:".base64_encode(random_bytes(32));'\'' )" && \
 		TEST_DB="$${DB_DATABASE_TEST:-$${DB_DATABASE}_test}" && \
 		APP_ENV=testing \
+		APP_KEY=$$APP_KEY \
 		DB_CONNECTION=pgsql \
 		DB_HOST=postgres \
 		DB_PORT=5432 \
