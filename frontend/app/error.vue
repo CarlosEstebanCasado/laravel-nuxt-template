@@ -48,7 +48,17 @@ const links = [{
     <UMain>
       <UContainer>
         <UPage>
-          <UError :error="error" />
+          <UError :error="error" :clear="false">
+            <template #links>
+              <UButton
+                to="/"
+                size="lg"
+                color="primary"
+                variant="solid"
+                label="Back to home"
+              />
+            </template>
+          </UError>
         </UPage>
       </UContainer>
     </UMain>
