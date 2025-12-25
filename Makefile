@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed qa test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel
+.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed qa test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db
 
 help:
 	@echo "Available targets:"
@@ -21,6 +21,7 @@ help:
 	@echo "  make trust-ca - Instalar mkcert/certutil y confiar la CA local (Chrome/Firefox/Brave)"
 	@echo "  make hosts    - Añadir dominios locales al archivo hosts"
 	@echo "  make logs     - Ver logs del gateway nginx"
+	@echo "  make test-db  - Crear DB de tests (<DB_DATABASE>_test) en Postgres si no existe"
 
 up:
 	docker compose up -d
@@ -73,6 +74,25 @@ hosts:
 logs:
 	docker compose logs -f nginx
 
+# Create a dedicated test database so running PHPUnit never wipes the dev DB.
+test-db:
+	@TEST_DB="$$(docker compose exec -T api sh -lc 'echo "$${DB_DATABASE_TEST:-$${DB_DATABASE}_test}"' 2>/dev/null || true)"; \
+	if [ -z "$$TEST_DB" ]; then \
+		TEST_DB="$$(docker compose exec -T postgres sh -lc 'echo "$${POSTGRES_DB}_test"')"; \
+	fi; \
+	: "Normalize to lowercase so existence checks / creation / connections are consistent (Postgres folds unquoted identifiers)."; \
+	TEST_DB="$$(printf "%s" "$$TEST_DB" | tr "[:upper:]" "[:lower:]")"; \
+	case "$$TEST_DB" in (""|*[!a-z0-9_]*) echo "Invalid TEST_DB name: $$TEST_DB (allowed: [a-z0-9_])" >&2; exit 1;; esac; \
+	echo "Ensuring test database exists: $$TEST_DB"; \
+	docker compose exec -T -e TEST_DB="$$TEST_DB" postgres sh -lc '\
+		psql -U "$$POSTGRES_USER" -d postgres -v ON_ERROR_STOP=1 -c "\
+			DO \$$\$$BEGIN \
+				IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '\''$$TEST_DB'\'' ) THEN \
+					EXECUTE format('\''CREATE DATABASE %I'\'', '\''$$TEST_DB'\'' ); \
+				END IF; \
+			END\$$\$$;"; \
+	'
+
 # CI helpers (local)
 # - Backend runs against docker-compose Postgres/Redis to match GitHub Actions as closely as possible.
 # - Frontend runs in the Nuxt container (Node 20) using npm ci so Nuxt generates .nuxt (eslint config depends on it).
@@ -83,15 +103,21 @@ ci-parallel:
 	@$(MAKE) -j2 ci-backend ci-frontend
 
 ci-backend:
+	@$(MAKE) test-db
 	docker compose exec -T api sh -lc '\
 		cd /var/www/html && \
 		composer install --no-interaction --prefer-dist && \
 		composer audit --no-interaction && \
-		php artisan key:generate --force && \
+		php artisan optimize:clear && \
+		APP_KEY="$$(php -r '\''echo "base64:".base64_encode(random_bytes(32));'\'' )" && \
+		TEST_DB="$${DB_DATABASE_TEST:-$${DB_DATABASE}_test}" && \
+		TEST_DB="$$(printf "%s" "$$TEST_DB" | tr "[:upper:]" "[:lower:]")" && \
+		APP_ENV=testing \
+		APP_KEY=$$APP_KEY \
 		DB_CONNECTION=pgsql \
 		DB_HOST=postgres \
 		DB_PORT=5432 \
-		DB_DATABASE=$$DB_DATABASE \
+		DB_DATABASE=$$TEST_DB \
 		DB_USERNAME=$$DB_USERNAME \
 		DB_PASSWORD=$$DB_PASSWORD \
 		REDIS_HOST=redis \
