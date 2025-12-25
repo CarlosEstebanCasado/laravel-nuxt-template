@@ -80,14 +80,15 @@ test-db:
 	if [ -z "$$TEST_DB" ]; then \
 		TEST_DB="$$(docker compose exec -T postgres sh -lc 'echo "$${POSTGRES_DB}_test"')"; \
 	fi; \
-	# Normalize to lowercase so existence checks / creation / connections are consistent (Postgres folds unquoted identifiers). \
+	: "Normalize to lowercase so existence checks / creation / connections are consistent (Postgres folds unquoted identifiers)."; \
 	TEST_DB="$$(printf "%s" "$$TEST_DB" | tr "[:upper:]" "[:lower:]")"; \
+	case "$$TEST_DB" in (""|*[!a-z0-9_]*) echo "Invalid TEST_DB name: $$TEST_DB (allowed: [a-z0-9_])" >&2; exit 1;; esac; \
 	echo "Ensuring test database exists: $$TEST_DB"; \
 	docker compose exec -T -e TEST_DB="$$TEST_DB" postgres sh -lc '\
-		psql -U "$$POSTGRES_USER" -d postgres -v ON_ERROR_STOP=1 -v test_db="$$TEST_DB" -c "\
+		psql -U "$$POSTGRES_USER" -d postgres -v ON_ERROR_STOP=1 -c "\
 			DO \$$\$$BEGIN \
-				IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = :'\''test_db'\'' ) THEN \
-					EXECUTE format('\''CREATE DATABASE %I'\'', :'\''test_db'\'' ); \
+				IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '\''$$TEST_DB'\'' ) THEN \
+					EXECUTE format('\''CREATE DATABASE %I'\'', '\''$$TEST_DB'\'' ); \
 				END IF; \
 			END\$$\$$;"; \
 	'
