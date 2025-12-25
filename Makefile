@@ -98,8 +98,8 @@ ci-backend:
 		cd /var/www/html && \
 		composer install --no-interaction --prefer-dist && \
 		composer audit --no-interaction && \
-		php artisan key:generate --force && \
 		php artisan optimize:clear && \
+		APP_KEY="$$(php -r '\''echo "base64:".base64_encode(random_bytes(32));'\'' )" && \
 		TEST_DB="$${DB_DATABASE_TEST:-$${DB_DATABASE}_test}" && \
 		APP_ENV=testing \
 		DB_CONNECTION=pgsql \
