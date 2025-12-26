@@ -2,18 +2,16 @@
 
 namespace App\Src\IdentityAccess\Session\Domain\Repository;
 
+use App\Src\IdentityAccess\Session\Domain\Response\SessionCollectionResponse;
+
 interface SessionRepository
 {
-    /**
-     * @return array<int, array{id:string,ip_address:?string,user_agent:?string,last_activity:int}>
-     */
-    public function listForUser(int $userId): array;
+    public function listForUser(int $userId): SessionCollectionResponse;
 
     public function deleteForUser(string $sessionId, int $userId): int;
 
     public function deleteOthersForUser(int $userId, string $currentSessionId): int;
 }
-
 
 
 

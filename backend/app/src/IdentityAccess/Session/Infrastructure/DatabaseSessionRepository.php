@@ -2,14 +2,17 @@
 
 namespace App\Src\IdentityAccess\Session\Infrastructure;
 
+use App\Src\IdentityAccess\Session\Domain\Collection\SessionCollection;
+use App\Src\IdentityAccess\Session\Domain\Entity\SessionInfo;
 use App\Src\IdentityAccess\Session\Domain\Repository\SessionRepository;
+use App\Src\IdentityAccess\Session\Domain\Response\SessionCollectionResponse;
 use Illuminate\Support\Facades\DB;
 
 final class DatabaseSessionRepository implements SessionRepository
 {
-    public function listForUser(int $userId): array
+    public function listForUser(int $userId): SessionCollectionResponse
     {
-        return DB::table('sessions')
+        $items = DB::table('sessions')
             ->where('user_id', $userId)
             ->orderByDesc('last_activity')
             ->get([
@@ -19,15 +22,20 @@ final class DatabaseSessionRepository implements SessionRepository
                 'last_activity',
             ])
             ->map(function ($row) {
-                return [
-                    'id' => (string) $row->id,
-                    'ip_address' => $row->ip_address,
-                    'user_agent' => $row->user_agent,
-                    'last_activity' => (int) $row->last_activity,
-                ];
+                return new SessionInfo(
+                    id: (string) $row->id,
+                    ipAddress: $row->ip_address,
+                    userAgent: $row->user_agent,
+                    lastActivity: (int) $row->last_activity,
+                    isCurrent: false,
+                );
             })
             ->values()
             ->all();
+
+        return new SessionCollectionResponse(
+            new SessionCollection($items)
+        );
     }
 
     public function deleteForUser(string $sessionId, int $userId): int
@@ -46,7 +54,6 @@ final class DatabaseSessionRepository implements SessionRepository
             ->delete();
     }
 }
-
 
 
 

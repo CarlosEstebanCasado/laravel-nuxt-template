@@ -31,10 +31,6 @@ class SessionsController extends Controller
             currentSessionId: (string) $currentSessionId,
         ));
 
-        return response()->json([
-            'data' => $sessions,
-        ]);
+        return response()->json($sessions);
     }
 }
-
-
