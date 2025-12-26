@@ -3,6 +3,7 @@
 namespace App\Src\IdentityAccess\Security\Reauth\Application\UseCase;
 
 use App\Src\IdentityAccess\Security\Reauth\Application\Request\DeleteAccountUseCaseRequest;
+use App\Src\IdentityAccess\Security\Reauth\Application\Response\DeleteAccountUseCaseResponse;
 use App\Src\IdentityAccess\Security\Reauth\Domain\Repository\AccountRepository;
 use App\Src\Shared\Domain\Service\AuditEventRecorder;
 
@@ -14,7 +15,7 @@ final class DeleteAccountUseCase
     ) {
     }
 
-    public function execute(DeleteAccountUseCaseRequest $request): void
+    public function execute(DeleteAccountUseCaseRequest $request): DeleteAccountUseCaseResponse
     {
         $this->audit->recordUserEvent(
             userId: $request->userId,
@@ -27,9 +28,9 @@ final class DeleteAccountUseCase
         );
 
         $this->accounts->deleteAccount($request->userId);
+
+        return new DeleteAccountUseCaseResponse();
     }
 }
-
-
 
 

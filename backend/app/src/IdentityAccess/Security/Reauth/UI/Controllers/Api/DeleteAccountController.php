@@ -40,7 +40,7 @@ class DeleteAccountController extends Controller
             'password.current_password' => __('The provided password does not match your current password.'),
         ]);
 
-        $this->useCase->execute(new DeleteAccountUseCaseRequest(
+        $response = $this->useCase->execute(new DeleteAccountUseCaseRequest(
             userId: (int) $user->getAuthIdentifier(),
             confirmation: $validated['confirmation'],
             url: $request->fullUrl(),
@@ -55,10 +55,7 @@ class DeleteAccountController extends Controller
             $request->session()->regenerateToken();
         }
 
-        return response()->json([
-            'message' => 'Account deleted.',
-        ], 200);
+        return response()->json($response->toArray(), 200);
     }
 }
-
 

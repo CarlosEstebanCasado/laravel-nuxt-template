@@ -8,7 +8,7 @@ use App\Src\Shared\UI\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class SessionsController extends Controller
+class ListUserSessionsController extends Controller
 {
     public function __construct(
         private readonly ListUserSessionsUseCase $useCase
