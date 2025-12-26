@@ -17,7 +17,11 @@ final class SessionListConverter
         $response = new GetSessionListUseCaseResponse();
 
         foreach ($collectionResponse->items() as $session) {
-            $response->data[] = $this->itemConverter->toResponse($session, $currentSessionId);
+            $normalizedSession = $session->id() === $currentSessionId
+                ? $session->markCurrent()
+                : $session;
+
+            $response->data[] = $this->itemConverter->toResponse($normalizedSession, $currentSessionId);
         }
 
         return $response;

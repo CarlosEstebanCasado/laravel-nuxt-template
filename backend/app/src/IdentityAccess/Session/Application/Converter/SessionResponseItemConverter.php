@@ -14,8 +14,7 @@ final class SessionResponseItemConverter
             ip_address: $session->ipAddress(),
             user_agent: $session->userAgent(),
             last_activity: $session->lastActivity(),
-            is_current: $session->id() === $currentSessionId,
+            is_current: $session->isCurrent() || $session->id() === $currentSessionId,
         );
     }
 }
-

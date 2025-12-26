@@ -6,6 +6,7 @@ use App\Src\Shared\Domain\Assert as DomainAssert;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use RuntimeException;
 
 abstract class Collection implements Countable, IteratorAggregate
 {
@@ -64,6 +65,25 @@ abstract class Collection implements Countable, IteratorAggregate
     }
 
     /**
+     * Sort items by a given field using getters (preferred) or public properties.
+     *
+     * @return array<int, object>
+     */
+    public function sort(string $field = 'created_at', string $order = 'desc'): array
+    {
+        usort($this->items, function ($a, $b) use ($field, $order) {
+            $aValue = $this->extractSortableValue($a, $field);
+            $bValue = $this->extractSortableValue($b, $field);
+
+            $result = $aValue <=> $bValue;
+
+            return $order === 'asc' ? $result : -$result;
+        });
+
+        return $this->items;
+    }
+
+    /**
      * @return array<string, array<int, object>>
      */
     public function groupBy(string $field): array
@@ -101,4 +121,53 @@ abstract class Collection implements Countable, IteratorAggregate
     }
 
     abstract protected function type(): string;
+
+    private function extractSortableValue(object $item, string $field): mixed
+    {
+        $methodCandidates = $this->methodCandidates($field);
+
+        foreach ($methodCandidates as $method) {
+            if (method_exists($item, $method)) {
+                return $item->{$method}();
+            }
+        }
+
+        if (property_exists($item, $field)) {
+            return $item->{$field};
+        }
+
+        throw new RuntimeException(sprintf(
+            'Unable to sort collection: field "%s" is not accessible on %s',
+            $field,
+            $item::class
+        ));
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function methodCandidates(string $field): array
+    {
+        $candidates = [$field];
+
+        $camel = $this->toCamelCase($field);
+        if ($camel !== $field) {
+            $candidates[] = $camel;
+        }
+
+        $studly = ucfirst($camel);
+        $candidates[] = 'get'.$studly;
+
+        return array_unique($candidates);
+    }
+
+    private function toCamelCase(string $value): string
+    {
+        $value = str_replace(['-', '_'], ' ', $value);
+        $value = ucwords(strtolower($value));
+
+        $value = str_replace(' ', '', $value);
+
+        return lcfirst($value);
+    }
 }

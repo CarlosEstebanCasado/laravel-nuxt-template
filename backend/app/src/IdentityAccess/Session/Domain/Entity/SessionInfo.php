@@ -13,6 +13,17 @@ final class SessionInfo
     ) {
     }
 
+    public function markCurrent(): self
+    {
+        return new self(
+            id: $this->id,
+            ipAddress: $this->ipAddress,
+            userAgent: $this->userAgent,
+            lastActivity: $this->lastActivity,
+            isCurrent: true,
+        );
+    }
+
     public function id(): string
     {
         return $this->id;
@@ -52,6 +63,5 @@ final class SessionInfo
         ];
     }
 }
-
 
 
