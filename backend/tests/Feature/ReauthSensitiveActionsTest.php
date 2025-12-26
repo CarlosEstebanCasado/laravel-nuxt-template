@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Notification;

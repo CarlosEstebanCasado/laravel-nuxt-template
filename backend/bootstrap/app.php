@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Middleware\EnsureHorizonAccess;
+use App\Src\Security\Reauth\UI\Middleware\ThrottleAuthEndpoints;
+use App\Src\Shared\Shared\UI\Middleware\EnsureHorizonAccess;
 use App\Providers\AppServiceProvider;
 use App\Providers\FortifyServiceProvider;
 use App\Providers\HorizonServiceProvider;
@@ -24,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // when the user's password changes (used by Auth::logoutOtherDevices()).
         $middleware->web(append: [
             AuthenticateSession::class,
-            \App\Http\Middleware\ThrottleAuthEndpoints::class,
+            ThrottleAuthEndpoints::class,
         ]);
 
         $middleware->alias([

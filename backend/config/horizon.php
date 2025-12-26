@@ -87,6 +87,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Horizon Access Allow List
+    |--------------------------------------------------------------------------
+    |
+    | In non-local environments, the `horizon.access` middleware can enforce an
+    | allow list of email addresses. Configure via a comma-separated env var.
+    |
+    */
+
+    'allowed_emails' => array_values(array_filter(array_map(
+        'trim',
+        explode(',', (string) env('HORIZON_ALLOWED_EMAILS', ''))
+    ))),
+
+    /*
+    |--------------------------------------------------------------------------
     | Queue Wait Time Thresholds
     |--------------------------------------------------------------------------
     |

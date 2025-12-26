@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\CurrentUserController;
-use App\Http\Controllers\Api\Auth\AuditsController;
-use App\Http\Controllers\Api\Auth\DeleteSessionController;
-use App\Http\Controllers\Api\Auth\DeleteAccountController;
-use App\Http\Controllers\Api\Auth\RevokeOtherSessionsController;
-use App\Http\Controllers\Api\Auth\SessionsController;
+use App\Src\Audit\Audit\UI\Controllers\Api\AuditsController;
+use App\Src\Auth\User\UI\Controllers\Api\CurrentUserController;
+use App\Src\Security\Reauth\UI\Controllers\Api\DeleteAccountController;
+use App\Src\Session\Session\UI\Controllers\Api\DeleteSessionController;
+use App\Src\Session\Session\UI\Controllers\Api\RevokeOtherSessionsController;
+use App\Src\Session\Session\UI\Controllers\Api\SessionsController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 

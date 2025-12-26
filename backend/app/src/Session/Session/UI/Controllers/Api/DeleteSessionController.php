@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Src\Session\Session\UI\Controllers\Api;
+
+use App\Src\Session\Session\Application\Request\RevokeSessionUseCaseRequest;
+use App\Src\Session\Session\Application\UseCase\RevokeSessionUseCase;
+use App\Src\Session\Session\Domain\Exception\CannotRevokeCurrentSession;
+use App\Src\Shared\Shared\UI\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class DeleteSessionController extends Controller
+{
+    public function __construct(
+        private readonly RevokeSessionUseCase $useCase
+    ) {
+    }
+
+    public function __invoke(Request $request, string $id): JsonResponse
+    {
+        if (! $request->hasSession()) {
+            return response()->json([
+                'message' => 'Session store is not available for this request.',
+            ], 422);
+        }
+
+        $userId = $request->user()->getAuthIdentifier();
+        $currentSessionId = $request->session()->getId();
+
+        try {
+            $revoked = $this->useCase->execute(new RevokeSessionUseCaseRequest(
+                userId: (int) $userId,
+                sessionId: $id,
+                currentSessionId: (string) $currentSessionId,
+                url: $request->fullUrl(),
+                ipAddress: $request->ip(),
+                userAgent: $request->userAgent(),
+            ));
+        } catch (CannotRevokeCurrentSession $exception) {
+            return response()->json([
+                'message' => $exception->getMessage(),
+            ], 422);
+        }
+
+        if (! $revoked) {
+            return response()->json([
+                'message' => 'Session not found.',
+            ], 404);
+        }
+
+        return response()->json(status: 204);
+    }
+}
+
+
