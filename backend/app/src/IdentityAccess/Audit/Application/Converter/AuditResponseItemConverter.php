@@ -12,7 +12,7 @@ final class AuditResponseItemConverter
         return new AuditResponseItem(
             id: $audit->id(),
             event: $audit->event(),
-            created_at: $audit->createdAt()->format('Y-m-d H:i:s'),
+            created_at: $audit->createdAt()->format(\DateTimeInterface::ATOM),
             old_values: $audit->oldValues(),
             new_values: $audit->newValues(),
             ip_address: $audit->ipAddress(),
@@ -21,4 +21,3 @@ final class AuditResponseItemConverter
         );
     }
 }
-
