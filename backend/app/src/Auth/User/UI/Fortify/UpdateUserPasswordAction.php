@@ -37,6 +37,10 @@ class UpdateUserPasswordAction implements UpdatesUserPasswords
             password: $input['password'],
         ));
 
+        // We update the password through a repository (different Eloquent instance),
+        // so refresh the currently authenticated model before calling logoutOtherDevices().
+        $user->refresh();
+
         // Keep this session, invalidate other sessions/devices.
         // Requires AuthenticateSession middleware in the 'web' group.
         Auth::logoutOtherDevices($input['password']);

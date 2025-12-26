@@ -28,13 +28,13 @@ final class EloquentUserRepository implements UserRepository
     public function createPasswordUser(
         string $name,
         EmailAddress $email,
-        string $passwordHash,
+        string $plainPassword,
         \DateTimeImmutable $passwordSetAt
     ): UserId {
         $model = User::query()->create([
             'name' => $name,
             'email' => $email->toString(),
-            'password' => $passwordHash,
+            'password' => $plainPassword,
             'auth_provider' => 'password',
             'password_set_at' => $passwordSetAt->format('Y-m-d H:i:s'),
         ]);
@@ -47,14 +47,14 @@ final class EloquentUserRepository implements UserRepository
         string $name,
         string $provider,
         \DateTimeImmutable $emailVerifiedAt,
-        string $passwordHash
+        string $plainPassword
     ): UserId {
         /** @var User $model */
         $model = User::query()->firstOrNew(['email' => $email->toString()]);
 
         if (! $model->exists) {
             $model->name = $name;
-            $model->password = $passwordHash;
+            $model->password = $plainPassword;
             $model->auth_provider = $provider;
             $model->password_set_at = null;
         }
@@ -88,12 +88,12 @@ final class EloquentUserRepository implements UserRepository
         $model->forceFill($data)->save();
     }
 
-    public function updatePassword(UserId $id, string $passwordHash, ?\DateTimeImmutable $passwordSetAt): void
+    public function updatePassword(UserId $id, string $plainPassword, ?\DateTimeImmutable $passwordSetAt): void
     {
         $model = User::query()->findOrFail($id->toInt());
 
         $data = [
-            'password' => $passwordHash,
+            'password' => $plainPassword,
         ];
 
         if ($passwordSetAt !== null) {

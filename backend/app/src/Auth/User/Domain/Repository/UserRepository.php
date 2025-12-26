@@ -15,7 +15,7 @@ interface UserRepository
     public function createPasswordUser(
         string $name,
         EmailAddress $email,
-        string $passwordHash,
+        string $plainPassword,
         \DateTimeImmutable $passwordSetAt
     ): UserId;
 
@@ -24,7 +24,7 @@ interface UserRepository
         string $name,
         string $provider,
         \DateTimeImmutable $emailVerifiedAt,
-        string $passwordHash
+        string $plainPassword
     ): UserId;
 
     public function updateProfile(
@@ -37,7 +37,7 @@ interface UserRepository
     /**
      * When $passwordSetAt is null, keep the existing value untouched.
      */
-    public function updatePassword(UserId $id, string $passwordHash, ?\DateTimeImmutable $passwordSetAt): void;
+    public function updatePassword(UserId $id, string $plainPassword, ?\DateTimeImmutable $passwordSetAt): void;
 }
 
 

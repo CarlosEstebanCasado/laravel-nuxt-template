@@ -11,10 +11,8 @@ use App\Src\Security\Reauth\Infrastructure\EloquentAccountRepository;
 use App\Src\Session\Session\Domain\Repository\SessionRepository;
 use App\Src\Session\Session\Infrastructure\DatabaseSessionRepository;
 use App\Src\Shared\Shared\Domain\Service\AuditEventRecorder;
-use App\Src\Shared\Shared\Domain\Service\PasswordHasher;
 use App\Src\Shared\Shared\Domain\Service\RandomStringGenerator;
 use App\Src\Shared\Shared\Infrastructure\OwenItAuditEventRecorder;
-use App\Src\Shared\Shared\Infrastructure\LaravelPasswordHasher;
 use App\Src\Shared\Shared\Infrastructure\LaravelRandomStringGenerator;
 use Illuminate\Support\ServiceProvider;
 
@@ -26,7 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(UserRepository::class, EloquentUserRepository::class);
-        $this->app->bind(PasswordHasher::class, LaravelPasswordHasher::class);
         $this->app->bind(RandomStringGenerator::class, LaravelRandomStringGenerator::class);
         $this->app->bind(AuditEventRecorder::class, OwenItAuditEventRecorder::class);
         $this->app->bind(SessionRepository::class, DatabaseSessionRepository::class);
