@@ -95,9 +95,7 @@ abstract class Collection implements Countable, IteratorAggregate
             $currentValue = $item;
 
             foreach ($fieldParts as $index => $part) {
-                $currentValue = (array_key_last($fieldParts) === $index)
-                    ? $currentValue->{$part}()
-                    : $currentValue->{$part};
+                $currentValue = $this->descendValue($currentValue, $part);
             }
 
             $groupKey = (string) $currentValue;
@@ -169,5 +167,26 @@ abstract class Collection implements Countable, IteratorAggregate
         $value = str_replace(' ', '', $value);
 
         return lcfirst($value);
+    }
+
+    private function descendValue(object $item, string $fieldPart): mixed
+    {
+        $methodCandidates = $this->methodCandidates($fieldPart);
+
+        foreach ($methodCandidates as $method) {
+            if (method_exists($item, $method)) {
+                return $item->{$method}();
+            }
+        }
+
+        if (property_exists($item, $fieldPart)) {
+            return $item->{$fieldPart};
+        }
+
+        throw new RuntimeException(sprintf(
+            'Unable to access field "%s" on %s when grouping collection',
+            $fieldPart,
+            $item::class
+        ));
     }
 }
