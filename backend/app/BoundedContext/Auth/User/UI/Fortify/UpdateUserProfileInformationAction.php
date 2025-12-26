@@ -4,7 +4,7 @@ namespace App\BoundedContext\Auth\User\UI\Fortify;
 
 use App\BoundedContext\Auth\User\Application\Request\UpdateUserProfileUseCaseRequest;
 use App\BoundedContext\Auth\User\Application\UseCase\UpdateUserProfileUseCase;
-use App\Models\User;
+use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;

@@ -5,7 +5,7 @@ namespace App\BoundedContext\Auth\User\UI\Controllers;
 use App\BoundedContext\Auth\User\Application\Request\OAuthCallbackUseCaseRequest;
 use App\BoundedContext\Auth\User\Application\UseCase\OAuthCallbackUseCase;
 use App\BoundedContext\Shared\Shared\UI\Controllers\Controller;
-use App\Models\User;
+use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;

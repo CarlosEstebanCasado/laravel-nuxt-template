@@ -7,7 +7,7 @@ use App\BoundedContext\Auth\User\Domain\Repository\UserRepository;
 use App\BoundedContext\Auth\User\Domain\ValueObject\AuthProvider;
 use App\BoundedContext\Auth\User\Domain\ValueObject\EmailAddress;
 use App\BoundedContext\Auth\User\Domain\ValueObject\UserId;
-use App\Models\User;
+use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
 
 final class EloquentUserRepository implements UserRepository
 {

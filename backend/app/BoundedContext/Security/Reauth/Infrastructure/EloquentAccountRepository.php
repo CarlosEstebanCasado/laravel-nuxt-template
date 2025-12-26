@@ -3,7 +3,7 @@
 namespace App\BoundedContext\Security\Reauth\Infrastructure;
 
 use App\BoundedContext\Security\Reauth\Domain\Repository\AccountRepository;
-use App\Models\User;
+use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
 
 final class EloquentAccountRepository implements AccountRepository
 {

@@ -3,7 +3,7 @@
 namespace App\BoundedContext\Shared\Shared\Infrastructure;
 
 use App\BoundedContext\Shared\Shared\Domain\Service\AuditEventRecorder;
-use App\Models\User;
+use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
 use OwenIt\Auditing\Models\Audit;
 
 final class OwenItAuditEventRecorder implements AuditEventRecorder

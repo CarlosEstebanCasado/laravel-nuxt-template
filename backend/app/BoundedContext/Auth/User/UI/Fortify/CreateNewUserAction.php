@@ -4,7 +4,7 @@ namespace App\BoundedContext\Auth\User\UI\Fortify;
 
 use App\BoundedContext\Auth\User\Application\Request\CreateUserUseCaseRequest;
 use App\BoundedContext\Auth\User\Application\UseCase\CreateUserUseCase;
-use App\Models\User;
+use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
