@@ -1,11 +1,11 @@
 <?php
 
-use App\Src\Audit\Audit\UI\Controllers\Api\AuditsController;
-use App\Src\Auth\User\UI\Controllers\Api\CurrentUserController;
-use App\Src\Security\Reauth\UI\Controllers\Api\DeleteAccountController;
-use App\Src\Session\Session\UI\Controllers\Api\DeleteSessionController;
-use App\Src\Session\Session\UI\Controllers\Api\RevokeOtherSessionsController;
-use App\Src\Session\Session\UI\Controllers\Api\SessionsController;
+use App\Src\IdentityAccess\Audit\UI\Controllers\Api\AuditsController;
+use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\CurrentUserController;
+use App\Src\IdentityAccess\Security\Reauth\UI\Controllers\Api\DeleteAccountController;
+use App\Src\IdentityAccess\Session\UI\Controllers\Api\DeleteSessionController;
+use App\Src\IdentityAccess\Session\UI\Controllers\Api\RevokeOtherSessionsController;
+use App\Src\IdentityAccess\Session\UI\Controllers\Api\SessionsController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 

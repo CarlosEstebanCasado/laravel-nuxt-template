@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+---
+
+# Regla de Calidad End-to-End
+
+- **Multitenancy disciplinado**: cualquier consulta o mutación debe validar `household_id` con Policies, `HouseholdScoped` y tests de accesos cruzados antes de merge. Previene fugas entre tenants en Laravel Domain/Application/Infrastructure.
+- **Contratos de API coherentes**: toda ruta nueva mantiene respuestas `{ data, meta, errors }`, documenta cambios en OpenAPI (`docs/**`) y añade soporte `Idempotency-Key` en escrituras críticas.
+- **CI obligatorio**: ejecuta `make qa` en cambios pequeños y `make ci` cuando hay lógica de negocio o dependencias nuevas. No se aceptan PR sin adjuntar la salida limpia de estos comandos.
+- **Seguridad auditada**: cada feature marca la checklist OWASP ASVS (`docs/security/owasp-asvs.md`), documenta el modelo de amenazas y enlaza evidencias en la PR. Si algún control no aplica, registra el riesgo residual.
+- **Consistencia Nuxt ↔ API**: cualquier cambio en `runtimeConfig`, `NUXT_PUBLIC_*` o autenticación debe seguir el roadmap de `docs/dashboard-migration.md`, manteniendo sincronizado el `.env` raíz y el frontend.
+- **Pirámide de tests**: capas Domain (unit sin Laravel), Application (fakes) e Infrastructure/UI (feature/E2E) deben tener al menos una prueba nueva o actualizada por cada cambio relevante antes de fusionar.
