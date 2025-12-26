@@ -19,6 +19,14 @@ interface UserRepository
         \DateTimeImmutable $passwordSetAt
     ): UserId;
 
+    public function upsertOAuthUser(
+        EmailAddress $email,
+        string $name,
+        string $provider,
+        \DateTimeImmutable $emailVerifiedAt,
+        string $passwordHash
+    ): UserId;
+
     public function updateProfile(
         UserId $id,
         string $name,

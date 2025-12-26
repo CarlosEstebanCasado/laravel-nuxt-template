@@ -2,12 +2,12 @@
 
 namespace App\BoundedContext\Auth\User\UI\Controllers;
 
+use App\BoundedContext\Auth\User\Application\Request\OAuthCallbackUseCaseRequest;
+use App\BoundedContext\Auth\User\Application\UseCase\OAuthCallbackUseCase;
 use App\BoundedContext\Shared\Shared\UI\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,6 +19,11 @@ class OAuthController extends Controller
      * @var array<int, string>
      */
     private array $providers = ['google', 'github'];
+
+    public function __construct(
+        private readonly OAuthCallbackUseCase $callbackUseCase
+    ) {
+    }
 
     public function redirect(string $provider): RedirectResponse
     {
@@ -41,20 +46,14 @@ class OAuthController extends Controller
             return $this->redirectToFrontend($provider, 'error', 'email_missing');
         }
 
-        $user = User::firstOrNew(['email' => $socialUser->getEmail()]);
+        $userId = $this->callbackUseCase->execute(new OAuthCallbackUseCaseRequest(
+            provider: $provider,
+            email: (string) $socialUser->getEmail(),
+            name: $socialUser->getName(),
+            nickname: $socialUser->getNickname(),
+        ));
 
-        if (! $user->exists) {
-            $user->name = $socialUser->getName() ?: $socialUser->getNickname() ?: $socialUser->getEmail();
-            $user->password = Hash::make(Str::random(32));
-            $user->auth_provider = $provider;
-            $user->password_set_at = null;
-        }
-
-        if (is_null($user->email_verified_at)) {
-            $user->email_verified_at = now();
-        }
-
-        $user->save();
+        $user = User::query()->findOrFail($userId->toInt());
 
         Auth::login($user, true);
 

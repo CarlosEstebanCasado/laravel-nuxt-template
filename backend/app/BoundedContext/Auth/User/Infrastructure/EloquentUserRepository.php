@@ -42,6 +42,32 @@ final class EloquentUserRepository implements UserRepository
         return new UserId((int) $model->getKey());
     }
 
+    public function upsertOAuthUser(
+        EmailAddress $email,
+        string $name,
+        string $provider,
+        \DateTimeImmutable $emailVerifiedAt,
+        string $passwordHash
+    ): UserId {
+        /** @var User $model */
+        $model = User::query()->firstOrNew(['email' => $email->toString()]);
+
+        if (! $model->exists) {
+            $model->name = $name;
+            $model->password = $passwordHash;
+            $model->auth_provider = $provider;
+            $model->password_set_at = null;
+        }
+
+        if (is_null($model->email_verified_at)) {
+            $model->email_verified_at = $emailVerifiedAt->format('Y-m-d H:i:s');
+        }
+
+        $model->save();
+
+        return new UserId((int) $model->getKey());
+    }
+
     public function updateProfile(
         UserId $id,
         string $name,
