@@ -15,7 +15,7 @@ These rules define the **mandatory scaffolding** for adding a new **BoundedConte
 When creating a **new BoundedContext**, create the context folder and at least one module folder. Example (replace names):
 
 ```
-backend/app/BoundedContext/{Context}/
+backend/app/src/{Context}/
   {Module}/
     Domain/
       Entity/
@@ -55,7 +55,7 @@ backend/app/BoundedContext/{Context}/
 For each new `{Module}` (aggregate root folder), create **all** of the following directories (even if initially empty):
 
 ```
-backend/app/BoundedContext/{Context}/{Module}/
+backend/app/src/{Context}/{Module}/
   Domain/
     Entity/
     ValueObject/
