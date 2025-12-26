@@ -1,9 +1,9 @@
 <?php
 
-namespace App\BoundedContext\Audit\Audit\Application\UseCase;
+namespace App\Src\Audit\Audit\Application\UseCase;
 
-use App\BoundedContext\Audit\Audit\Application\Request\ListUserAuditsUseCaseRequest;
-use App\BoundedContext\Audit\Audit\Domain\Repository\AuditRepository;
+use App\Src\Audit\Audit\Application\Request\ListUserAuditsUseCaseRequest;
+use App\Src\Audit\Audit\Domain\Repository\AuditRepository;
 
 final class ListUserAuditsUseCase
 {

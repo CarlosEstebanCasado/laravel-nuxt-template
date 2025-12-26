@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Audit\Audit\Domain\Repository;
+namespace App\Src\Audit\Audit\Domain\Repository;
 
 interface AuditRepository
 {

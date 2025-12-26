@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\UI\Responses;
+namespace App\Src\Auth\User\UI\Responses;
 
 use Illuminate\Http\JsonResponse;
 use Laravel\Fortify\Contracts\FailedPasswordResetLinkRequestResponse as FailedPasswordResetLinkRequestResponseContract;

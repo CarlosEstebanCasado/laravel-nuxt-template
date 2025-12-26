@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\Domain\ValueObject;
+namespace App\Src\Auth\User\Domain\ValueObject;
 
 final class AuthProvider
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\Application\UseCase;
+namespace App\Src\Auth\User\Application\UseCase;
 
-use App\BoundedContext\Auth\User\Application\Request\UpdateUserProfileUseCaseRequest;
-use App\BoundedContext\Auth\User\Domain\Repository\UserRepository;
-use App\BoundedContext\Auth\User\Domain\ValueObject\EmailAddress;
-use App\BoundedContext\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Auth\User\Application\Request\UpdateUserProfileUseCaseRequest;
+use App\Src\Auth\User\Domain\Repository\UserRepository;
+use App\Src\Auth\User\Domain\ValueObject\EmailAddress;
+use App\Src\Auth\User\Domain\ValueObject\UserId;
 
 final class UpdateUserProfileUseCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\Domain\Entity;
+namespace App\Src\Session\Session\Domain\Entity;
 
 final class SessionInfo
 {

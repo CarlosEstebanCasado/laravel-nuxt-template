@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\Domain\Exception;
+namespace App\Src\Session\Session\Domain\Exception;
 
 final class CannotRevokeCurrentSession extends \DomainException
 {

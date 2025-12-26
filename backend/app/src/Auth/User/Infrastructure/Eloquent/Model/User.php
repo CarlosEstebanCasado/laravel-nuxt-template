@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model;
+namespace App\Src\Auth\User\Infrastructure\Eloquent\Model;
 
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Security\Reauth\Application\Request;
+namespace App\Src\Security\Reauth\Application\Request;
 
 final class DeleteAccountUseCaseRequest
 {

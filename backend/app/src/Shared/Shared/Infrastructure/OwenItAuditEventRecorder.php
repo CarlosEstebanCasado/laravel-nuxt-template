@@ -1,9 +1,9 @@
 <?php
 
-namespace App\BoundedContext\Shared\Shared\Infrastructure;
+namespace App\Src\Shared\Shared\Infrastructure;
 
-use App\BoundedContext\Shared\Shared\Domain\Service\AuditEventRecorder;
-use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Shared\Shared\Domain\Service\AuditEventRecorder;
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 use OwenIt\Auditing\Models\Audit;
 
 final class OwenItAuditEventRecorder implements AuditEventRecorder

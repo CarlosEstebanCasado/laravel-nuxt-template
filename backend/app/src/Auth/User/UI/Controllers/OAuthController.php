@@ -1,11 +1,11 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\UI\Controllers;
+namespace App\Src\Auth\User\UI\Controllers;
 
-use App\BoundedContext\Auth\User\Application\Request\OAuthCallbackUseCaseRequest;
-use App\BoundedContext\Auth\User\Application\UseCase\OAuthCallbackUseCase;
-use App\BoundedContext\Shared\Shared\UI\Controllers\Controller;
-use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Auth\User\Application\Request\OAuthCallbackUseCaseRequest;
+use App\Src\Auth\User\Application\UseCase\OAuthCallbackUseCase;
+use App\Src\Shared\Shared\UI\Controllers\Controller;
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;

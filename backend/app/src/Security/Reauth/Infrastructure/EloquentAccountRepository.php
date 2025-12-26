@@ -1,9 +1,9 @@
 <?php
 
-namespace App\BoundedContext\Security\Reauth\Infrastructure;
+namespace App\Src\Security\Reauth\Infrastructure;
 
-use App\BoundedContext\Security\Reauth\Domain\Repository\AccountRepository;
-use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Security\Reauth\Domain\Repository\AccountRepository;
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 
 final class EloquentAccountRepository implements AccountRepository
 {

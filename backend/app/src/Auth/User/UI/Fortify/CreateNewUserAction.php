@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\UI\Fortify;
+namespace App\Src\Auth\User\UI\Fortify;
 
-use App\BoundedContext\Auth\User\Application\Request\CreateUserUseCaseRequest;
-use App\BoundedContext\Auth\User\Application\UseCase\CreateUserUseCase;
-use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Auth\User\Application\Request\CreateUserUseCaseRequest;
+use App\Src\Auth\User\Application\UseCase\CreateUserUseCase;
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;

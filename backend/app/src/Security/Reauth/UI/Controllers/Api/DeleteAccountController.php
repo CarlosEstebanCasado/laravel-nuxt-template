@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Security\Reauth\UI\Controllers\Api;
+namespace App\Src\Security\Reauth\UI\Controllers\Api;
 
-use App\BoundedContext\Security\Reauth\Application\Request\DeleteAccountUseCaseRequest;
-use App\BoundedContext\Security\Reauth\Application\UseCase\DeleteAccountUseCase;
-use App\BoundedContext\Shared\Shared\UI\Controllers\Controller;
+use App\Src\Security\Reauth\Application\Request\DeleteAccountUseCaseRequest;
+use App\Src\Security\Reauth\Application\UseCase\DeleteAccountUseCase;
+use App\Src\Shared\Shared\UI\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

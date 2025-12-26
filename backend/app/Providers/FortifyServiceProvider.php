@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use App\BoundedContext\Auth\User\UI\Fortify\CreateNewUserAction;
-use App\BoundedContext\Auth\User\UI\Fortify\ResetUserPasswordAction;
-use App\BoundedContext\Auth\User\UI\Fortify\UpdateUserPasswordAction;
-use App\BoundedContext\Auth\User\UI\Fortify\UpdateUserProfileInformationAction;
-use App\BoundedContext\Auth\User\UI\Responses\LoginResponse as ApiLoginResponse;
-use App\BoundedContext\Auth\User\UI\Responses\LogoutResponse as ApiLogoutResponse;
-use App\BoundedContext\Auth\User\UI\Responses\RegisterResponse as ApiRegisterResponse;
+use App\Src\Auth\User\UI\Fortify\CreateNewUserAction;
+use App\Src\Auth\User\UI\Fortify\ResetUserPasswordAction;
+use App\Src\Auth\User\UI\Fortify\UpdateUserPasswordAction;
+use App\Src\Auth\User\UI\Fortify\UpdateUserProfileInformationAction;
+use App\Src\Auth\User\UI\Responses\LoginResponse as ApiLoginResponse;
+use App\Src\Auth\User\UI\Responses\LogoutResponse as ApiLogoutResponse;
+use App\Src\Auth\User\UI\Responses\RegisterResponse as ApiRegisterResponse;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -35,10 +35,10 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(LoginResponse::class, ApiLoginResponse::class);
         $this->app->singleton(RegisterResponse::class, ApiRegisterResponse::class);
         $this->app->singleton(LogoutResponse::class, ApiLogoutResponse::class);
-        $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, \App\BoundedContext\Auth\User\UI\Responses\SuccessfulPasswordResetLinkRequestResponse::class);
-        $this->app->singleton(FailedPasswordResetLinkRequestResponse::class, \App\BoundedContext\Auth\User\UI\Responses\FailedPasswordResetLinkRequestResponse::class);
-        $this->app->singleton(PasswordResetResponseContract::class, \App\BoundedContext\Auth\User\UI\Responses\PasswordResetResponse::class);
-        $this->app->singleton(FailedPasswordResetResponseContract::class, \App\BoundedContext\Auth\User\UI\Responses\FailedPasswordResetResponse::class);
+        $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, \App\Src\Auth\User\UI\Responses\SuccessfulPasswordResetLinkRequestResponse::class);
+        $this->app->singleton(FailedPasswordResetLinkRequestResponse::class, \App\Src\Auth\User\UI\Responses\FailedPasswordResetLinkRequestResponse::class);
+        $this->app->singleton(PasswordResetResponseContract::class, \App\Src\Auth\User\UI\Responses\PasswordResetResponse::class);
+        $this->app->singleton(FailedPasswordResetResponseContract::class, \App\Src\Auth\User\UI\Responses\FailedPasswordResetResponse::class);
     }
 
     /**

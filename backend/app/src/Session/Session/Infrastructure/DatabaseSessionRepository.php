@@ -1,8 +1,8 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\Infrastructure;
+namespace App\Src\Session\Session\Infrastructure;
 
-use App\BoundedContext\Session\Session\Domain\Repository\SessionRepository;
+use App\Src\Session\Session\Domain\Repository\SessionRepository;
 use Illuminate\Support\Facades\DB;
 
 final class DatabaseSessionRepository implements SessionRepository

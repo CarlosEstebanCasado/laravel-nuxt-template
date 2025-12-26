@@ -1,7 +1,7 @@
 <?php
 
-use App\BoundedContext\Security\Reauth\UI\Middleware\ThrottleAuthEndpoints;
-use App\BoundedContext\Shared\Shared\UI\Middleware\EnsureHorizonAccess;
+use App\Src\Security\Reauth\UI\Middleware\ThrottleAuthEndpoints;
+use App\Src\Shared\Shared\UI\Middleware\EnsureHorizonAccess;
 use App\Providers\AppServiceProvider;
 use App\Providers\FortifyServiceProvider;
 use App\Providers\HorizonServiceProvider;

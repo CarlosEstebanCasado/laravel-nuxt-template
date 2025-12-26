@@ -2,20 +2,20 @@
 
 namespace App\Providers;
 
-use App\BoundedContext\Auth\User\Domain\Repository\UserRepository;
-use App\BoundedContext\Auth\User\Infrastructure\EloquentUserRepository;
-use App\BoundedContext\Audit\Audit\Domain\Repository\AuditRepository;
-use App\BoundedContext\Audit\Audit\Infrastructure\OwenItAuditRepository;
-use App\BoundedContext\Security\Reauth\Domain\Repository\AccountRepository;
-use App\BoundedContext\Security\Reauth\Infrastructure\EloquentAccountRepository;
-use App\BoundedContext\Session\Session\Domain\Repository\SessionRepository;
-use App\BoundedContext\Session\Session\Infrastructure\DatabaseSessionRepository;
-use App\BoundedContext\Shared\Shared\Domain\Service\AuditEventRecorder;
-use App\BoundedContext\Shared\Shared\Domain\Service\PasswordHasher;
-use App\BoundedContext\Shared\Shared\Domain\Service\RandomStringGenerator;
-use App\BoundedContext\Shared\Shared\Infrastructure\OwenItAuditEventRecorder;
-use App\BoundedContext\Shared\Shared\Infrastructure\LaravelPasswordHasher;
-use App\BoundedContext\Shared\Shared\Infrastructure\LaravelRandomStringGenerator;
+use App\Src\Auth\User\Domain\Repository\UserRepository;
+use App\Src\Auth\User\Infrastructure\EloquentUserRepository;
+use App\Src\Audit\Audit\Domain\Repository\AuditRepository;
+use App\Src\Audit\Audit\Infrastructure\OwenItAuditRepository;
+use App\Src\Security\Reauth\Domain\Repository\AccountRepository;
+use App\Src\Security\Reauth\Infrastructure\EloquentAccountRepository;
+use App\Src\Session\Session\Domain\Repository\SessionRepository;
+use App\Src\Session\Session\Infrastructure\DatabaseSessionRepository;
+use App\Src\Shared\Shared\Domain\Service\AuditEventRecorder;
+use App\Src\Shared\Shared\Domain\Service\PasswordHasher;
+use App\Src\Shared\Shared\Domain\Service\RandomStringGenerator;
+use App\Src\Shared\Shared\Infrastructure\OwenItAuditEventRecorder;
+use App\Src\Shared\Shared\Infrastructure\LaravelPasswordHasher;
+use App\Src\Shared\Shared\Infrastructure\LaravelRandomStringGenerator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\UI\Fortify;
+namespace App\Src\Auth\User\UI\Fortify;
 
-use App\BoundedContext\Auth\User\Application\Request\ResetUserPasswordUseCaseRequest;
-use App\BoundedContext\Auth\User\Application\UseCase\ResetUserPasswordUseCase;
-use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Auth\User\Application\Request\ResetUserPasswordUseCaseRequest;
+use App\Src\Auth\User\Application\UseCase\ResetUserPasswordUseCase;
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\Domain\Entity;
+namespace App\Src\Auth\User\Domain\Entity;
 
-use App\BoundedContext\Auth\User\Domain\ValueObject\AuthProvider;
-use App\BoundedContext\Auth\User\Domain\ValueObject\EmailAddress;
-use App\BoundedContext\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Auth\User\Domain\ValueObject\AuthProvider;
+use App\Src\Auth\User\Domain\ValueObject\EmailAddress;
+use App\Src\Auth\User\Domain\ValueObject\UserId;
 
 final class User
 {

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Support\Facades\DB;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Security\Reauth\Application\UseCase;
+namespace App\Src\Security\Reauth\Application\UseCase;
 
-use App\BoundedContext\Security\Reauth\Application\Request\DeleteAccountUseCaseRequest;
-use App\BoundedContext\Security\Reauth\Domain\Repository\AccountRepository;
-use App\BoundedContext\Shared\Shared\Domain\Service\AuditEventRecorder;
+use App\Src\Security\Reauth\Application\Request\DeleteAccountUseCaseRequest;
+use App\Src\Security\Reauth\Domain\Repository\AccountRepository;
+use App\Src\Shared\Shared\Domain\Service\AuditEventRecorder;
 
 final class DeleteAccountUseCase
 {

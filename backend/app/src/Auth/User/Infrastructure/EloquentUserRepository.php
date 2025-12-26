@@ -1,13 +1,13 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\Infrastructure;
+namespace App\Src\Auth\User\Infrastructure;
 
-use App\BoundedContext\Auth\User\Domain\Entity\User as DomainUser;
-use App\BoundedContext\Auth\User\Domain\Repository\UserRepository;
-use App\BoundedContext\Auth\User\Domain\ValueObject\AuthProvider;
-use App\BoundedContext\Auth\User\Domain\ValueObject\EmailAddress;
-use App\BoundedContext\Auth\User\Domain\ValueObject\UserId;
-use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Auth\User\Domain\Entity\User as DomainUser;
+use App\Src\Auth\User\Domain\Repository\UserRepository;
+use App\Src\Auth\User\Domain\ValueObject\AuthProvider;
+use App\Src\Auth\User\Domain\ValueObject\EmailAddress;
+use App\Src\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 
 final class EloquentUserRepository implements UserRepository
 {

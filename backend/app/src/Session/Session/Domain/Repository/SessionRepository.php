@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\Domain\Repository;
+namespace App\Src\Session\Session\Domain\Repository;
 
 interface SessionRepository
 {

@@ -2,7 +2,7 @@
 These rules define the **mandatory scaffolding** for adding a new **BoundedContext** or a new **module/aggregate** inside an existing BoundedContext in this repository.
 
 ## Naming + namespaces
-- **Root namespace**: `App\\BoundedContext\\{Context}\\{Module}\\...`
+- **Root namespace**: `App\\Src\\{Context}\\{Module}\\...`
 - **Context**: PascalCase (e.g. `Auth`, `Billing`, `Catalog`, `Security`)
 - **Module** (aggregate root folder): PascalCase (e.g. `User`, `Session`, `Audit`, `Payment`)
 - **Layers**: `Domain`, `Application`, `Infrastructure`, `UI`

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\Application\UseCase;
+namespace App\Src\Session\Session\Application\UseCase;
 
-use App\BoundedContext\Session\Session\Application\Request\RevokeOtherSessionsUseCaseRequest;
-use App\BoundedContext\Session\Session\Domain\Repository\SessionRepository;
-use App\BoundedContext\Shared\Shared\Domain\Service\AuditEventRecorder;
+use App\Src\Session\Session\Application\Request\RevokeOtherSessionsUseCaseRequest;
+use App\Src\Session\Session\Domain\Repository\SessionRepository;
+use App\Src\Shared\Shared\Domain\Service\AuditEventRecorder;
 
 final class RevokeOtherSessionsUseCase
 {

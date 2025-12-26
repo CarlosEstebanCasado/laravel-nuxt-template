@@ -1,9 +1,9 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\UI\Controllers\Api;
+namespace App\Src\Auth\User\UI\Controllers\Api;
 
-use App\BoundedContext\Auth\User\UI\Resources\UserResource;
-use App\BoundedContext\Shared\Shared\UI\Controllers\Controller;
+use App\Src\Auth\User\UI\Resources\UserResource;
+use App\Src\Shared\Shared\UI\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class CurrentUserController extends Controller

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\UI\Controllers\Api;
+namespace App\Src\Session\Session\UI\Controllers\Api;
 
-use App\BoundedContext\Session\Session\Application\Request\ListUserSessionsUseCaseRequest;
-use App\BoundedContext\Session\Session\Application\UseCase\ListUserSessionsUseCase;
-use App\BoundedContext\Shared\Shared\UI\Controllers\Controller;
+use App\Src\Session\Session\Application\Request\ListUserSessionsUseCaseRequest;
+use App\Src\Session\Session\Application\UseCase\ListUserSessionsUseCase;
+use App\Src\Shared\Shared\UI\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

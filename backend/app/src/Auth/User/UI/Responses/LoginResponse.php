@@ -1,8 +1,8 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\UI\Responses;
+namespace App\Src\Auth\User\UI\Responses;
 
-use App\BoundedContext\Auth\User\UI\Resources\UserResource;
+use App\Src\Auth\User\UI\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 

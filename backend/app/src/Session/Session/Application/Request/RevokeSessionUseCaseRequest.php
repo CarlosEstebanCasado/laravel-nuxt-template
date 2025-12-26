@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\Application\Request;
+namespace App\Src\Session\Session\Application\Request;
 
 final class RevokeSessionUseCaseRequest
 {

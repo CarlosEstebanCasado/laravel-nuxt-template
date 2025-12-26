@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Shared\Shared\Domain\Service;
+namespace App\Src\Shared\Shared\Domain\Service;
 
 interface AuditEventRecorder
 {

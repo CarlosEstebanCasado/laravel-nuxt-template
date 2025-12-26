@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\UI\Fortify;
+namespace App\Src\Auth\User\UI\Fortify;
 
-use App\BoundedContext\Auth\User\Application\Request\UpdateUserProfileUseCaseRequest;
-use App\BoundedContext\Auth\User\Application\UseCase\UpdateUserProfileUseCase;
-use App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Auth\User\Application\Request\UpdateUserProfileUseCaseRequest;
+use App\Src\Auth\User\Application\UseCase\UpdateUserProfileUseCase;
+use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;

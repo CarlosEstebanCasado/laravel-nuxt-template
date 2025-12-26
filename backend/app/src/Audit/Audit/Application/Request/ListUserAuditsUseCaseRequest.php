@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Audit\Audit\Application\Request;
+namespace App\Src\Audit\Audit\Application\Request;
 
 final class ListUserAuditsUseCaseRequest
 {

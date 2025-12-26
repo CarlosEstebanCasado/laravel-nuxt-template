@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Security\Reauth\UI\Middleware;
+namespace App\Src\Security\Reauth\UI\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

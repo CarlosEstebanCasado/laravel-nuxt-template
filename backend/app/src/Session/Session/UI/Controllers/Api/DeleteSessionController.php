@@ -1,11 +1,11 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\UI\Controllers\Api;
+namespace App\Src\Session\Session\UI\Controllers\Api;
 
-use App\BoundedContext\Session\Session\Application\Request\RevokeSessionUseCaseRequest;
-use App\BoundedContext\Session\Session\Application\UseCase\RevokeSessionUseCase;
-use App\BoundedContext\Session\Session\Domain\Exception\CannotRevokeCurrentSession;
-use App\BoundedContext\Shared\Shared\UI\Controllers\Controller;
+use App\Src\Session\Session\Application\Request\RevokeSessionUseCaseRequest;
+use App\Src\Session\Session\Application\UseCase\RevokeSessionUseCase;
+use App\Src\Session\Session\Domain\Exception\CannotRevokeCurrentSession;
+use App\Src\Shared\Shared\UI\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

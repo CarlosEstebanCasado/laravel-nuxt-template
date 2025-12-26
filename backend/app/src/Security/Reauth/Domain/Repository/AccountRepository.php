@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Security\Reauth\Domain\Repository;
+namespace App\Src\Security\Reauth\Domain\Repository;
 
 interface AccountRepository
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Audit\Audit\UI\Controllers\Api;
+namespace App\Src\Audit\Audit\UI\Controllers\Api;
 
-use App\BoundedContext\Audit\Audit\Application\Request\ListUserAuditsUseCaseRequest;
-use App\BoundedContext\Audit\Audit\Application\UseCase\ListUserAuditsUseCase;
-use App\BoundedContext\Shared\Shared\UI\Controllers\Controller;
+use App\Src\Audit\Audit\Application\Request\ListUserAuditsUseCaseRequest;
+use App\Src\Audit\Audit\Application\UseCase\ListUserAuditsUseCase;
+use App\Src\Shared\Shared\UI\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

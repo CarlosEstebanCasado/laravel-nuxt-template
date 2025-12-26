@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\Domain\Repository;
+namespace App\Src\Auth\User\Domain\Repository;
 
-use App\BoundedContext\Auth\User\Domain\Entity\User;
-use App\BoundedContext\Auth\User\Domain\ValueObject\EmailAddress;
-use App\BoundedContext\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Auth\User\Domain\Entity\User;
+use App\Src\Auth\User\Domain\ValueObject\EmailAddress;
+use App\Src\Auth\User\Domain\ValueObject\UserId;
 
 interface UserRepository
 {

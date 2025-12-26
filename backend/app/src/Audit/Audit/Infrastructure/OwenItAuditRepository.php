@@ -1,8 +1,8 @@
 <?php
 
-namespace App\BoundedContext\Audit\Audit\Infrastructure;
+namespace App\Src\Audit\Audit\Infrastructure;
 
-use App\BoundedContext\Audit\Audit\Domain\Repository\AuditRepository;
+use App\Src\Audit\Audit\Domain\Repository\AuditRepository;
 use OwenIt\Auditing\Models\Audit;
 
 final class OwenItAuditRepository implements AuditRepository

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\Application\UseCase;
+namespace App\Src\Auth\User\Application\UseCase;
 
 final class UpdateUserProfileResult
 {

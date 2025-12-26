@@ -27,7 +27,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "App\\BoundedContext\\": "app/src/",
+            "App\\Src\\": "app/src/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }

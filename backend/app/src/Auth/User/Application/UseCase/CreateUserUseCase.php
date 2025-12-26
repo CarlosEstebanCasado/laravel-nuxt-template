@@ -1,12 +1,12 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\Application\UseCase;
+namespace App\Src\Auth\User\Application\UseCase;
 
-use App\BoundedContext\Auth\User\Application\Request\CreateUserUseCaseRequest;
-use App\BoundedContext\Auth\User\Domain\Repository\UserRepository;
-use App\BoundedContext\Auth\User\Domain\ValueObject\EmailAddress;
-use App\BoundedContext\Auth\User\Domain\ValueObject\UserId;
-use App\BoundedContext\Shared\Shared\Domain\Service\PasswordHasher;
+use App\Src\Auth\User\Application\Request\CreateUserUseCaseRequest;
+use App\Src\Auth\User\Domain\Repository\UserRepository;
+use App\Src\Auth\User\Domain\ValueObject\EmailAddress;
+use App\Src\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Shared\Shared\Domain\Service\PasswordHasher;
 
 final class CreateUserUseCase
 {

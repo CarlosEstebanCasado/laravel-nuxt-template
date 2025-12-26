@@ -1,10 +1,10 @@
 <?php
 
-namespace App\BoundedContext\Session\Session\Application\UseCase;
+namespace App\Src\Session\Session\Application\UseCase;
 
-use App\BoundedContext\Session\Session\Application\Request\ListUserSessionsUseCaseRequest;
-use App\BoundedContext\Session\Session\Domain\Entity\SessionInfo;
-use App\BoundedContext\Session\Session\Domain\Repository\SessionRepository;
+use App\Src\Session\Session\Application\Request\ListUserSessionsUseCaseRequest;
+use App\Src\Session\Session\Domain\Entity\SessionInfo;
+use App\Src\Session\Session\Domain\Repository\SessionRepository;
 
 final class ListUserSessionsUseCase
 {

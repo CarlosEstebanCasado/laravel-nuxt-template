@@ -1,12 +1,12 @@
 <?php
 
-namespace App\BoundedContext\Auth\User\UI\Resources;
+namespace App\Src\Auth\User\UI\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \App\BoundedContext\Auth\User\Infrastructure\Eloquent\Model\User
+ * @mixin \App\Src\Auth\User\Infrastructure\Eloquent\Model\User
  */
 class UserResource extends JsonResource
 {
