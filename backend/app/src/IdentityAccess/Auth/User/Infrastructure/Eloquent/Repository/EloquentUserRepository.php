@@ -113,6 +113,14 @@ final class EloquentUserRepository implements UserRepository
             ? new \DateTimeImmutable($model->password_set_at->toDateTimeString())
             : null;
 
+        $createdAt = $model->created_at
+            ? new \DateTimeImmutable($model->created_at->toDateTimeString())
+            : null;
+
+        $updatedAt = $model->updated_at
+            ? new \DateTimeImmutable($model->updated_at->toDateTimeString())
+            : null;
+
         return new DomainUser(
             id: new UserId((int) $model->getKey()),
             name: (string) $model->name,
@@ -120,10 +128,11 @@ final class EloquentUserRepository implements UserRepository
             emailVerifiedAt: $emailVerifiedAt,
             authProvider: new AuthProvider((string) ($model->auth_provider ?? 'password')),
             passwordSetAt: $passwordSetAt,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
         );
     }
 }
-
 
 
 

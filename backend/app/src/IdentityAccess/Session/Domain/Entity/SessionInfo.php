@@ -5,12 +5,37 @@ namespace App\Src\IdentityAccess\Session\Domain\Entity;
 final class SessionInfo
 {
     public function __construct(
-        public readonly string $id,
-        public readonly ?string $ipAddress,
-        public readonly ?string $userAgent,
-        public readonly int $lastActivity,
-        public readonly bool $isCurrent,
+        private readonly string $id,
+        private readonly ?string $ipAddress,
+        private readonly ?string $userAgent,
+        private readonly int $lastActivity,
+        private readonly bool $isCurrent,
     ) {
+    }
+
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    public function ipAddress(): ?string
+    {
+        return $this->ipAddress;
+    }
+
+    public function userAgent(): ?string
+    {
+        return $this->userAgent;
+    }
+
+    public function lastActivity(): int
+    {
+        return $this->lastActivity;
+    }
+
+    public function isCurrent(): bool
+    {
+        return $this->isCurrent;
     }
 
     /**
@@ -27,7 +52,6 @@ final class SessionInfo
         ];
     }
 }
-
 
 
 

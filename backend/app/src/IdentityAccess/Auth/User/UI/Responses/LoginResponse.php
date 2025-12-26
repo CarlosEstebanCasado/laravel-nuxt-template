@@ -2,16 +2,24 @@
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Responses;
 
-use App\Src\IdentityAccess\Auth\User\UI\Resources\UserResource;
+use App\Src\IdentityAccess\Auth\User\Application\Request\GetCurrentUserUseCaseRequest;
+use App\Src\IdentityAccess\Auth\User\Application\UseCase\GetCurrentUserUseCase;
 use Illuminate\Http\JsonResponse;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 
 class LoginResponse implements LoginResponseContract
 {
+    public function __construct(
+        private readonly GetCurrentUserUseCase $useCase
+    ) {
+    }
+
     public function toResponse($request): JsonResponse
     {
-        return response()->json([
-            'data' => new UserResource($request->user()->fresh()),
-        ]);
+        $result = $this->useCase->execute(new GetCurrentUserUseCaseRequest(
+            userId: (int) $request->user()->getAuthIdentifier(),
+        ));
+
+        return response()->json($result);
     }
 }

@@ -9,13 +9,55 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 final class User
 {
     public function __construct(
-        public readonly UserId $id,
-        public readonly string $name,
-        public readonly EmailAddress $email,
-        public readonly ?\DateTimeImmutable $emailVerifiedAt,
-        public readonly AuthProvider $authProvider,
-        public readonly ?\DateTimeImmutable $passwordSetAt,
+        private readonly UserId $id,
+        private readonly string $name,
+        private readonly EmailAddress $email,
+        private readonly ?\DateTimeImmutable $emailVerifiedAt,
+        private readonly AuthProvider $authProvider,
+        private readonly ?\DateTimeImmutable $passwordSetAt,
+        private readonly ?\DateTimeImmutable $createdAt,
+        private readonly ?\DateTimeImmutable $updatedAt,
     ) {
+    }
+
+    public function id(): UserId
+    {
+        return $this->id;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function email(): EmailAddress
+    {
+        return $this->email;
+    }
+
+    public function emailVerifiedAt(): ?\DateTimeImmutable
+    {
+        return $this->emailVerifiedAt;
+    }
+
+    public function authProvider(): AuthProvider
+    {
+        return $this->authProvider;
+    }
+
+    public function passwordSetAt(): ?\DateTimeImmutable
+    {
+        return $this->passwordSetAt;
+    }
+
+    public function createdAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function updatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 
     /**
@@ -27,7 +69,5 @@ final class User
         return $this->authProvider->isPassword() || $this->passwordSetAt !== null;
     }
 }
-
-
 
 
