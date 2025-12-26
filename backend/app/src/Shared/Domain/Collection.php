@@ -64,20 +64,6 @@ abstract class Collection implements Countable, IteratorAggregate
     }
 
     /**
-     * @return array<int, object>
-     */
-    public function sort(string $field = 'created_at', string $order = 'desc'): array
-    {
-        usort($this->items, function ($a, $b) use ($field, $order) {
-            $result = $a->{$field} <=> $b->{$field};
-
-            return $order === 'asc' ? $result : -$result;
-        });
-
-        return $this->items;
-    }
-
-    /**
      * @return array<string, array<int, object>>
      */
     public function groupBy(string $field): array
