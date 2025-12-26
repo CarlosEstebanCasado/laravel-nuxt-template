@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Src\Auth\User\Infrastructure;
+namespace App\Src\Auth\User\Infrastructure\Eloquent\Repository;
 
 use App\Src\Auth\User\Domain\Entity\User as DomainUser;
 use App\Src\Auth\User\Domain\Repository\UserRepository;

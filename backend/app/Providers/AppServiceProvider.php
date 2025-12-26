@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use App\Src\Auth\User\Domain\Repository\UserRepository;
-use App\Src\Auth\User\Infrastructure\EloquentUserRepository;
+use App\Src\Auth\User\Infrastructure\Eloquent\Repository\EloquentUserRepository;
 use App\Src\Audit\Audit\Domain\Repository\AuditRepository;
 use App\Src\Audit\Audit\Infrastructure\OwenItAuditRepository;
 use App\Src\Security\Reauth\Domain\Repository\AccountRepository;
-use App\Src\Security\Reauth\Infrastructure\EloquentAccountRepository;
+use App\Src\Security\Reauth\Infrastructure\Eloquent\Repository\EloquentAccountRepository;
 use App\Src\Session\Session\Domain\Repository\SessionRepository;
 use App\Src\Session\Session\Infrastructure\DatabaseSessionRepository;
 use App\Src\Shared\Shared\Domain\Service\AuditEventRecorder;

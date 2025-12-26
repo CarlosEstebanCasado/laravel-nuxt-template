@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Src\Security\Reauth\Infrastructure;
+namespace App\Src\Security\Reauth\Infrastructure\Eloquent\Repository;
 
 use App\Src\Security\Reauth\Domain\Repository\AccountRepository;
 use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;

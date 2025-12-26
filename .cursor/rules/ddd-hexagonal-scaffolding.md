@@ -36,6 +36,7 @@ backend/app/src/{Context}/
     UI/
       Controllers/
         Api/
+      Fortify/
       Request/
       Resources/
       Responses/
@@ -75,6 +76,7 @@ backend/app/src/{Context}/{Module}/
   UI/
     Controllers/
       Api/
+    Fortify/
     Request/
     Resources/
     Responses/
