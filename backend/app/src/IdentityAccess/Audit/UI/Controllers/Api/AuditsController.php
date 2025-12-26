@@ -26,9 +26,6 @@ class AuditsController extends Controller
             page: (int) $request->integer('page', 1),
         ));
 
-        return response()->json([
-            'data' => $result['data'],
-            'meta' => $result['meta'],
-        ]);
+        return response()->json($result);
     }
 }

@@ -31,6 +31,7 @@ backend/app/src/{Context}/
       UseCase/
       Request/
       Response/
+      Converter/
     Infrastructure/
       Eloquent/
         Model/
@@ -41,8 +42,6 @@ backend/app/src/{Context}/
       Controllers/
         Api/
       Request/
-      Resources/
-      Responses/
       Middleware/
       Routes/
 ```
@@ -71,6 +70,7 @@ backend/app/src/{Context}/{Module}/
     UseCase/
     Request/
     Response/
+    Converter/
   Infrastructure/
     Eloquent/
       Model/
@@ -81,8 +81,6 @@ backend/app/src/{Context}/{Module}/
     Controllers/
       Api/
     Request/
-    Resources/
-    Responses/
     Middleware/
     Routes/
 ```
@@ -101,6 +99,12 @@ backend/app/src/{Context}/{Module}/
   - Eloquent adapter: `.../Infrastructure/Eloquent/Repository/Eloquent{Entity}Repository.php`
   - Non-Eloquent adapter: `.../Infrastructure/{AdapterName}{Entity}Repository.php` (if needed)
 - **Mappers** (Domain ↔ Persistence/DTO): `.../Infrastructure/Mapper/**`
+
+### Repository responses + converters
+- Infra repositories nunca devuelven arrays “raw”. Construyen entidades/colecciones de dominio (p.ej. `AuditCollectionResponse`) usando utilidades compartidas (`App\\Src\\Shared\\Domain\\Collection`, `PaginationResponse`, etc.).
+- Cada módulo debe incluir `Application/Converter/` con converters responsables de transformar las colecciones tipadas en DTOs públicos (`Application/Response/**`). Divide los converters en “list” + “item” cuando proceda para fomentar reutilización.
+- Los UseCases consumen el repositorio, invocan al converter adecuado (`->toResponse(...)`) y devuelven el DTO final.
+- Los controladores solo serializan el DTO retornado por el UseCase; no deben mapear arrays ni acceder a modelos directamente.
 
 ## DTO conventions (Application/Request)
 - `*UseCaseRequest` MUST be a **simple immutable DTO**:
