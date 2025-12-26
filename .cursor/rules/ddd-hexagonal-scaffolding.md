@@ -97,6 +97,17 @@ backend/app/BoundedContext/{Context}/{Module}/
   - Non-Eloquent adapter: `.../Infrastructure/{AdapterName}{Entity}Repository.php` (if needed)
 - **Mappers** (Domain ↔ Persistence/DTO): `.../Infrastructure/Mapper/**`
 
+## DTO conventions (Application/Request)
+- `*UseCaseRequest` MUST be a **simple immutable DTO**:
+  - `final class`
+  - `public function __construct(public readonly ...$props) {}`
+  - **No getters**
+  - **No magic accessors** (`__get`, `__set`)
+- Exception: if construction requires invariants/normalization, use:
+  - `private function __construct(...)`
+  - `public static function fromPrimitives(...)` / `create(...)`
+  - (getters allowed only when needed by that pattern)
+
 ## Dependency direction (Hexagonal)
 - `UI` → `Application` → `Domain`
 - `Infrastructure` implements `Domain` ports (e.g. repositories) and is wired via container bindings.
