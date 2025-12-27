@@ -19,9 +19,9 @@ final class AuditCollection extends Collection
             return null;
         }
 
-        /** @var Audit $first */
-        $first = $this->items()[0];
+        $items = $this->items();
+        $first = reset($items);
 
-        return $first;
+        return $first instanceof Audit ? $first : null;
     }
 }
