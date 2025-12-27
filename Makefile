@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed qa test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db
+.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed qa phpstan test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db
 
 help:
 	@echo "Available targets:"
@@ -58,6 +58,9 @@ qa:
 	@if [ -f frontend/package.json ]; then \
 		docker compose exec nuxt npm run lint || echo "Define npm script 'lint'"; \
 	fi
+
+phpstan:
+	docker compose exec api vendor/bin/phpstan analyse
 
 # Backwards-compatible alias mentioned in README
 test: ci

@@ -75,6 +75,9 @@ jobs:
       - name: Security audit (composer)
         run: composer audit --no-interaction
 
+      - name: Static analysis (PHPStan)
+        run: vendor/bin/phpstan analyse
+
       - name: Prepare .env for CI
         run: |
           if [ ! -f .env ]; then
@@ -86,5 +89,4 @@ jobs:
 
       - name: Run tests (PHPUnit)
         run: php artisan test
-
 
