@@ -47,18 +47,35 @@ class UpdateUserProfileInformationAction implements UpdatesUserProfileInformatio
             'current_password.current_password' => __('The provided password does not match your current password.'),
         ])->validateWithBag('updateProfileInformation');
 
-        $result = $this->useCase->execute(new UpdateUserProfileUseCaseRequest(
-            userId: (int) $user->getAuthIdentifier(),
-            name: $input['name'],
-            email: $input['email'],
-            isEmailChanging: $isEmailChanging,
-            mustVerifyEmail: true,
-        ));
+        $result = $this->useCase->execute(
+            new UpdateUserProfileUseCaseRequest(
+                userId: $this->resolveUserId($user),
+                name: $input['name'],
+                email: $input['email'],
+                isEmailChanging: $isEmailChanging,
+                mustVerifyEmail: true,
+            )
+        );
 
         $user->refresh();
 
         if ($result->shouldSendEmailVerificationNotification) {
             $user->sendEmailVerificationNotification();
         }
+    }
+
+    private function resolveUserId(User $user): int
+    {
+        $userId = $user->getAuthIdentifier();
+
+        if (! is_int($userId) && ! is_string($userId)) {
+            throw new \InvalidArgumentException('User identifier must be string or int.');
+        }
+
+        if (! is_numeric($userId)) {
+            throw new \InvalidArgumentException('User identifier must be numeric.');
+        }
+
+        return (int) $userId;
     }
 }

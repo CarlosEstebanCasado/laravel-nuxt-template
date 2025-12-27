@@ -9,6 +9,7 @@ use App\Src\IdentityAccess\Audit\Domain\Repository\AuditRepository;
 use App\Src\IdentityAccess\Audit\Domain\Response\AuditCollectionResponse;
 use App\Src\Shared\Domain\Response\PaginationResponse;
 use Illuminate\Support\Carbon;
+use InvalidArgumentException;
 use OwenIt\Auditing\Models\Audit;
 
 final class EloquentAuditRepository implements AuditRepository
@@ -25,26 +26,32 @@ final class EloquentAuditRepository implements AuditRepository
             ->orderByDesc('created_at')
             ->paginate($perPage, ['*'], 'page', $page);
 
-        $audits = $paginator->map(function (Audit $audit) {
-            $createdAt = $audit->getAttribute('created_at');
-            $createdAtValue = $createdAt instanceof Carbon
-                ? new \DateTimeImmutable($createdAt->toDateTimeString())
-                : new \DateTimeImmutable();
+        $audits = $paginator
+            ->map(function ($audit) {
+                if (! $audit instanceof Audit) {
+                    throw new InvalidArgumentException('Expected OwenIt audit model instance.');
+                }
 
-            $oldValues = $audit->getAttribute('old_values');
-            $newValues = $audit->getAttribute('new_values');
+                $createdAt = $audit->getAttribute('created_at');
+                $createdAtValue = $createdAt instanceof Carbon
+                    ? new \DateTimeImmutable($createdAt->toDateTimeString())
+                    : new \DateTimeImmutable();
 
-            return new DomainAudit(
-                id: (int) $audit->getKey(),
-                event: (string) ($audit->getAttribute('event') ?? ''),
-                createdAt: $createdAtValue,
-                oldValues: is_array($oldValues) ? $oldValues : null,
-                newValues: is_array($newValues) ? $newValues : null,
-                ipAddress: $audit->getAttribute('ip_address'),
-                userAgent: $audit->getAttribute('user_agent'),
-                tags: $audit->getAttribute('tags'),
-            );
-        })->all();
+                $oldValues = $audit->getAttribute('old_values');
+                $newValues = $audit->getAttribute('new_values');
+
+                return new DomainAudit(
+                    id: $this->resolveAuditId($audit),
+                    event: $this->stringOrFallback($audit->getAttribute('event')),
+                    createdAt: $createdAtValue,
+                    oldValues: is_array($oldValues) ? $this->normalizeAuditValues($oldValues) : null,
+                    newValues: is_array($newValues) ? $this->normalizeAuditValues($newValues) : null,
+                    ipAddress: $this->stringOrNull($audit->getAttribute('ip_address')),
+                    userAgent: $this->stringOrNull($audit->getAttribute('user_agent')),
+                    tags: $this->stringOrNull($audit->getAttribute('tags')),
+                );
+            })
+            ->all();
 
         return new AuditCollectionResponse(
             new AuditCollection($audits),
@@ -55,5 +62,45 @@ final class EloquentAuditRepository implements AuditRepository
                 total: $paginator->total(),
             ),
         );
+    }
+
+    private function resolveAuditId(Audit $audit): int
+    {
+        $id = $audit->getKey();
+
+        if (! is_int($id) && ! is_string($id)) {
+            throw new InvalidArgumentException('Audit primary key must be string or int.');
+        }
+
+        if (! is_numeric($id)) {
+            throw new InvalidArgumentException('Audit primary key must be numeric.');
+        }
+
+        return (int) $id;
+    }
+
+    /**
+     * @param array<mixed, mixed> $values
+     * @return array<string, mixed>
+     */
+    private function normalizeAuditValues(array $values): array
+    {
+        $normalized = [];
+
+        foreach ($values as $key => $value) {
+            $normalized[(string) $key] = $value;
+        }
+
+        return $normalized;
+    }
+
+    private function stringOrNull(mixed $value): ?string
+    {
+        return is_string($value) ? $value : null;
+    }
+
+    private function stringOrFallback(mixed $value, string $fallback = ''): string
+    {
+        return is_string($value) ? $value : $fallback;
     }
 }

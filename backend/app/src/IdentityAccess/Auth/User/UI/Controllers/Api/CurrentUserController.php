@@ -18,11 +18,13 @@ class CurrentUserController extends Controller
 
     public function __invoke(Request $request): JsonResponse
     {
-        $user = $request->user();
+        $user = $this->requireUser($request);
 
-        $result = $this->useCase->execute(new GetCurrentUserUseCaseRequest(
-            userId: (int) $user->getAuthIdentifier(),
-        ));
+        $result = $this->useCase->execute(
+            new GetCurrentUserUseCaseRequest(
+                userId: $this->requireUserId($user),
+            )
+        );
 
         return response()->json($result);
     }

@@ -101,11 +101,11 @@ abstract class Collection implements Countable, IteratorAggregate
         foreach ($this->items() as $item) {
             $currentValue = $item;
 
-            foreach ($fieldParts as $index => $part) {
+            foreach ($fieldParts as $part) {
                 $currentValue = $this->descendValue($currentValue, $part);
             }
 
-            $groupKey = (string) $currentValue;
+            $groupKey = $this->stringifyGroupKey($currentValue);
 
             if (! isset($groupedResult[$groupKey])) {
                 $groupedResult[$groupKey] = [];
@@ -176,8 +176,16 @@ abstract class Collection implements Countable, IteratorAggregate
         return lcfirst($value);
     }
 
-    private function descendValue(object $item, string $fieldPart): mixed
+    private function descendValue(mixed $item, string $fieldPart): mixed
     {
+        if (! is_object($item)) {
+            throw new RuntimeException(sprintf(
+                'Unable to access field "%s" on value of type %s when grouping collection',
+                $fieldPart,
+                get_debug_type($item)
+            ));
+        }
+
         $methodCandidates = $this->methodCandidates($fieldPart);
 
         foreach ($methodCandidates as $method) {
@@ -194,6 +202,22 @@ abstract class Collection implements Countable, IteratorAggregate
             'Unable to access field "%s" on %s when grouping collection',
             $fieldPart,
             $item::class
+        ));
+    }
+
+    private function stringifyGroupKey(mixed $value): string
+    {
+        if (is_scalar($value) || $value === null) {
+            return (string) $value;
+        }
+
+        if (is_object($value) && method_exists($value, '__toString')) {
+            return (string) $value;
+        }
+
+        throw new RuntimeException(sprintf(
+            'Unable to convert group key to string. Received %s',
+            get_debug_type($value)
         ));
     }
 }

@@ -34,7 +34,7 @@ class UpdateUserPasswordAction implements UpdatesUserPasswords
         ])->validateWithBag('updatePassword');
 
         $this->useCase->execute(new UpdateUserPasswordUseCaseRequest(
-            userId: (int) $user->getAuthIdentifier(),
+            userId: $this->resolveUserId($user),
             password: $input['password'],
         ));
 
@@ -45,5 +45,20 @@ class UpdateUserPasswordAction implements UpdatesUserPasswords
         // Keep this session, invalidate other sessions/devices.
         // Requires AuthenticateSession middleware in the 'web' group.
         Auth::logoutOtherDevices($input['password']);
+    }
+
+    private function resolveUserId(User $user): int
+    {
+        $userId = $user->getAuthIdentifier();
+
+        if (! is_int($userId) && ! is_string($userId)) {
+            throw new \InvalidArgumentException('User identifier must be string or int.');
+        }
+
+        if (! is_numeric($userId)) {
+            throw new \InvalidArgumentException('User identifier must be numeric.');
+        }
+
+        return (int) $userId;
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use Illuminate\Contracts\Session\Session as SessionContract;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Support\Facades\DB;
@@ -36,9 +37,13 @@ class SessionsAuditTest extends TestCase
 
     private function bootStatefulSession(string $sessionId): string
     {
-        $this->app['session']->setId($sessionId);
+        /** @var SessionContract $session */
+        $session = $this->app['session'];
+        $session->setId($sessionId);
         $this->withCredentials();
-        $this->withUnencryptedCookie(config('session.cookie'), $sessionId);
+        $cookieName = config('session.cookie');
+        $cookieName = is_string($cookieName) && $cookieName !== '' ? $cookieName : 'laravel_session';
+        $this->withUnencryptedCookie($cookieName, $sessionId);
         $this->withSession(['_token' => $this->csrfToken, 'init' => true]);
 
         return $sessionId;
@@ -117,8 +122,11 @@ class SessionsAuditTest extends TestCase
             ->first();
 
         $this->assertNotNull($audit);
-        $revoked = data_get($audit->getAttribute('new_values'), 'revoked', 0);
-        $this->assertSame(2, (int) $revoked);
+        $revokedValue = data_get($audit->getAttribute('new_values'), 'revoked', 0);
+        $revoked = is_int($revokedValue)
+            ? $revokedValue
+            : (is_numeric($revokedValue) ? (int) $revokedValue : 0);
+        $this->assertSame(2, $revoked);
     }
 
     public function test_user_can_revoke_a_specific_session_and_it_creates_an_audit_event(): void
@@ -169,8 +177,9 @@ class SessionsAuditTest extends TestCase
             ->first();
 
         $this->assertNotNull($audit);
-        $sessionId = data_get($audit->getAttribute('new_values'), 'session_id', '');
-        $this->assertSame('revokable_session', (string) $sessionId);
+        $sessionIdValue = data_get($audit->getAttribute('new_values'), 'session_id', '');
+        $sessionId = is_string($sessionIdValue) ? $sessionIdValue : '';
+        $this->assertSame('revokable_session', $sessionId);
     }
 
     public function test_audits_endpoint_returns_user_audits(): void

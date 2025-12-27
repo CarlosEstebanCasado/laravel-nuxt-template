@@ -21,11 +21,11 @@ class DeleteAccountController extends Controller
 
     public function __invoke(Request $request): JsonResponse
     {
-        $user = $request->user();
+        $user = $this->requireUser($request);
 
         $requiresPassword =
-            ($user?->auth_provider === 'password') ||
-            (! is_null($user?->password_set_at));
+            ($user->auth_provider === 'password') ||
+            (! is_null($user->password_set_at));
 
         $validated = $request->validate([
             'confirmation' => ['required', 'string', Rule::in(['DELETE'])],
@@ -42,13 +42,15 @@ class DeleteAccountController extends Controller
             'password.current_password' => __('The provided password does not match your current password.'),
         ]);
 
-        $response = $this->useCase->execute(new DeleteAccountUseCaseRequest(
-            userId: (int) $user->getAuthIdentifier(),
-            confirmation: $validated['confirmation'],
-            url: $request->fullUrl(),
-            ipAddress: $request->ip(),
-            userAgent: $request->userAgent(),
-        ));
+        $response = $this->useCase->execute(
+            new DeleteAccountUseCaseRequest(
+                userId: $this->requireUserId($user),
+                confirmation: $validated['confirmation'],
+                url: $request->fullUrl(),
+                ipAddress: $request->ip(),
+                userAgent: $request->userAgent(),
+            )
+        );
 
         // Logout and invalidate session (stateful Sanctum).
         /** @var StatefulGuard $guard */
