@@ -9,6 +9,9 @@ use Countable;
 use IteratorAggregate;
 use RuntimeException;
 
+/**
+ * @implements IteratorAggregate<int, object>
+ */
 abstract class Collection implements Countable, IteratorAggregate
 {
     /**
@@ -19,6 +22,9 @@ abstract class Collection implements Countable, IteratorAggregate
         DomainAssert::arrayOf($this->type(), $items);
     }
 
+    /**
+     * @return ArrayIterator<int, object>
+     */
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->items());

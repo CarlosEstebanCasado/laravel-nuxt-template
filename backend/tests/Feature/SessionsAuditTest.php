@@ -16,6 +16,7 @@ class SessionsAuditTest extends TestCase
     private string $csrfToken = 'test_csrf_token';
     private string $validSessionId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 
+    /** @var array<string, string> */
     private array $statefulHeaders = [
         'Origin' => 'https://app.project.dev',
         'Referer' => 'https://app.project.dev/',
@@ -45,10 +46,12 @@ class SessionsAuditTest extends TestCase
 
     public function test_user_can_revoke_other_sessions_and_it_creates_an_audit_event(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
         ]);
 
+        /** @var User $otherUser */
         $otherUser = User::factory()->create([
             'email_verified_at' => now(),
         ]);
@@ -114,11 +117,13 @@ class SessionsAuditTest extends TestCase
             ->first();
 
         $this->assertNotNull($audit);
-        $this->assertSame(2, (int) ($audit->new_values['revoked'] ?? 0));
+        $revoked = data_get($audit->getAttribute('new_values'), 'revoked', 0);
+        $this->assertSame(2, (int) $revoked);
     }
 
     public function test_user_can_revoke_a_specific_session_and_it_creates_an_audit_event(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
         ]);
@@ -164,11 +169,13 @@ class SessionsAuditTest extends TestCase
             ->first();
 
         $this->assertNotNull($audit);
-        $this->assertSame('revokable_session', (string) ($audit->new_values['session_id'] ?? ''));
+        $sessionId = data_get($audit->getAttribute('new_values'), 'session_id', '');
+        $this->assertSame('revokable_session', (string) $sessionId);
     }
 
     public function test_audits_endpoint_returns_user_audits(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
         ]);
@@ -210,9 +217,9 @@ class SessionsAuditTest extends TestCase
                 'meta' => ['current_page', 'last_page', 'per_page', 'total'],
             ]);
 
-        $events = collect($response->json('data'))->pluck('event')->all();
+        /** @var array<int, array<string, mixed>> $data */
+        $data = $response->json('data');
+        $events = collect($data)->pluck('event')->all();
         $this->assertContains('sessions_revoked', $events);
     }
 }
-
-

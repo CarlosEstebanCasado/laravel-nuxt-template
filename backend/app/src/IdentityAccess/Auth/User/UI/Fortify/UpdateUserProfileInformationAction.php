@@ -6,7 +6,6 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Fortify;
 use App\Src\IdentityAccess\Auth\User\Application\Request\UpdateUserProfileUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\UpdateUserProfileUseCase;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
@@ -53,12 +52,12 @@ class UpdateUserProfileInformationAction implements UpdatesUserProfileInformatio
             name: $input['name'],
             email: $input['email'],
             isEmailChanging: $isEmailChanging,
-            mustVerifyEmail: $user instanceof MustVerifyEmail,
+            mustVerifyEmail: true,
         ));
 
         $user->refresh();
 
-        if ($result->shouldSendEmailVerificationNotification && $user instanceof MustVerifyEmail) {
+        if ($result->shouldSendEmailVerificationNotification) {
             $user->sendEmailVerificationNotification();
         }
     }

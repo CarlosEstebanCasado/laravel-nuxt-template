@@ -14,14 +14,11 @@ final class EloquentAccountRepository implements AccountRepository
         $user = User::query()->findOrFail($userId);
 
         // Best-effort: revoke Sanctum personal access tokens if the app uses them.
-        if (method_exists($user, 'tokens')) {
-            $user->tokens()->delete();
-        }
+        $user->tokens()->delete();
 
         $user->delete();
     }
 }
-
 
 
 

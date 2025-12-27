@@ -8,6 +8,7 @@ use App\Src\IdentityAccess\Audit\Domain\Entity\Audit as DomainAudit;
 use App\Src\IdentityAccess\Audit\Domain\Repository\AuditRepository;
 use App\Src\IdentityAccess\Audit\Domain\Response\AuditCollectionResponse;
 use App\Src\Shared\Domain\Response\PaginationResponse;
+use Illuminate\Support\Carbon;
 use OwenIt\Auditing\Models\Audit;
 
 final class EloquentAuditRepository implements AuditRepository
@@ -25,19 +26,23 @@ final class EloquentAuditRepository implements AuditRepository
             ->paginate($perPage, ['*'], 'page', $page);
 
         $audits = $paginator->map(function (Audit $audit) {
-            $createdAt = $audit->created_at
-                ? new \DateTimeImmutable($audit->created_at->toDateTimeString())
+            $createdAt = $audit->getAttribute('created_at');
+            $createdAtValue = $createdAt instanceof Carbon
+                ? new \DateTimeImmutable($createdAt->toDateTimeString())
                 : new \DateTimeImmutable();
+
+            $oldValues = $audit->getAttribute('old_values');
+            $newValues = $audit->getAttribute('new_values');
 
             return new DomainAudit(
                 id: (int) $audit->getKey(),
-                event: (string) $audit->event,
-                createdAt: $createdAt,
-                oldValues: $audit->old_values ? (array) $audit->old_values : null,
-                newValues: $audit->new_values ? (array) $audit->new_values : null,
-                ipAddress: $audit->ip_address,
-                userAgent: $audit->user_agent,
-                tags: $audit->tags,
+                event: (string) ($audit->getAttribute('event') ?? ''),
+                createdAt: $createdAtValue,
+                oldValues: is_array($oldValues) ? $oldValues : null,
+                newValues: is_array($newValues) ? $newValues : null,
+                ipAddress: $audit->getAttribute('ip_address'),
+                userAgent: $audit->getAttribute('user_agent'),
+                tags: $audit->getAttribute('tags'),
             );
         })->all();
 

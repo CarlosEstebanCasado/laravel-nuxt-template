@@ -7,9 +7,9 @@ use App\Src\IdentityAccess\Auth\User\Application\Request\OAuthCallbackUseCaseReq
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\OAuthCallbackUseCase;
 use App\Src\Shared\UI\Controllers\Controller;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class OAuthController extends Controller

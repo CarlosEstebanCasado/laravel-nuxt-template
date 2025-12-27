@@ -9,6 +9,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use Illuminate\Support\Carbon;
 
 final class EloquentUserRepository implements UserRepository
 {
@@ -37,7 +38,7 @@ final class EloquentUserRepository implements UserRepository
             'email' => $email->toString(),
             'password' => $plainPassword,
             'auth_provider' => 'password',
-            'password_set_at' => $passwordSetAt->format('Y-m-d H:i:s'),
+            'password_set_at' => Carbon::createFromInterface($passwordSetAt),
         ]);
 
         return new UserId((int) $model->getKey());
@@ -61,7 +62,7 @@ final class EloquentUserRepository implements UserRepository
         }
 
         if (is_null($model->email_verified_at)) {
-            $model->email_verified_at = $emailVerifiedAt->format('Y-m-d H:i:s');
+            $model->email_verified_at = Carbon::createFromInterface($emailVerifiedAt);
         }
 
         $model->save();
@@ -98,7 +99,7 @@ final class EloquentUserRepository implements UserRepository
         ];
 
         if ($passwordSetAt !== null) {
-            $data['password_set_at'] = $passwordSetAt->format('Y-m-d H:i:s');
+            $data['password_set_at'] = Carbon::createFromInterface($passwordSetAt);
         }
 
         $model->forceFill($data)->save();
@@ -134,6 +135,5 @@ final class EloquentUserRepository implements UserRepository
         );
     }
 }
-
 
 

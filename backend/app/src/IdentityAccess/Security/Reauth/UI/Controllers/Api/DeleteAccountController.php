@@ -6,6 +6,7 @@ namespace App\Src\IdentityAccess\Security\Reauth\UI\Controllers\Api;
 use App\Src\IdentityAccess\Security\Reauth\Application\Request\DeleteAccountUseCaseRequest;
 use App\Src\IdentityAccess\Security\Reauth\Application\UseCase\DeleteAccountUseCase;
 use App\Src\Shared\UI\Controllers\Controller;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +51,9 @@ class DeleteAccountController extends Controller
         ));
 
         // Logout and invalidate session (stateful Sanctum).
-        Auth::guard('web')->logout();
+        /** @var StatefulGuard $guard */
+        $guard = Auth::guard('web');
+        $guard->logout();
         if ($request->hasSession()) {
             $request->session()->invalidate();
             $request->session()->regenerateToken();
@@ -59,4 +62,3 @@ class DeleteAccountController extends Controller
         return response()->json($response->toArray(), 200);
     }
 }
-

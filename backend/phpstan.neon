@@ -1,0 +1,11 @@
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+    level: 6
+    paths:
+        - app/src
+        - tests
+    tmpDir: storage/framework/cache/phpstan
+    bootstrapFiles:
+        - vendor/autoload.php
