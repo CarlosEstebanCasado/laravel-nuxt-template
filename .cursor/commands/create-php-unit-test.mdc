@@ -1,0 +1,21 @@
+# Crear PHP Unit Test para Servicios/Use Cases
+
+## Estructura del Test
+1. Declara todos los mocks como propiedades privadas con tipo `MockObject`.
+2. Implementa casos de test para todos los flujos posibles (happy path y excepciones).
+3. Los nombres de los métodos de los tests deben ser en snake_case.
+
+## Reglas Obligatorias
+- No modifiques otras clases que no sean el test unitario.
+- Usa `IntegerMother`, `WordMother` y otros Mothers para generar valores aleatorios. Para mothers personalizados toma como referencia `@ProviderMother.php`.
+- Itera el test con `php vendor/bin/phpunit --filter 'NOMBRE DEL SUT' + PATH DEL SUT` hasta que funcione cumpliendo todas las reglas.
+- No crees mocks de entidades o value objects; emplea Mothers para instanciarlos.
+- Sigue el enfoque de caja negra: prueba únicamente la interfaz pública del SUT.
+- Para relaciones entre entidades, usa siempre `setRelation()`. Consulta las migraciones para conocer las relaciones entre tablas.
+- Evita callbacks en `with()` y `willReturn`. Si necesitas verificar parámetros complejos, crea las requests/responses con anterioridad.
+- No añadas comentarios en el código.
+- En los `with()` pasa directamente la request como parámetro.
+- Usa named parameters en todas las llamadas a métodos.
+- Usa `$this->expectException()` al inicio del test cuando pruebes excepciones.
+- Al finalizar el test, elimina las importaciones no utilizadas.
+- Si la respuesta del SUT ya devuelve una instancia concreta, no añadas un `assertInstanceOf` redundante.

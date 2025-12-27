@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\UI\Controllers\Api;
 
@@ -17,14 +18,16 @@ class AuditsController extends Controller
 
     public function __invoke(Request $request): JsonResponse
     {
-        $user = $request->user();
+        $user = $this->requireUser($request);
 
-        $result = $this->useCase->execute(new ListUserAuditsUseCaseRequest(
-            auditableType: $user::class,
-            auditableId: (int) $user->getAuthIdentifier(),
-            perPage: 10,
-            page: (int) $request->integer('page', 1),
-        ));
+        $result = $this->useCase->execute(
+            new ListUserAuditsUseCaseRequest(
+                auditableType: $user::class,
+                auditableId: $this->requireUserId($user),
+                perPage: 10,
+                page: (int) $request->integer('page', 1),
+            )
+        );
 
         return response()->json($result);
     }

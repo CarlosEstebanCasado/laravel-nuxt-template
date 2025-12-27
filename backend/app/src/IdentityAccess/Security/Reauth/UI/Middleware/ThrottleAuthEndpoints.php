@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Security\Reauth\UI\Middleware;
 
@@ -17,7 +18,7 @@ class ThrottleAuthEndpoints
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! (bool) config('security.throttling.auth.enabled', true)) {
+        if (! $this->boolFromConfig('security.throttling.auth.enabled', true)) {
             return $next($request);
         }
 
@@ -27,10 +28,11 @@ class ThrottleAuthEndpoints
         if ($request->isMethod('POST')) {
             // POST /auth/forgot-password: prevent email spam & user enumeration attempts.
             if ($path === 'auth/forgot-password') {
-                $maxAttempts = (int) config('security.throttling.auth.forgot_password.max_attempts', 5);
-                $decaySeconds = (int) config('security.throttling.auth.forgot_password.decay_seconds', 60);
+                $maxAttempts = $this->intFromConfig('security.throttling.auth.forgot_password.max_attempts', 5);
+                $decaySeconds = $this->intFromConfig('security.throttling.auth.forgot_password.decay_seconds', 60);
 
-                $email = (string) $request->input('email', '');
+                $emailInput = $request->input('email', '');
+                $email = is_string($emailInput) ? $emailInput : '';
                 $key = 'auth:forgot-password:'.Str::transliterate(Str::lower($email)).'|'.$request->ip();
 
                 if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
@@ -45,8 +47,8 @@ class ThrottleAuthEndpoints
 
             // POST /auth/reset-password: protect from brute-force attempts.
             if ($path === 'auth/reset-password') {
-                $maxAttempts = (int) config('security.throttling.auth.reset_password.max_attempts', 10);
-                $decaySeconds = (int) config('security.throttling.auth.reset_password.decay_seconds', 60);
+                $maxAttempts = $this->intFromConfig('security.throttling.auth.reset_password.max_attempts', 10);
+                $decaySeconds = $this->intFromConfig('security.throttling.auth.reset_password.decay_seconds', 60);
 
                 $key = 'auth:reset-password:'.$request->ip();
 
@@ -62,8 +64,8 @@ class ThrottleAuthEndpoints
 
             // POST /auth/register: avoid automated account creation bursts.
             if ($path === 'auth/register') {
-                $maxAttempts = (int) config('security.throttling.auth.register.max_attempts', 10);
-                $decaySeconds = (int) config('security.throttling.auth.register.decay_seconds', 60);
+                $maxAttempts = $this->intFromConfig('security.throttling.auth.register.max_attempts', 10);
+                $decaySeconds = $this->intFromConfig('security.throttling.auth.register.decay_seconds', 60);
 
                 $key = 'auth:register:'.$request->ip();
 
@@ -80,6 +82,27 @@ class ThrottleAuthEndpoints
 
         return $next($request);
     }
-}
 
+    private function boolFromConfig(string $key, bool $default): bool
+    {
+        $value = config($key);
+
+        return is_bool($value) ? $value : $default;
+    }
+
+    private function intFromConfig(string $key, int $default): int
+    {
+        $value = config($key);
+
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_numeric($value)) {
+            return (int) $value;
+        }
+
+        return $default;
+    }
+}
 

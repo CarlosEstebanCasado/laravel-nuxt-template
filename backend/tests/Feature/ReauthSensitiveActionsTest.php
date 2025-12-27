@@ -15,6 +15,7 @@ class ReauthSensitiveActionsTest extends TestCase
 
     public function test_password_user_must_confirm_password_to_delete_account(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
             'auth_provider' => 'password',
@@ -52,6 +53,7 @@ class ReauthSensitiveActionsTest extends TestCase
 
     public function test_oauth_user_can_delete_account_without_password(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
             'auth_provider' => 'github',
@@ -71,6 +73,7 @@ class ReauthSensitiveActionsTest extends TestCase
 
     public function test_password_user_must_confirm_password_to_change_email(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
             'auth_provider' => 'password',
@@ -120,5 +123,4 @@ class ReauthSensitiveActionsTest extends TestCase
         Notification::assertSentTo($user, VerifyEmail::class);
     }
 }
-
 

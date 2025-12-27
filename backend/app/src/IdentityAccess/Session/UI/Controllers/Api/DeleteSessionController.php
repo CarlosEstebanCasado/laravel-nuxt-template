@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\UI\Controllers\Api;
 
@@ -24,12 +25,13 @@ class DeleteSessionController extends Controller
             ], 422);
         }
 
-        $userId = $request->user()->getAuthIdentifier();
+        $user = $this->requireUser($request);
+        $userId = $this->requireUserId($user);
         $currentSessionId = $request->session()->getId();
 
         try {
             $revoked = $this->useCase->execute(new RevokeSessionUseCaseRequest(
-                userId: (int) $userId,
+                userId: $userId,
                 sessionId: $id,
                 currentSessionId: (string) $currentSessionId,
                 url: $request->fullUrl(),
@@ -51,5 +53,4 @@ class DeleteSessionController extends Controller
         return response()->json(status: 204);
     }
 }
-
 

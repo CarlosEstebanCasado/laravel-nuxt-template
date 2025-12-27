@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\UI\Controllers\Api;
 
@@ -23,11 +24,12 @@ class ListUserSessionsController extends Controller
             ], 422);
         }
 
-        $userId = $request->user()->getAuthIdentifier();
+        $user = $this->requireUser($request);
+        $userId = $this->requireUserId($user);
         $currentSessionId = $request->session()->getId();
 
         $sessions = $this->useCase->execute(new ListUserSessionsUseCaseRequest(
-            userId: (int) $userId,
+            userId: $userId,
             currentSessionId: (string) $currentSessionId,
         ));
 

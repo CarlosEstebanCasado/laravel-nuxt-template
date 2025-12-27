@@ -1,26 +1,36 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\Shared\UI\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Auth\Factory as AuthFactory;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureHorizonAccess
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
+    public function __construct(
+        private readonly AuthFactory $auth
+    ) {
+    }
+
     public function handle(Request $request, Closure $next): Response
     {
+        /** @var StatefulGuard $guard */
+        $guard = $this->auth->guard();
+
         // Only allow access to authenticated users.
-        if (! auth()->check()) {
+        if (! $guard->check()) {
             return redirect()->route('login');
         }
 
-        $user = auth()->user();
+        /** @var \App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User|null $user */
+        $user = $guard->user();
+        if ($user === null) {
+            return redirect()->route('login');
+        }
 
         // In local/dev environments, it's usually enough to require authentication.
         if (app()->environment('local', 'testing')) {

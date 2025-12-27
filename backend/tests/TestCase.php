@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Tests;
 
@@ -50,7 +51,7 @@ abstract class TestCase extends BaseTestCase
             $value = $_ENV[$key] ?? $_SERVER[$key] ?? null;
         }
 
-        if ($value === null || $value === '') {
+        if (! is_string($value) || $value === '') {
             return null;
         }
 

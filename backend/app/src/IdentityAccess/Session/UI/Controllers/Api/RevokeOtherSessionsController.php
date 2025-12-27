@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\UI\Controllers\Api;
 
@@ -23,11 +24,12 @@ class RevokeOtherSessionsController extends Controller
             ], 422);
         }
 
-        $userId = $request->user()->getAuthIdentifier();
+        $user = $this->requireUser($request);
+        $userId = $this->requireUserId($user);
         $currentSessionId = $request->session()->getId();
 
         $revoked = $this->useCase->execute(new RevokeOtherSessionsUseCaseRequest(
-            userId: (int) $userId,
+            userId: $userId,
             currentSessionId: (string) $currentSessionId,
             url: $request->fullUrl(),
             ipAddress: $request->ip(),
@@ -41,5 +43,4 @@ class RevokeOtherSessionsController extends Controller
         ]);
     }
 }
-
 

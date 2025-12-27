@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Domain\Entity;
 
@@ -49,19 +50,5 @@ final class SessionInfo
         return $this->isCurrent;
     }
 
-    /**
-     * @return array{id:string,ip_address:?string,user_agent:?string,last_activity:int,is_current:bool}
-     */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'ip_address' => $this->ipAddress,
-            'user_agent' => $this->userAgent,
-            'last_activity' => $this->lastActivity,
-            'is_current' => $this->isCurrent,
-        ];
-    }
 }
-
 

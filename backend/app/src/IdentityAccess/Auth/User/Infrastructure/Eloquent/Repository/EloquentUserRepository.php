@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository;
 
@@ -8,6 +9,8 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use Illuminate\Support\Carbon;
+use InvalidArgumentException;
 
 final class EloquentUserRepository implements UserRepository
 {
@@ -36,10 +39,10 @@ final class EloquentUserRepository implements UserRepository
             'email' => $email->toString(),
             'password' => $plainPassword,
             'auth_provider' => 'password',
-            'password_set_at' => $passwordSetAt->format('Y-m-d H:i:s'),
+            'password_set_at' => Carbon::createFromInterface($passwordSetAt),
         ]);
 
-        return new UserId((int) $model->getKey());
+        return new UserId($this->resolveModelId($model));
     }
 
     public function upsertOAuthUser(
@@ -60,12 +63,12 @@ final class EloquentUserRepository implements UserRepository
         }
 
         if (is_null($model->email_verified_at)) {
-            $model->email_verified_at = $emailVerifiedAt->format('Y-m-d H:i:s');
+            $model->email_verified_at = Carbon::createFromInterface($emailVerifiedAt);
         }
 
         $model->save();
 
-        return new UserId((int) $model->getKey());
+        return new UserId($this->resolveModelId($model));
     }
 
     public function updateProfile(
@@ -97,7 +100,7 @@ final class EloquentUserRepository implements UserRepository
         ];
 
         if ($passwordSetAt !== null) {
-            $data['password_set_at'] = $passwordSetAt->format('Y-m-d H:i:s');
+            $data['password_set_at'] = Carbon::createFromInterface($passwordSetAt);
         }
 
         $model->forceFill($data)->save();
@@ -122,7 +125,7 @@ final class EloquentUserRepository implements UserRepository
             : null;
 
         return new DomainUser(
-            id: new UserId((int) $model->getKey()),
+            id: new UserId($this->resolveModelId($model)),
             name: (string) $model->name,
             email: new EmailAddress((string) $model->email),
             emailVerifiedAt: $emailVerifiedAt,
@@ -132,7 +135,20 @@ final class EloquentUserRepository implements UserRepository
             updatedAt: $updatedAt,
         );
     }
+
+    private function resolveModelId(User $model): int
+    {
+        $id = $model->getKey();
+
+        if (! is_int($id) && ! is_string($id)) {
+            throw new InvalidArgumentException('User primary key must be string or int.');
+        }
+
+        if (! is_numeric($id)) {
+            throw new InvalidArgumentException('User primary key must be numeric.');
+        }
+
+        return (int) $id;
+    }
 }
-
-
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Controllers;
 
@@ -6,9 +7,9 @@ use App\Src\IdentityAccess\Auth\User\Application\Request\OAuthCallbackUseCaseReq
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\OAuthCallbackUseCase;
 use App\Src\Shared\UI\Controllers\Controller;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class OAuthController extends Controller
@@ -67,7 +68,12 @@ class OAuthController extends Controller
 
     private function redirectToFrontend(string $provider, string $status, ?string $error = null): RedirectResponse
     {
-        $frontendUrl = rtrim(config('app.frontend_url', config('app.url')), '/');
+        $frontendConfig = config('app.frontend_url');
+        $defaultUrl = config('app.url');
+        $frontendUrl = is_string($frontendConfig) && $frontendConfig !== ''
+            ? $frontendConfig
+            : (is_string($defaultUrl) ? $defaultUrl : '/');
+        $frontendUrl = rtrim($frontendUrl, '/');
         $query = array_filter([
             'provider' => $provider,
             'status' => $status,
