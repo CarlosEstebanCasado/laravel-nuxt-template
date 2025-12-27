@@ -8,14 +8,20 @@ use App\Src\Shared\Domain\Collection;
 
 final class AuditCollection extends Collection
 {
-    public function first(): ?Audit
-    {
-        return $this->isNotEmpty() ? reset($this->items) : null;
-    }
-
     protected function type(): string
     {
         return Audit::class;
     }
-}
 
+    public function first(): ?Audit
+    {
+        if ($this->isEmpty()) {
+            return null;
+        }
+
+        /** @var Audit $first */
+        $first = $this->items()[0];
+
+        return $first;
+    }
+}

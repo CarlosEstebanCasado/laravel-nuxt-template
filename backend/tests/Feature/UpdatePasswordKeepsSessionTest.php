@@ -13,6 +13,7 @@ class UpdatePasswordKeepsSessionTest extends TestCase
 
     public function test_password_update_keeps_current_session_authenticated(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
             'password' => 'old-password-123',
@@ -37,5 +38,4 @@ class UpdatePasswordKeepsSessionTest extends TestCase
             ->assertOk();
     }
 }
-
 
