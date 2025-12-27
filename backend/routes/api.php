@@ -1,11 +1,11 @@
 <?php
 
-use App\Src\Audit\Audit\UI\Controllers\Api\AuditsController;
-use App\Src\Auth\User\UI\Controllers\Api\CurrentUserController;
-use App\Src\Security\Reauth\UI\Controllers\Api\DeleteAccountController;
-use App\Src\Session\Session\UI\Controllers\Api\DeleteSessionController;
-use App\Src\Session\Session\UI\Controllers\Api\RevokeOtherSessionsController;
-use App\Src\Session\Session\UI\Controllers\Api\SessionsController;
+use App\Src\IdentityAccess\Audit\UI\Controllers\Api\AuditsController;
+use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\CurrentUserController;
+use App\Src\IdentityAccess\Security\Reauth\UI\Controllers\Api\DeleteAccountController;
+use App\Src\IdentityAccess\Session\UI\Controllers\Api\DeleteSessionController;
+use App\Src\IdentityAccess\Session\UI\Controllers\Api\ListUserSessionsController;
+use App\Src\IdentityAccess\Session\UI\Controllers\Api\RevokeOtherSessionsController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +27,7 @@ Route::prefix('v1')->group(function (): void {
     // Protected API endpoints (verified email required).
     Route::middleware(['auth:sanctum', 'verified'])->group(function (): void {
         Route::delete('/account', DeleteAccountController::class);
-        Route::get('/sessions', SessionsController::class);
+        Route::get('/sessions', ListUserSessionsController::class);
         Route::post('/sessions/revoke-others', RevokeOtherSessionsController::class);
         Route::delete('/sessions/{id}', DeleteSessionController::class);
         Route::get('/audits', AuditsController::class);

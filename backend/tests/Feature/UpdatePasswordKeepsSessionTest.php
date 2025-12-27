@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Src\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Tests\TestCase;
