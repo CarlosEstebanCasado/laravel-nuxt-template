@@ -54,6 +54,7 @@ backend/app/src/{Context}/
 - **`Infrastructure/Provider/`** is only for infrastructure composition/bindings local to the module (optional). Prefer bindings in Laravel `backend/app/Providers/*`.
 - **`UI/Fortify/`** solo aplica a contextos relacionados con autenticación; omítelo en módulos que no extiendan Fortify.
 - **`UI/Routes/`** is for route group files if you choose to modularize route definitions. If not used, keep empty or omit.
+- **Strict typing**: Every `.php` file under `/src` must declare `declare(strict_types=1);` immediately after the opening `<?php` tag.
 
 ## Scaffolding: new module (aggregate) inside an existing context
 For each new `{Module}` (aggregate root folder), create **all** of the following directories (even if initially empty):
