@@ -2,6 +2,7 @@
 
 use App\Src\IdentityAccess\Security\Reauth\UI\Middleware\ThrottleAuthEndpoints;
 use App\Src\Shared\UI\Middleware\EnsureHorizonAccess;
+use App\Src\Shared\UI\Middleware\SetLocaleFromRequest;
 use App\Providers\AppServiceProvider;
 use App\Providers\FortifyServiceProvider;
 use App\Providers\HorizonServiceProvider;
@@ -31,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'verified' => EnsureEmailIsVerified::class,
             'horizon.access' => EnsureHorizonAccess::class,
+            'locale' => SetLocaleFromRequest::class,
         ]);
     })
     ->withProviders([

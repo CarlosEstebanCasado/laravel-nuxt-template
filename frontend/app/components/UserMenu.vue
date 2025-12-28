@@ -10,6 +10,19 @@ const appConfig = useAppConfig()
 const auth = useAuth()
 const router = useRouter()
 
+const updateThemePreference = async (theme: 'light' | 'dark') => {
+  colorMode.preference = theme
+  if (!auth.isAuthenticated.value) {
+    return
+  }
+
+  try {
+    await auth.updatePreferences({ theme })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
 
@@ -98,7 +111,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     onSelect(e: Event) {
       e.preventDefault()
 
-      colorMode.preference = 'light'
+      updateThemePreference('light')
     }
   }, {
     label: 'Dark',
@@ -107,7 +120,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     checked: colorMode.value === 'dark',
     onUpdateChecked(checked: boolean) {
       if (checked) {
-        colorMode.preference = 'dark'
+        updateThemePreference('dark')
       }
     },
     onSelect(e: Event) {

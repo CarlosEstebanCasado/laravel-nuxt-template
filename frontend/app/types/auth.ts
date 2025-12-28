@@ -1,3 +1,5 @@
+import type { UserPreferencesPayload } from './preferences'
+
 export interface AuthUser {
   id: number
   name: string
@@ -7,6 +9,7 @@ export interface AuthUser {
   password_set_at: string | null
   created_at: string
   updated_at: string
+  preferences?: UserPreferencesPayload | null
 }
 
 export interface AuthResponse {

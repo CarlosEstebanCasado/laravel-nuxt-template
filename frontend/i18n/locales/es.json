@@ -1,0 +1,21 @@
+{
+  "navigation": {
+    "settings": "Ajustes",
+    "preferences": "Preferencias"
+  },
+  "preferences": {
+    "title": "Preferencias",
+    "description": "Elige tu idioma y apariencia favoritos.",
+    "language_label": "Idioma de la interfaz",
+    "language_hint": "Aplica el idioma seleccionado en todo el panel.",
+    "theme_label": "Tema",
+    "theme_hint": "Ajusta el aspecto al de tu sistema o fija uno concreto.",
+    "save": "Guardar preferencias",
+    "success": "Preferencias actualizadas"
+  },
+  "theme": {
+    "system": "Según el sistema",
+    "light": "Claro",
+    "dark": "Oscuro"
+  }
+}

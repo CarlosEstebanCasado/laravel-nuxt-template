@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/content',
     '@nuxt/eslint',
-    '@vueuse/nuxt'
+    '@vueuse/nuxt',
+    '@nuxtjs/i18n'
   ],
 
   // SSR enabled by default (good for SEO on public pages).
@@ -93,5 +94,25 @@ export default defineNuxtConfig({
       allowedHosts: ['nuxt', 'gateway', 'gateway-api', 'app.project.dev'],
       hmr: false
     }
+  },
+
+  i18n: {
+    strategy: 'no_prefix',
+    defaultLocale: 'es',
+    lazy: true,
+    langDir: 'i18n/locales',
+    restructureDir: '.',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root',
+      alwaysRedirect: false
+    },
+    locales: [
+      { code: 'es', iso: 'es-ES', file: 'es.json', name: 'Español' },
+      { code: 'en', iso: 'en-US', file: 'en.json', name: 'English' },
+      { code: 'ca', iso: 'ca-ES', file: 'ca.json', name: 'Català' }
+    ],
+    vueI18n: './i18n.config.ts'
   }
 })

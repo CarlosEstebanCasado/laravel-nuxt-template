@@ -14,6 +14,10 @@ const links = [[{
   to: `${dashboardBase}/settings`,
   exact: true
 }, {
+  label: 'Preferences',
+  icon: 'i-lucide-sliders-horizontal',
+  to: `${dashboardBase}/settings/preferences`
+}, {
   label: 'Members',
   icon: 'i-lucide-users',
   to: `${dashboardBase}/settings/members`

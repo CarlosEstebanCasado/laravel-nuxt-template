@@ -1,0 +1,21 @@
+{
+  "navigation": {
+    "settings": "Configuració",
+    "preferences": "Preferències"
+  },
+  "preferences": {
+    "title": "Preferències",
+    "description": "Escull l'idioma i l'aparença que prefereixes.",
+    "language_label": "Idioma de la interfície",
+    "language_hint": "Aplica l'idioma seleccionat a tot el tauler.",
+    "theme_label": "Tema",
+    "theme_hint": "Fes servir el mode del sistema o força'n un de fix.",
+    "save": "Desar preferències",
+    "success": "Preferències actualitzades"
+  },
+  "theme": {
+    "system": "Per defecte del sistema",
+    "light": "Clar",
+    "dark": "Fosc"
+  }
+}

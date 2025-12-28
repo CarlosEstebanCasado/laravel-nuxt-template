@@ -6,6 +6,7 @@ namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
 use App\Src\IdentityAccess\Auth\User\Application\Converter\UserResponseConverter;
 use App\Src\IdentityAccess\Auth\User\Application\Request\GetCurrentUserUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\Response\GetCurrentUserUseCaseResponse;
+use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 
@@ -13,15 +14,17 @@ final class GetCurrentUserUseCase
 {
     public function __construct(
         private readonly UserRepository $users,
+        private readonly UserPreferencesRepository $preferences,
         private readonly UserResponseConverter $converter,
     ) {
     }
 
     public function execute(GetCurrentUserUseCaseRequest $request): GetCurrentUserUseCaseResponse
     {
-        $user = $this->users->get(new UserId($request->userId));
+        $userId = new UserId($request->userId);
+        $user = $this->users->get($userId);
+        $preferences = $this->preferences->find($userId);
 
-        return $this->converter->toResponse($user);
+        return $this->converter->toResponse($user, $preferences);
     }
 }
-

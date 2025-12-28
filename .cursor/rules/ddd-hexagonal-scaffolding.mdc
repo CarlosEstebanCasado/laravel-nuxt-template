@@ -101,6 +101,17 @@ backend/app/src/{Context}/{Module}/
   - Non-Eloquent adapter: `.../Infrastructure/{AdapterName}{Entity}Repository.php` (if needed)
 - **Mappers** (Domain ↔ Persistence/DTO): `.../Infrastructure/Mapper/**`
 
+## Localization + User Preferences
+- **Locales soportados** se declaran en `config/app.php` (`supported_locales`) y cualquier servicio que los necesite deberá leerlos desde configuración (nunca hardcodearlos). Cuando el contenedor no está bootstrapped (tests unitarios puros) debemos proveer un fallback seguro en el propio servicio.
+- El switch de idioma se resuelve a través del middleware `Shared/UI/Middleware/SetLocaleFromRequest`, que consulta cabecera `X-Locale`, preferencia del usuario (`UserPreferencesRepository`) y por último `Request::getPreferredLanguage`. Cualquier endpoint expuesto debe incluir el alias `locale` para garantizar que la request se procesa en el idioma correcto.
+- Las preferencias del usuario (idioma, tema, etc.) se tratan como un módulo de Auth/User:
+  - Entidad: `IdentityAccess/Auth/User/Domain/Entity/UserPreferences`.
+  - Puerto: `Domain/Repository/UserPreferencesRepository`.
+  - Adaptador Eloquent + modelo dedicado en `Infrastructure/Eloquent`.
+  - UseCases `GetUserPreferencesUseCase` y `UpdateUserPreferencesUseCase` con sus DTOs correspondientes.
+  - Controlador API en `UI/Controllers/Api/UserPreferencesController`.
+- Cualquier nueva preferencia persistible debe añadirse a la entidad, al repositorio y a los DTOs sin romper la convención anterior. Los controladores deben validar contra `config('app.supported_locales')` y `config('preferences.themes')` (u otras configuraciones específicas), nunca contra literales.
+
 ### Repository responses + converters
 - Infra repositories nunca devuelven arrays “raw”. Construyen entidades/colecciones de dominio (p.ej. `AuditCollectionResponse`) usando utilidades compartidas (`App\\Src\\Shared\\Domain\\Collection`, `PaginationResponse`, etc.).
 - Cada módulo debe incluir `Application/Converter/` con converters responsables de transformar las colecciones tipadas en DTOs públicos (`Application/Response/**`). Divide los converters en “list” + “item” cuando proceda para fomentar reutilización.

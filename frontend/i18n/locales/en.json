@@ -1,0 +1,21 @@
+{
+  "navigation": {
+    "settings": "Settings",
+    "preferences": "Preferences"
+  },
+  "preferences": {
+    "title": "Preferences",
+    "description": "Choose your preferred language and appearance.",
+    "language_label": "Interface language",
+    "language_hint": "Apply the selected language across the dashboard experience.",
+    "theme_label": "Theme",
+    "theme_hint": "Match your system setting or keep a fixed appearance.",
+    "save": "Save preferences",
+    "success": "Preferences updated"
+  },
+  "theme": {
+    "system": "System default",
+    "light": "Light",
+    "dark": "Dark"
+  }
+}

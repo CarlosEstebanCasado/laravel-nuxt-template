@@ -1,11 +1,22 @@
 import { joinURL } from 'ufo'
 import type { AuthResponse, AuthUser } from '~/types/auth'
+import type { PreferencesResponse, UserPreferencesPayload } from '~/types/preferences'
 
 const CSRF_ENDPOINT = '/sanctum/csrf-cookie'
 
 const useAuthUserState = () => useState<AuthUser | null>('auth:user', () => null)
 
 const useAuthFetchedState = () => useState<boolean>('auth:fetched', () => false)
+
+const usePreferencesState = () => useState<UserPreferencesPayload | null>('auth:preferences', () => null)
+
+const usePreferencesFetchedState = () => useState<boolean>('auth:preferences:fetched', () => false)
+
+const usePreferenceOptionsState = () =>
+  useState<{ locales: { value: string, label: string }[], themes: { value: string, label: string }[] }>(
+    'auth:preferences:options',
+    () => ({ locales: [], themes: [] })
+  )
 
 const readCookie = (name: string) => {
   if (typeof document === 'undefined') {
@@ -45,23 +56,63 @@ export function useAuth() {
   const apiBase = config.public.apiBase
   const apiPrefix = config.public.apiPrefix
   const authPrefix = config.public.authPrefix
+  const nuxtApp = useNuxtApp()
   const router = useRouter()
-  const route = useRoute()
 
   const user = useAuthUserState()
   const hasFetched = useAuthFetchedState()
+  const preferences = usePreferencesState()
+  const preferencesFetched = usePreferencesFetchedState()
+  const preferenceOptions = usePreferenceOptionsState()
+  const localeState = useState<string>('auth:active-locale', () => nuxtApp.$i18n?.locale.value ?? 'es')
+  const colorMode = useColorMode()
+
+  const getActiveLocale = () => nuxtApp.$i18n?.locale ?? localeState
+
+  const setActiveLocale = (newLocale: string) => {
+    localeState.value = newLocale
+    if (nuxtApp.$i18n?.locale) {
+      nuxtApp.$i18n.locale.value = newLocale
+    }
+  }
+
+  const applyPreferenceEffects = (prefs: UserPreferencesPayload | null) => {
+    if (prefs?.locale) {
+      setActiveLocale(prefs.locale)
+    }
+    if (prefs?.theme) {
+      colorMode.preference = prefs.theme
+    }
+  }
+
+  const resetPreferences = () => {
+    preferences.value = null
+    preferenceOptions.value = { locales: [], themes: [] }
+    preferencesFetched.value = false
+  }
+
+  const setPreferenceState = (payload: PreferencesResponse) => {
+    preferences.value = payload.data
+    preferenceOptions.value = {
+      locales: payload.available_locales,
+      themes: payload.available_themes
+    }
+    preferencesFetched.value = true
+    applyPreferenceEffects(preferences.value)
+  }
 
   const handleInvalidSession = async () => {
     const hadUser = Boolean(user.value)
     user.value = null
     hasFetched.value = true
+    resetPreferences()
 
     if (import.meta.server) {
       return
     }
 
     // Avoid redirect loops on guest/auth pages.
-    const path = route.path
+    const path = router.currentRoute.value?.path ?? ''
     const isGuestPage =
       path === '/login' ||
       path === '/signup' ||
@@ -84,6 +135,11 @@ export function useAuth() {
     const headers: Record<string, string> = {
       Accept: 'application/json',
       ...(options?.headers as Record<string, string> | undefined),
+    }
+
+    const preferredLocale = preferences.value?.locale || getActiveLocale().value || localeState.value
+    if (preferredLocale) {
+      headers['X-Locale'] = preferredLocale
     }
 
     if (opts.csrf) {
@@ -122,7 +178,50 @@ export function useAuth() {
 
   const handleAuthSuccess = (payload: AuthResponse) => {
     user.value = payload.data
+    if (payload.data.preferences) {
+      preferences.value = payload.data.preferences
+      applyPreferenceEffects(preferences.value)
+    }
     return user.value
+  }
+
+  const fetchPreferences = async (force = false) => {
+    if (!user.value) {
+      resetPreferences()
+      return null
+    }
+
+    if (preferencesFetched.value && !force) {
+      return preferences.value
+    }
+
+    const response = await withCredentials<PreferencesResponse>(
+      joinURL(apiPrefix, '/preferences'),
+      {
+        method: 'GET',
+      }
+    )
+
+    setPreferenceState(response)
+
+    return preferences.value
+  }
+
+  const updatePreferences = async (payload: { locale?: string, theme?: string }) => {
+    await ensureCsrfCookie()
+
+    const response = await withCredentials<PreferencesResponse>(
+      joinURL(apiPrefix, '/preferences'),
+      {
+        method: 'PUT',
+        body: payload,
+      },
+      { csrf: true }
+    )
+
+    setPreferenceState(response)
+
+    return preferences.value
   }
 
   const login = async (payload: {
@@ -144,7 +243,9 @@ export function useAuth() {
       { csrf: true }
     )
 
-    return handleAuthSuccess(response)
+    const authUser = handleAuthSuccess(response)
+    await fetchPreferences(true)
+    return authUser
   }
 
   const register = async (payload: {
@@ -164,7 +265,9 @@ export function useAuth() {
       { csrf: true }
     )
 
-    return handleAuthSuccess(response)
+    const authUser = handleAuthSuccess(response)
+    await fetchPreferences(true)
+    return authUser
   }
 
   const updateProfile = async (payload: { name: string, email: string, current_password?: string }) => {
@@ -237,6 +340,7 @@ export function useAuth() {
     // Server invalidates the session; clear client state too.
     user.value = null
     hasFetched.value = true
+    resetPreferences()
   }
 
   const logout = async () => {
@@ -251,6 +355,7 @@ export function useAuth() {
     )
 
     user.value = null
+    resetPreferences()
   }
 
   const requestPasswordReset = async (payload: { email: string }) => {
@@ -297,6 +402,11 @@ export function useAuth() {
         }
       )
       user.value = response.data
+      if (user.value) {
+        await fetchPreferences(true)
+      } else {
+        resetPreferences()
+      }
       return user.value
     } catch (error: any) {
       // Treat unauthenticated responses as a valid "no user" state.
@@ -307,6 +417,7 @@ export function useAuth() {
         error?.response?.status === 401
       ) {
         user.value = null
+        resetPreferences()
         return null
       }
 
@@ -394,6 +505,8 @@ export function useAuth() {
 
   return {
     user,
+    preferences,
+    preferenceOptions,
     isAuthenticated,
     login,
     register,
@@ -409,6 +522,8 @@ export function useAuth() {
     requestPasswordReset,
     resetPassword,
     fetchUser,
+    fetchPreferences,
+    updatePreferences,
     loginWithProvider,
   }
 }
