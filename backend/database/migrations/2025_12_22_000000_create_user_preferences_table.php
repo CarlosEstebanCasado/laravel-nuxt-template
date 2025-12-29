@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('user_preferences', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('locale', 10)->default(config('app.locale'));
-            $table->string('theme', 20)->default(config('preferences.default_theme'));
+            $table->string('locale', 10)->default('es');
+            $table->string('theme', 20)->default('system');
             $table->timestamps();
 
             $table->unique('user_id');

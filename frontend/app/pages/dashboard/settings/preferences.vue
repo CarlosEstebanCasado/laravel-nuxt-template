@@ -33,21 +33,21 @@ const localeOptions = computed(() => auth.preferenceOptions.value.locales)
 const themeOptions = computed(() =>
   auth.preferenceOptions.value.themes.map((theme) => ({
     ...theme,
-    label: t(`theme.${theme.value}` as const) ?? theme.label
+    label: t(`theme.${theme.value}` as const) || theme.label
   }))
 )
 
 const primaryColorOptions = computed(() =>
   auth.preferenceOptions.value.primary_colors.map((color) => ({
     ...color,
-    label: t(`colors.${color.value}` as const) ?? color.label
+    label: t(`colors.${color.value}` as const) || color.label
   }))
 )
 
 const neutralColorOptions = computed(() =>
   auth.preferenceOptions.value.neutral_colors.map((color) => ({
     ...color,
-    label: t(`colors.${color.value}` as const) ?? color.label
+    label: t(`colors.${color.value}` as const) || color.label
   }))
 )
 

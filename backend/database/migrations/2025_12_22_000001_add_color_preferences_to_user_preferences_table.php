@@ -14,11 +14,11 @@ return new class extends Migration
     {
         Schema::table('user_preferences', function (Blueprint $table): void {
             $table->string('primary_color', 20)
-                ->default(config('preferences.default_primary_color'))
+                ->default('blue')
                 ->before('created_at');
 
             $table->string('neutral_color', 20)
-                ->default(config('preferences.default_neutral_color'))
+                ->default('slate')
                 ->after('primary_color');
         });
     }
