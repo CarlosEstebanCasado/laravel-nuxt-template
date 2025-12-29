@@ -40,6 +40,8 @@ final class GetUserPreferencesUseCaseTest extends BaseTestCase
 
         $this->assertSame(config('app.locale'), $response->data['locale']);
         $this->assertSame(config('preferences.default_theme'), $response->data['theme']);
+        $this->assertSame(config('preferences.default_primary_color'), $response->data['primary_color']);
+        $this->assertSame(config('preferences.default_neutral_color'), $response->data['neutral_color']);
         $this->assertNotEmpty($response->available_locales);
         $this->assertNotEmpty($response->available_themes);
     }
@@ -47,7 +49,7 @@ final class GetUserPreferencesUseCaseTest extends BaseTestCase
     public function test_it_returns_saved_preferences(): void
     {
         $userId = new UserId(10);
-        $preferences = UserPreferences::create($userId, 'ca', 'dark');
+        $preferences = UserPreferences::create($userId, 'ca', 'dark', 'emerald', 'slate');
 
         $this->repository
             ->expects($this->once())
@@ -61,5 +63,7 @@ final class GetUserPreferencesUseCaseTest extends BaseTestCase
 
         $this->assertSame('ca', $response->data['locale']);
         $this->assertSame('dark', $response->data['theme']);
+        $this->assertSame('emerald', $response->data['primary_color']);
+        $this->assertSame('slate', $response->data['neutral_color']);
     }
 }

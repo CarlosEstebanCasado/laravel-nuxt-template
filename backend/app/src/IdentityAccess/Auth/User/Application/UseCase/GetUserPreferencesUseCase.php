@@ -32,9 +32,13 @@ final class GetUserPreferencesUseCase
             data: [
                 'locale' => $preferences->locale(),
                 'theme' => $preferences->theme(),
+                'primary_color' => $preferences->primaryColor(),
+                'neutral_color' => $preferences->neutralColor(),
             ],
             available_locales: $this->availableLocales(),
             available_themes: $this->availableThemes(),
+            available_primary_colors: $this->availablePrimaryColors(),
+            available_neutral_colors: $this->availableNeutralColors(),
         );
     }
 
@@ -69,6 +73,50 @@ final class GetUserPreferencesUseCase
         $options = [];
 
         foreach ($themes as $value => $label) {
+            if (! is_string($value) || ! is_string($label)) {
+                continue;
+            }
+
+            $options[] = [
+                'value' => $value,
+                'label' => $label,
+            ];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return array<int, array{value:string,label:string}>
+     */
+    private function availablePrimaryColors(): array
+    {
+        $colors = (array) config('preferences.primary_colors', []);
+        $options = [];
+
+        foreach ($colors as $value => $label) {
+            if (! is_string($value) || ! is_string($label)) {
+                continue;
+            }
+
+            $options[] = [
+                'value' => $value,
+                'label' => $label,
+            ];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return array<int, array{value:string,label:string}>
+     */
+    private function availableNeutralColors(): array
+    {
+        $colors = (array) config('preferences.neutral_colors', []);
+        $options = [];
+
+        foreach ($colors as $value => $label) {
             if (! is_string($value) || ! is_string($label)) {
                 continue;
             }

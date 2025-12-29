@@ -33,6 +33,8 @@ final class UserResponseConverter
                 preferences: new UserPreferencesResponseItem(
                     locale: $preferences->locale(),
                     theme: $preferences->theme(),
+                    primary_color: $preferences->primaryColor(),
+                    neutral_color: $preferences->neutralColor(),
                 ),
             );
         }

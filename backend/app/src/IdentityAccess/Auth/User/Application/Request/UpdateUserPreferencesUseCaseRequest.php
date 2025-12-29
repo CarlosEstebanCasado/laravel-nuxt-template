@@ -9,6 +9,8 @@ final class UpdateUserPreferencesUseCaseRequest
         public readonly int $userId,
         public readonly ?string $locale,
         public readonly ?string $theme,
+        public readonly ?string $primaryColor,
+        public readonly ?string $neutralColor,
     ) {
     }
 }

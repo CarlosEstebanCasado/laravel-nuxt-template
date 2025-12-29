@@ -12,7 +12,9 @@ const toast = useToast()
 
 const form = reactive({
   locale: 'es',
-  theme: 'system'
+  theme: 'system',
+  primary_color: 'blue',
+  neutral_color: 'slate'
 })
 
 const isLoading = ref(true)
@@ -26,6 +28,20 @@ const themeOptions = computed(() =>
   }))
 )
 
+const primaryColorOptions = computed(() =>
+  auth.preferenceOptions.value.primary_colors.map((color) => ({
+    ...color,
+    label: t(`colors.${color.value}` as const) ?? color.label
+  }))
+)
+
+const neutralColorOptions = computed(() =>
+  auth.preferenceOptions.value.neutral_colors.map((color) => ({
+    ...color,
+    label: t(`colors.${color.value}` as const) ?? color.label
+  }))
+)
+
 const syncPreferences = () => {
   if (!auth.preferences.value) {
     return
@@ -33,6 +49,8 @@ const syncPreferences = () => {
 
   form.locale = auth.preferences.value.locale
   form.theme = auth.preferences.value.theme
+  form.primary_color = auth.preferences.value.primary_color
+  form.neutral_color = auth.preferences.value.neutral_color
 }
 
 onMounted(async () => {
@@ -45,6 +63,13 @@ onMounted(async () => {
   }
 })
 
+watch(
+  () => auth.preferences.value,
+  () => {
+    syncPreferences()
+  }
+)
+
 const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
   if (isSaving.value) {
     return
@@ -54,7 +79,9 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
   try {
     await auth.updatePreferences({
       locale: event.data.locale,
-      theme: event.data.theme
+      theme: event.data.theme,
+      primary_color: event.data.primary_color,
+      neutral_color: event.data.neutral_color
     })
     toast.add({
       title: t('preferences.success'),
@@ -121,6 +148,41 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
         <USelect
           v-model="form.theme"
           :items="themeOptions"
+          label-key="label"
+          value-key="value"
+          :disabled="isLoading"
+        />
+      </UFormField>
+
+      <USeparator />
+
+      <UFormField
+        name="primary_color"
+        :label="t('preferences.primary_color_label')"
+        :description="t('preferences.primary_color_hint')"
+        class="flex max-sm:flex-col justify-between items-start gap-4"
+      >
+        <USelect
+          v-model="form.primary_color"
+          :items="primaryColorOptions"
+          label-key="label"
+          value-key="value"
+          :disabled="isLoading"
+          class="min-w-35"
+        />
+      </UFormField>
+
+      <USeparator />
+
+      <UFormField
+        name="neutral_color"
+        :label="t('preferences.neutral_color_label')"
+        :description="t('preferences.neutral_color_hint')"
+        class="flex max-sm:flex-col justify-between items-start gap-4"
+      >
+        <USelect
+          v-model="form.neutral_color"
+          :items="neutralColorOptions"
           label-key="label"
           value-key="value"
           :disabled="isLoading"

@@ -33,6 +33,8 @@ final class EloquentUserPreferencesRepository implements UserPreferencesReposito
 
         $model->setAttribute('locale', $preferences->locale());
         $model->setAttribute('theme', $preferences->theme());
+        $model->setAttribute('primary_color', $preferences->primaryColor());
+        $model->setAttribute('neutral_color', $preferences->neutralColor());
         $model->save();
     }
 
@@ -41,22 +43,34 @@ final class EloquentUserPreferencesRepository implements UserPreferencesReposito
         $userIdValue = $model->getAttribute('user_id');
         $localeValue = $model->getAttribute('locale');
         $themeValue = $model->getAttribute('theme');
+        $primaryColorValue = $model->getAttribute('primary_color');
+        $neutralColorValue = $model->getAttribute('neutral_color');
 
         $isNumericId = is_int($userIdValue)
             || (is_string($userIdValue) && ctype_digit($userIdValue));
 
         $fallbackLocale = config('app.locale', 'es');
         $fallbackTheme = config('preferences.default_theme', 'system');
+        $fallbackPrimary = config('preferences.default_primary_color', 'blue');
+        $fallbackNeutral = config('preferences.default_neutral_color', 'slate');
 
         $locale = is_string($localeValue) ? $localeValue : (is_string($fallbackLocale) ? $fallbackLocale : 'es');
         $theme = is_string($themeValue) ? $themeValue : (is_string($fallbackTheme) ? $fallbackTheme : 'system');
+        $primaryColor = is_string($primaryColorValue)
+            ? $primaryColorValue
+            : (is_string($fallbackPrimary) ? $fallbackPrimary : 'blue');
+        $neutralColor = is_string($neutralColorValue)
+            ? $neutralColorValue
+            : (is_string($fallbackNeutral) ? $fallbackNeutral : 'slate');
 
         $userId = new UserId($isNumericId ? (int) $userIdValue : 0);
 
         return new UserPreferences(
             $userId,
             $locale,
-            $theme
+            $theme,
+            $primaryColor,
+            $neutralColor
         );
     }
 }

@@ -36,6 +36,16 @@ final class UpdateUserPreferencesUseCase
             $preferences->updateTheme($request->theme);
         }
 
+        if ($request->primaryColor !== null) {
+            $this->assertPrimaryColorSupported($request->primaryColor);
+            $preferences->updatePrimaryColor($request->primaryColor);
+        }
+
+        if ($request->neutralColor !== null) {
+            $this->assertNeutralColorSupported($request->neutralColor);
+            $preferences->updateNeutralColor($request->neutralColor);
+        }
+
         $this->preferences->save($preferences);
 
         return $this->getUserPreferencesUseCase->execute(
@@ -60,6 +70,24 @@ final class UpdateUserPreferencesUseCase
 
         if (! in_array($theme, $themes, true)) {
             throw new InvalidArgumentException(sprintf('Unsupported theme <%s>', $theme));
+        }
+    }
+
+    private function assertPrimaryColorSupported(string $color): void
+    {
+        $colors = array_keys((array) config('preferences.primary_colors', []));
+
+        if (! in_array($color, $colors, true)) {
+            throw new InvalidArgumentException(sprintf('Unsupported primary color <%s>', $color));
+        }
+    }
+
+    private function assertNeutralColorSupported(string $color): void
+    {
+        $colors = array_keys((array) config('preferences.neutral_colors', []));
+
+        if (! in_array($color, $colors, true)) {
+            throw new InvalidArgumentException(sprintf('Unsupported neutral color <%s>', $color));
         }
     }
 }

@@ -8,6 +8,8 @@ final class UserPreferencesResponseItem
     public function __construct(
         public string $locale,
         public string $theme,
+        public string $primary_color,
+        public string $neutral_color,
     ) {
     }
 }

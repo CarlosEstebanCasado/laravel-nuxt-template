@@ -39,6 +39,8 @@ final class UserPreferencesController extends Controller
 
         $supportedLocales = array_keys((array) config('app.supported_locales', []));
         $supportedThemes = array_keys((array) config('preferences.themes', []));
+        $supportedPrimary = array_keys((array) config('preferences.primary_colors', []));
+        $supportedNeutrals = array_keys((array) config('preferences.neutral_colors', []));
 
         $validated = $request->validate([
             'locale' => [
@@ -51,6 +53,16 @@ final class UserPreferencesController extends Controller
                 'string',
                 Rule::in($supportedThemes),
             ],
+            'primary_color' => [
+                'sometimes',
+                'string',
+                Rule::in($supportedPrimary),
+            ],
+            'neutral_color' => [
+                'sometimes',
+                'string',
+                Rule::in($supportedNeutrals),
+            ],
         ]);
 
         if ($validated === []) {
@@ -62,6 +74,8 @@ final class UserPreferencesController extends Controller
                 userId: $this->requireUserId($user),
                 locale: $validated['locale'] ?? null,
                 theme: $validated['theme'] ?? null,
+                primaryColor: $validated['primary_color'] ?? null,
+                neutralColor: $validated['neutral_color'] ?? null,
             )
         );
 

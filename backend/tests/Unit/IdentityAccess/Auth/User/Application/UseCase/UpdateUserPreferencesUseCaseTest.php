@@ -33,7 +33,7 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
     {
         $userId = new UserId(5);
         $existing = UserPreferences::default($userId);
-        $updated = UserPreferences::create($userId, 'en', 'dark');
+        $updated = UserPreferences::create($userId, 'en', 'dark', 'emerald', 'gray');
 
         $this->repository
             ->expects($this->exactly(2))
@@ -46,18 +46,24 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
             ->method('save')
             ->with($this->callback(function (UserPreferences $preferences) {
                 return $preferences->locale() === 'en'
-                    && $preferences->theme() === 'dark';
+                    && $preferences->theme() === 'dark'
+                    && $preferences->primaryColor() === 'emerald'
+                    && $preferences->neutralColor() === 'gray';
             }));
 
         $response = $this->useCase->execute(
             new UpdateUserPreferencesUseCaseRequest(
                 userId: $userId->toInt(),
                 locale: 'en',
-                theme: 'dark'
+                theme: 'dark',
+                primaryColor: 'emerald',
+                neutralColor: 'gray',
             )
         );
 
         $this->assertSame('en', $response->data['locale']);
         $this->assertSame('dark', $response->data['theme']);
+        $this->assertSame('emerald', $response->data['primary_color']);
+        $this->assertSame('gray', $response->data['neutral_color']);
     }
 }

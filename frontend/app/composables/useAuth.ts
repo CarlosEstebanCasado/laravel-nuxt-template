@@ -13,9 +13,19 @@ const usePreferencesState = () => useState<UserPreferencesPayload | null>('auth:
 const usePreferencesFetchedState = () => useState<boolean>('auth:preferences:fetched', () => false)
 
 const usePreferenceOptionsState = () =>
-  useState<{ locales: { value: string, label: string }[], themes: { value: string, label: string }[] }>(
+  useState<{
+    locales: { value: string, label: string }[]
+    themes: { value: string, label: string }[]
+    primary_colors: { value: string, label: string }[]
+    neutral_colors: { value: string, label: string }[]
+  }>(
     'auth:preferences:options',
-    () => ({ locales: [], themes: [] })
+    () => ({
+      locales: [],
+      themes: [],
+      primary_colors: [],
+      neutral_colors: [],
+    }),
   )
 
 const readCookie = (name: string) => {
@@ -58,6 +68,7 @@ export function useAuth() {
   const authPrefix = config.public.authPrefix
   const nuxtApp = useNuxtApp()
   const router = useRouter()
+  const appConfig = useAppConfig()
 
   const user = useAuthUserState()
   const hasFetched = useAuthFetchedState()
@@ -83,11 +94,17 @@ export function useAuth() {
     if (prefs?.theme) {
       colorMode.preference = prefs.theme
     }
+    if (prefs?.primary_color) {
+      appConfig.ui.colors.primary = prefs.primary_color
+    }
+    if (prefs?.neutral_color) {
+      appConfig.ui.colors.neutral = prefs.neutral_color
+    }
   }
 
   const resetPreferences = () => {
     preferences.value = null
-    preferenceOptions.value = { locales: [], themes: [] }
+    preferenceOptions.value = { locales: [], themes: [], primary_colors: [], neutral_colors: [] }
     preferencesFetched.value = false
   }
 
@@ -95,7 +112,9 @@ export function useAuth() {
     preferences.value = payload.data
     preferenceOptions.value = {
       locales: payload.available_locales,
-      themes: payload.available_themes
+      themes: payload.available_themes,
+      primary_colors: payload.available_primary_colors,
+      neutral_colors: payload.available_neutral_colors,
     }
     preferencesFetched.value = true
     applyPreferenceEffects(preferences.value)
@@ -207,7 +226,7 @@ export function useAuth() {
     return preferences.value
   }
 
-  const updatePreferences = async (payload: { locale?: string, theme?: string }) => {
+  const updatePreferences = async (payload: Partial<UserPreferencesPayload>) => {
     await ensureCsrfCookie()
 
     const response = await withCredentials<PreferencesResponse>(

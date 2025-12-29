@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $user_id
  * @property string $locale
  * @property string $theme
+ * @property string $primary_color
+ * @property string $neutral_color
  */
 class UserPreference extends Model
 {
@@ -18,5 +20,7 @@ class UserPreference extends Model
         'user_id',
         'locale',
         'theme',
+        'primary_color',
+        'neutral_color',
     ];
 }

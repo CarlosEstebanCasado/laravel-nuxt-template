@@ -100,6 +100,7 @@ backend/app/src/{Context}/{Module}/
   - Eloquent adapter: `.../Infrastructure/Eloquent/Repository/Eloquent{Entity}Repository.php`
   - Non-Eloquent adapter: `.../Infrastructure/{AdapterName}{Entity}Repository.php` (if needed)
 - **Mappers** (Domain ↔ Persistence/DTO): `.../Infrastructure/Mapper/**`
+- **Migrations**: cuando añadas columnas nuevas en cualquier tabla debes declararlas justo antes de `created_at`/`updated_at` en la migración. Así, al inspeccionar la tabla en la base de datos, los campos de tracking permanecen al final y las nuevas columnas quedan agrupadas con el resto de datos del dominio.
 
 ## Localization + User Preferences
 - **Locales soportados** se declaran en `config/app.php` (`supported_locales`) y cualquier servicio que los necesite deberá leerlos desde configuración (nunca hardcodearlos). Cuando el contenedor no está bootstrapped (tests unitarios puros) debemos proveer un fallback seguro en el propio servicio.

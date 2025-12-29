@@ -11,7 +11,7 @@ const auth = useAuth()
 const router = useRouter()
 const { t } = useI18n()
 
-const updateThemePreference = async (theme: 'light' | 'dark') => {
+const updateThemePreference = async (theme: 'system' | 'light' | 'dark') => {
   colorMode.preference = theme
   if (!auth.isAuthenticated.value) {
     return
@@ -26,6 +26,19 @@ const updateThemePreference = async (theme: 'light' | 'dark') => {
 
 const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
 const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
+const translateColor = (color: string) => t(`colors.${color}` as const) ?? color
+
+const persistColorPreference = async (payload: { primary_color?: string, neutral_color?: string }) => {
+  if (!auth.isAuthenticated.value) {
+    return
+  }
+
+  try {
+    await auth.updatePreferences(payload)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 const dashboardBase = '/dashboard'
 
@@ -69,7 +82,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       collisionPadding: 16
     },
     children: colors.map(color => ({
-      label: color,
+      label: translateColor(color),
       chip: color,
       slot: 'chip',
       checked: appConfig.ui.colors.primary === color,
@@ -78,6 +91,12 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
         e.preventDefault()
 
         appConfig.ui.colors.primary = color
+
+        if (auth.preferences.value?.primary_color === color) {
+          return
+        }
+
+        void persistColorPreference({ primary_color: color })
       }
     }))
   }, {
@@ -89,7 +108,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       collisionPadding: 16
     },
     children: neutrals.map(color => ({
-      label: color,
+      label: translateColor(color),
       chip: color === 'neutral' ? 'old-neutral' : color,
       slot: 'chip',
       type: 'checkbox',
@@ -98,6 +117,12 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
         e.preventDefault()
 
         appConfig.ui.colors.neutral = color
+
+        if (auth.preferences.value?.neutral_color === color) {
+          return
+        }
+
+        void persistColorPreference({ neutral_color: color })
       }
     }))
   }]
