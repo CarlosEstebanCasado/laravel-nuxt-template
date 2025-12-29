@@ -106,7 +106,10 @@ const extractErrorMessage = (error: unknown) => {
   return t('auth.signup.toast_error_title')
 }
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event?: FormSubmitEvent<Schema>) {
+  if (!event) {
+    return
+  }
   if (isSubmitting.value) {
     return
   }
