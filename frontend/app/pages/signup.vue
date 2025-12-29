@@ -52,11 +52,29 @@ const providers = [{
   onClick: () => handleProvider('github')
 }]
 
+const requiredField = () => t('messages.validation.required')
+const requiredString = (message: string) =>
+  z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z.string().min(1, message)
+  )
+const requiredEmail = (message: string) =>
+  z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z.string().email(message)
+  )
+
 const schema = z.object({
-  name: z.string().min(1, t('messages.validation.too_short')),
-  email: z.string().email(t('messages.validation.invalid_email')),
-  password: z.string().min(8, t('messages.validation.password_min')),
-  password_confirmation: z.string().min(8, t('messages.validation.password_min'))
+  name: requiredString(requiredField()),
+  email: requiredEmail(t('messages.validation.invalid_email')),
+  password: z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z.string().min(8, t('messages.validation.password_min'))
+  ),
+  password_confirmation: z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z.string().min(8, t('messages.validation.password_min'))
+  )
 }).refine((data) => data.password === data.password_confirmation, {
   message: t('messages.validation.passwords_mismatch'),
   path: ['password_confirmation'],

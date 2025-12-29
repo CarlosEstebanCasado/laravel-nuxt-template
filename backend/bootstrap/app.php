@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Keep the current session active but invalidate other browser sessions
         // when the user's password changes (used by Auth::logoutOtherDevices()).
         $middleware->web(append: [
+            SetLocaleFromRequest::class,
             AuthenticateSession::class,
             ThrottleAuthEndpoints::class,
         ]);

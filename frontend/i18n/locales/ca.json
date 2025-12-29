@@ -431,6 +431,7 @@
     "generic_error": "Alguna cosa no ha anat bé. Torna-ho a provar.",
     "sessions_empty": "No hem trobat sessions actives per al teu compte.",
     "validation": {
+      "required": "Aquest camp es obligatori",
       "too_short": "Massa curt",
       "invalid_email": "Correu no vàlid",
       "password_min": "Ha de tenir almenys 8 caràcters",

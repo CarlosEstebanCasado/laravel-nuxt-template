@@ -431,6 +431,7 @@
     "generic_error": "Something went wrong. Please try again.",
     "sessions_empty": "We couldn't find any active sessions for your account.",
     "validation": {
+      "required": "This field is required",
       "too_short": "Too short",
       "invalid_email": "Invalid email",
       "password_min": "Must be at least 8 characters",
