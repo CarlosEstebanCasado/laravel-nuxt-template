@@ -86,6 +86,9 @@ export default defineNuxtConfig({
     prerender: {
       routes: ['/'],
       crawlLinks: true
+    },
+    externals: {
+      inline: ['@img/sharp-linux-x64', '@img/sharp-libvips-linux-x64']
     }
   },
 
