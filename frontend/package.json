@@ -25,6 +25,7 @@
     "nuxt": "^4.2.2",
     "nuxt-og-image": "^5.1.12",
     "scule": "^1.3.0",
+    "sharp": "^0.34.5",
     "zod": "^4.1.12"
   },
   "devDependencies": {

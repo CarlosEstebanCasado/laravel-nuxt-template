@@ -1,12 +1,4 @@
-FROM node:20-alpine
-
-RUN apk add --no-cache \
-    g++ \
-    make \
-    python3 \
-    vips-dev
-
-ENV npm_config_build_from_source=true
+FROM node:20
 
 WORKDIR /usr/src/app
 

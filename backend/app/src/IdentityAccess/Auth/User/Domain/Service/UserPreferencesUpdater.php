@@ -24,10 +24,21 @@ final class UserPreferencesUpdater
         $nextPrimary = $primaryColor ?? $preferences->primaryColor();
         $nextNeutral = $neutralColor ?? $preferences->neutralColor();
 
-        $this->assertLocaleSupported($nextLocale);
-        $this->assertThemeSupported($nextTheme);
-        $this->assertPrimaryColorSupported($nextPrimary);
-        $this->assertNeutralColorSupported($nextNeutral);
+        if ($locale !== null) {
+            $this->assertLocaleSupported($nextLocale);
+        }
+
+        if ($theme !== null) {
+            $this->assertThemeSupported($nextTheme);
+        }
+
+        if ($primaryColor !== null) {
+            $this->assertPrimaryColorSupported($nextPrimary);
+        }
+
+        if ($neutralColor !== null) {
+            $this->assertNeutralColorSupported($nextNeutral);
+        }
 
         return new UserPreferences(
             $preferences->userId(),
