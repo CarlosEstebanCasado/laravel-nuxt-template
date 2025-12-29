@@ -80,8 +80,6 @@ const schema = z.object({
   path: ['password_confirmation'],
 })
 
-type Schema = z.output<typeof schema>
-
 const handleProvider = (provider: 'google' | 'github') => {
   auth.loginWithProvider(provider)
 }
@@ -106,9 +104,13 @@ const extractErrorMessage = (error: unknown) => {
   return t('auth.signup.toast_error_title')
 }
 
-async function onSubmit(event?: FormSubmitEvent<Schema>) {
-  if (!event) {
-    return
+async function onSubmit(event?: FormSubmitEvent<Record<string, unknown>>) {
+  const data = event?.data ?? {}
+  const payload = {
+    name: String(data.name ?? ''),
+    email: String(data.email ?? ''),
+    password: String(data.password ?? ''),
+    password_confirmation: String(data.password_confirmation ?? '')
   }
   if (isSubmitting.value) {
     return
@@ -117,7 +119,7 @@ async function onSubmit(event?: FormSubmitEvent<Schema>) {
   isSubmitting.value = true
 
   try {
-    const user = await auth.register(event.data)
+    const user = await auth.register(payload)
 
     toast.add({
       title: t('auth.signup.toast_success_title'),
