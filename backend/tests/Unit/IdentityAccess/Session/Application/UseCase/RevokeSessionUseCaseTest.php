@@ -29,8 +29,8 @@ final class RevokeSessionUseCaseTest extends TestCase
         $this->sessions = $this->createMock(SessionRepository::class);
         $this->audit = $this->createMock(AuditEventRecorder::class);
         $this->useCase = new RevokeSessionUseCase(
-            sessions: $this->sessions,
-            audit: $this->audit
+            sessionRepository: $this->sessions,
+            auditEventRecorder: $this->audit
         );
     }
 

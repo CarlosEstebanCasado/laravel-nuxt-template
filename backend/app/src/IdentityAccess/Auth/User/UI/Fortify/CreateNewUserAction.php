@@ -15,7 +15,7 @@ class CreateNewUserAction implements CreatesNewUsers
     use PasswordValidationRules;
 
     public function __construct(
-        private readonly CreateUserUseCase $useCase
+        private readonly CreateUserUseCase $createUserUseCase
     ) {
     }
 
@@ -40,7 +40,7 @@ class CreateNewUserAction implements CreatesNewUsers
             'email.unique' => __('An account with this email already exists. Please sign in or reset your password.'),
         ])->validate();
 
-        $userId = $this->useCase->execute(new CreateUserUseCaseRequest(
+        $userId = $this->createUserUseCase->execute(new CreateUserUseCaseRequest(
             name: $input['name'],
             email: $input['email'],
             password: $input['password'],

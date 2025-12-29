@@ -5,18 +5,14 @@ defineProps<{
   collapsed?: boolean
 }>()
 
-const colorMode = useColorMode()
-const appConfig = useAppConfig()
 const auth = useAuth()
 const router = useRouter()
-
-const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
-const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
+const { t } = useI18n()
 
 const dashboardBase = '/dashboard'
 
 const user = computed(() => {
-  const name = auth.user.value?.name ?? 'Guest'
+  const name = auth.user.value?.name ?? t('userMenu.guest')
   const email = auth.user.value?.email ?? ''
   return {
     name,
@@ -34,129 +30,58 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   description: user.value.email,
   avatar: user.value.avatar
 }], [{
-  label: 'Profile',
+  label: t('userMenu.profile'),
   icon: 'i-lucide-user'
 }, {
-  label: 'Billing',
+  label: t('userMenu.billing'),
   icon: 'i-lucide-credit-card'
 }, {
-  label: 'Settings',
+  label: t('userMenu.settings'),
   icon: 'i-lucide-settings',
   to: `${dashboardBase}/settings`
 }], [{
-  label: 'Theme',
-  icon: 'i-lucide-palette',
-  children: [{
-    label: 'Primary',
-    slot: 'chip',
-    chip: appConfig.ui.colors.primary,
-    content: {
-      align: 'center',
-      collisionPadding: 16
-    },
-    children: colors.map(color => ({
-      label: color,
-      chip: color,
-      slot: 'chip',
-      checked: appConfig.ui.colors.primary === color,
-      type: 'checkbox',
-      onSelect: (e) => {
-        e.preventDefault()
-
-        appConfig.ui.colors.primary = color
-      }
-    }))
-  }, {
-    label: 'Neutral',
-    slot: 'chip',
-    chip: appConfig.ui.colors.neutral === 'neutral' ? 'old-neutral' : appConfig.ui.colors.neutral,
-    content: {
-      align: 'end',
-      collisionPadding: 16
-    },
-    children: neutrals.map(color => ({
-      label: color,
-      chip: color === 'neutral' ? 'old-neutral' : color,
-      slot: 'chip',
-      type: 'checkbox',
-      checked: appConfig.ui.colors.neutral === color,
-      onSelect: (e) => {
-        e.preventDefault()
-
-        appConfig.ui.colors.neutral = color
-      }
-    }))
-  }]
-}, {
-  label: 'Appearance',
-  icon: 'i-lucide-sun-moon',
-  children: [{
-    label: 'Light',
-    icon: 'i-lucide-sun',
-    type: 'checkbox',
-    checked: colorMode.value === 'light',
-    onSelect(e: Event) {
-      e.preventDefault()
-
-      colorMode.preference = 'light'
-    }
-  }, {
-    label: 'Dark',
-    icon: 'i-lucide-moon',
-    type: 'checkbox',
-    checked: colorMode.value === 'dark',
-    onUpdateChecked(checked: boolean) {
-      if (checked) {
-        colorMode.preference = 'dark'
-      }
-    },
-    onSelect(e: Event) {
-      e.preventDefault()
-    }
-  }]
-}], [{
-  label: 'Templates',
+  label: t('userMenu.templates'),
   icon: 'i-lucide-layout-template',
   children: [{
-    label: 'Starter',
+    label: t('templates.starter'),
     to: 'https://starter-template.nuxt.dev/'
   }, {
-    label: 'Landing',
+    label: t('templates.landing'),
     to: 'https://landing-template.nuxt.dev/'
   }, {
-    label: 'Docs',
+    label: t('templates.docs'),
     to: 'https://docs-template.nuxt.dev/'
   }, {
-    label: 'SaaS',
+    label: t('templates.saas'),
     to: 'https://saas-template.nuxt.dev/'
   }, {
-    label: 'Dashboard',
+    label: t('templates.dashboard'),
     to: 'https://dashboard-template.nuxt.dev/',
     color: 'primary',
     checked: true,
     type: 'checkbox'
   }, {
-    label: 'Chat',
+    label: t('templates.chat'),
     to: 'https://chat-template.nuxt.dev/'
   }, {
-    label: 'Portfolio',
+    label: t('templates.portfolio'),
     to: 'https://portfolio-template.nuxt.dev/'
   }, {
-    label: 'Changelog',
+    label: t('templates.changelog'),
     to: 'https://changelog-template.nuxt.dev/'
   }]
 }], [{
-  label: 'Documentation',
+  label: t('userMenu.documentation'),
   icon: 'i-lucide-book-open',
   to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
   target: '_blank'
 }, {
-  label: 'GitHub repository',
+  label: t('userMenu.github'),
   icon: 'i-simple-icons-github',
   to: 'https://github.com/nuxt-ui-templates/dashboard',
   target: '_blank'
 }, {
-  label: 'Log out',
+  label: t('userMenu.logout'),
   icon: 'i-lucide-log-out',
   onSelect: async () => {
     await auth.logout()
@@ -187,16 +112,5 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       }"
     />
 
-    <template #chip-leading="{ item }">
-      <div class="inline-flex items-center justify-center shrink-0 size-5">
-        <span
-          class="rounded-full ring ring-bg bg-(--chip-light) dark:bg-(--chip-dark) size-2"
-          :style="{
-            '--chip-light': `var(--color-${(item as any).chip}-500)`,
-            '--chip-dark': `var(--color-${(item as any).chip}-400)`
-          }"
-        />
-      </div>
-    </template>
   </UDropdownMenu>
 </template>

@@ -2,6 +2,8 @@
 
 use App\Src\IdentityAccess\Audit\UI\Controllers\Api\AuditsController;
 use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\CurrentUserController;
+use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\ShowUserPreferencesController;
+use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\UpdateUserPreferencesController;
 use App\Src\IdentityAccess\Security\Reauth\UI\Controllers\Api\DeleteAccountController;
 use App\Src\IdentityAccess\Session\UI\Controllers\Api\DeleteSessionController;
 use App\Src\IdentityAccess\Session\UI\Controllers\Api\ListUserSessionsController;
@@ -9,7 +11,7 @@ use App\Src\IdentityAccess\Session\UI\Controllers\Api\RevokeOtherSessionsControl
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->group(function (): void {
+Route::prefix('v1')->middleware('locale')->group(function (): void {
     Route::get('/health', function (): JsonResponse {
         return response()->json([
             'status' => 'ok',
@@ -27,6 +29,8 @@ Route::prefix('v1')->group(function (): void {
     // Protected API endpoints (verified email required).
     Route::middleware(['auth:sanctum', 'verified'])->group(function (): void {
         Route::delete('/account', DeleteAccountController::class);
+        Route::get('/preferences', ShowUserPreferencesController::class);
+        Route::put('/preferences', UpdateUserPreferencesController::class);
         Route::get('/sessions', ListUserSessionsController::class);
         Route::post('/sessions/revoke-others', RevokeOtherSessionsController::class);
         Route::delete('/sessions/{id}', DeleteSessionController::class);

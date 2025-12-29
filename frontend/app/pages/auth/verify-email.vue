@@ -4,9 +4,11 @@ definePageMeta({
   middleware: 'auth'
 })
 
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Verify your email',
-  description: 'Verify your email address to continue'
+  title: t('auth.verify.seo_title'),
+  description: t('auth.verify.seo_description')
 })
 
 const auth = useAuth()
@@ -35,9 +37,9 @@ const refreshUser = async () => {
       await router.replace(redirectTo.value)
     }
   } catch (error: any) {
-    const message = error?.data?.message || error?.message || 'Unable to refresh your account status, please try again.'
+    const message = error?.data?.message || error?.message || t('auth.verify.toast_refresh_error')
     toast.add({
-      title: 'Request failed',
+      title: t('auth.verify.toast_refresh_error'),
       description: message,
       color: 'error'
     })
@@ -55,13 +57,13 @@ const resend = async () => {
   try {
     await auth.resendEmailVerification()
     toast.add({
-      title: 'Verification email sent',
-      description: 'Please check your inbox (and spam folder).'
+      title: t('auth.verify.toast_resend_success'),
+      description: t('auth.verify.toast_resend_description')
     })
   } catch (error: any) {
-    const message = error?.data?.message || error?.message || 'Unable to send verification email, please try again.'
+    const message = error?.data?.message || error?.message || t('auth.verify.toast_resend_error')
     toast.add({
-      title: 'Request failed',
+      title: t('auth.verify.toast_resend_error'),
       description: message,
       color: 'error'
     })
@@ -84,26 +86,24 @@ onMounted(async () => {
 
 <template>
   <UPageCard
-    title="Verify your email"
+    :title="t('auth.verify.title')"
     icon="i-lucide-mail-check"
     class="text-center"
   >
     <p class="text-sm text-muted">
-      We've sent a verification link to
-      <span class="font-medium">{{ userEmail || 'your email address' }}</span>.
-      Please open it to activate your account.
+      {{ t('auth.verify.message', { email: userEmail || t('auth.verify.fallback_email') }) }}
     </p>
 
     <div class="mt-6 flex flex-col gap-2">
       <UButton
-        label="I've verified my email"
+        :label="t('auth.verify.cta_verified')"
         color="primary"
         block
         :loading="isSubmitting"
         @click="refreshUser"
       />
       <UButton
-        label="Resend verification email"
+        :label="t('auth.verify.cta_resend')"
         color="neutral"
         variant="outline"
         block
@@ -111,7 +111,7 @@ onMounted(async () => {
         @click="resend"
       />
       <UButton
-        label="Logout"
+        :label="t('auth.verify.cta_logout')"
         color="neutral"
         variant="ghost"
         block
@@ -121,5 +121,4 @@ onMounted(async () => {
     </div>
   </UPageCard>
 </template>
-
 

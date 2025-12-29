@@ -6,14 +6,21 @@ defineProps<{
   members: Member[]
 }>()
 
-const items = [{
-  label: 'Edit member',
+const { t } = useI18n()
+
+const items = computed<DropdownMenuItem[]>(() => [{
+  label: t('settings.members.menu.edit'),
   onSelect: () => console.log('Edit member')
 }, {
-  label: 'Remove member',
+  label: t('settings.members.menu.remove'),
   color: 'error' as const,
   onSelect: () => console.log('Remove member')
-}] satisfies DropdownMenuItem[]
+}])
+
+const roleOptions = computed(() => ['member', 'owner'].map((role) => ({
+  label: t(`settings.members.roles.${role}` as const),
+  value: role
+})))
 </script>
 
 <template>
@@ -42,7 +49,7 @@ const items = [{
       <div class="flex items-center gap-3">
         <USelect
           :model-value="member.role"
-          :items="['member', 'owner']"
+          :items="roleOptions"
           color="neutral"
           :ui="{ value: 'capitalize', item: 'capitalize' }"
         />

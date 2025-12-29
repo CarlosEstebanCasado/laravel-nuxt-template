@@ -6,18 +6,20 @@ namespace App\Src\IdentityAccess\Auth\User\Domain\Entity;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 
 final class User
 {
     public function __construct(
         private readonly UserId $id,
-        private readonly string $name,
+        private readonly UserName $name,
         private readonly EmailAddress $email,
-        private readonly ?\DateTimeImmutable $emailVerifiedAt,
+        private readonly ?DateTimeValue $emailVerifiedAt,
         private readonly AuthProvider $authProvider,
-        private readonly ?\DateTimeImmutable $passwordSetAt,
-        private readonly ?\DateTimeImmutable $createdAt,
-        private readonly ?\DateTimeImmutable $updatedAt,
+        private readonly ?DateTimeValue $passwordSetAt,
+        private readonly ?DateTimeValue $createdAt,
+        private readonly ?DateTimeValue $updatedAt,
     ) {
     }
 
@@ -26,7 +28,7 @@ final class User
         return $this->id;
     }
 
-    public function name(): string
+    public function name(): UserName
     {
         return $this->name;
     }
@@ -36,7 +38,7 @@ final class User
         return $this->email;
     }
 
-    public function emailVerifiedAt(): ?\DateTimeImmutable
+    public function emailVerifiedAt(): ?DateTimeValue
     {
         return $this->emailVerifiedAt;
     }
@@ -46,17 +48,17 @@ final class User
         return $this->authProvider;
     }
 
-    public function passwordSetAt(): ?\DateTimeImmutable
+    public function passwordSetAt(): ?DateTimeValue
     {
         return $this->passwordSetAt;
     }
 
-    public function createdAt(): ?\DateTimeImmutable
+    public function createdAt(): ?DateTimeValue
     {
         return $this->createdAt;
     }
 
-    public function updatedAt(): ?\DateTimeImmutable
+    public function updatedAt(): ?DateTimeValue
     {
         return $this->updatedAt;
     }
@@ -70,5 +72,4 @@ final class User
         return $this->authProvider->isPassword() || $this->passwordSetAt !== null;
     }
 }
-
 

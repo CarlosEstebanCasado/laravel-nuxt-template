@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class ListUserSessionsController extends Controller
 {
     public function __construct(
-        private readonly ListUserSessionsUseCase $useCase
+        private readonly ListUserSessionsUseCase $listUserSessionsUseCase
     ) {
     }
 
@@ -28,7 +28,7 @@ class ListUserSessionsController extends Controller
         $userId = $this->requireUserId($user);
         $currentSessionId = $request->session()->getId();
 
-        $sessions = $this->useCase->execute(new ListUserSessionsUseCaseRequest(
+        $sessions = $this->listUserSessionsUseCase->execute(new ListUserSessionsUseCaseRequest(
             userId: $userId,
             currentSessionId: (string) $currentSessionId,
         ));

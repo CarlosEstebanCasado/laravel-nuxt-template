@@ -12,7 +12,7 @@ final class ListUserSessionsUseCase
 {
     public function __construct(
         private readonly SessionRepository $sessionRepository,
-        private readonly SessionListConverter $converter
+        private readonly SessionListConverter $sessionListConverter
     ) {
     }
 
@@ -20,9 +20,8 @@ final class ListUserSessionsUseCase
     {
         $collection = $this->sessionRepository->listForUser($request->userId);
 
-        return $this->converter->toResponse($collection, $request->currentSessionId);
+        return $this->sessionListConverter->toResponse($collection, $request->currentSessionId);
     }
 }
-
 
 

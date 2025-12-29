@@ -22,7 +22,7 @@ final class ResetUserPasswordUseCaseTest extends TestCase
         parent::setUp();
 
         $this->users = $this->createMock(UserRepository::class);
-        $this->useCase = new ResetUserPasswordUseCase(users: $this->users);
+        $this->useCase = new ResetUserPasswordUseCase(userRepository: $this->users);
     }
 
     public function test_it_resets_password_without_updating_password_set_at(): void
@@ -38,7 +38,7 @@ final class ResetUserPasswordUseCaseTest extends TestCase
             ->with(
                 self::equalTo(new UserId($request->userId)),
                 $request->password,
-                null
+                $this->isNull()
             );
 
         $this->useCase->execute(request: $request);

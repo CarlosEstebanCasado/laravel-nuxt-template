@@ -14,6 +14,7 @@ class AuthProviderMigrationTest extends TestCase
         // This test manually creates/drops tables to simulate a legacy schema.
         // Ensure we always clean up so other tests (using RefreshDatabase) don't
         // collide when running against Postgres in CI.
+        Schema::dropIfExists('user_preferences');
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');
@@ -28,6 +29,7 @@ class AuthProviderMigrationTest extends TestCase
     public function test_migration_does_not_lock_out_legacy_oauth_users(): void
     {
         // Ensure a clean slate (this test does NOT use RefreshDatabase on purpose).
+        Schema::dropIfExists('user_preferences');
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');
@@ -99,5 +101,4 @@ class AuthProviderMigrationTest extends TestCase
         $this->assertNotNull($password->password_set_at);
     }
 }
-
 

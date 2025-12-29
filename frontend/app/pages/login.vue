@@ -7,9 +7,11 @@ definePageMeta({
   middleware: 'guest'
 })
 
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Login',
-  description: 'Login to your account to continue'
+  title: t('auth.login.seo_title'),
+  description: t('auth.login.seo_description')
 })
 
 const toast = useToast()
@@ -18,22 +20,22 @@ const router = useRouter()
 const route = useRoute()
 const isSubmitting = ref(false)
 
-const fields = [{
+const fields = computed(() => [{
   name: 'email',
   type: 'text' as const,
-  label: 'Email',
-  placeholder: 'Enter your email',
+  label: t('auth.fields.email_label'),
+  placeholder: t('auth.fields.email_placeholder'),
   required: true
 }, {
   name: 'password',
-  label: 'Password',
+  label: t('auth.fields.password_label'),
   type: 'password' as const,
-  placeholder: 'Enter your password'
+  placeholder: t('auth.fields.password_placeholder')
 }, {
   name: 'remember',
-  label: 'Remember me',
+  label: t('auth.fields.remember_me'),
   type: 'checkbox' as const
-}]
+}])
 
 const providers = [{
   label: 'Google',
@@ -47,8 +49,8 @@ const providers = [{
 
 const schema = z.object({
   remember: z.boolean().optional(),
-  email: z.string().email('Invalid email'),
-  password: z.string().min(8, 'Must be at least 8 characters')
+  email: z.string().email(t('messages.validation.invalid_email')),
+  password: z.string().min(8, t('messages.validation.password_min'))
 })
 
 type Schema = z.output<typeof schema>
@@ -74,7 +76,7 @@ const extractErrorMessage = (error: unknown) => {
     return (error as any).message
   }
 
-  return 'Unable to sign in, please try again.'
+  return t('auth.login.error_generic')
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -88,8 +90,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     const user = await auth.login(event.data)
 
     toast.add({
-      title: 'Welcome back!',
-      description: 'You are now signed in.',
+      title: t('auth.login.toast_success_title'),
+      description: t('auth.login.toast_success_description'),
     })
 
     const redirectTo = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard'
@@ -102,7 +104,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     await router.push(redirectTo)
   } catch (error) {
     toast.add({
-      title: 'Unable to sign in',
+      title: t('auth.login.toast_error_title'),
       description: extractErrorMessage(error),
       color: 'error',
     })
@@ -118,15 +120,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     :schema="schema"
     :providers="providers"
     :loading="isSubmitting"
-    title="Welcome back"
+    :title="t('auth.login.title')"
     icon="i-lucide-lock"
     @submit="onSubmit"
   >
     <template #description>
-      Don't have an account? <ULink
+      {{ t('auth.login.cta_text') }}
+      <ULink
         to="/signup"
         class="text-primary font-medium"
-      >Sign up</ULink>.
+      >{{ t('auth.login.cta_action') }}</ULink>.
     </template>
 
     <template #password-hint>
@@ -134,14 +137,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         to="/forgot-password"
         class="text-primary font-medium"
         tabindex="-1"
-      >Forgot password?</ULink>
+      >{{ t('auth.login.forgot') }}</ULink>
     </template>
 
     <template #footer>
-      By signing in, you agree to our <ULink
+      {{ t('auth.login.footer_text') }}
+      <ULink
         to="/"
         class="text-primary font-medium"
-      >Terms of Service</ULink>.
+      >{{ t('auth.login.footer_link') }}</ULink>.
     </template>
   </UAuthForm>
 </template>

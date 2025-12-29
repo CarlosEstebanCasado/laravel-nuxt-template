@@ -4,9 +4,11 @@ definePageMeta({
   middleware: 'auth'
 })
 
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Email verified',
-  description: 'Your email address has been verified'
+  title: t('auth.email_verified.seo_title'),
+  description: t('auth.email_verified.seo_description')
 })
 
 const auth = useAuth()
@@ -34,8 +36,8 @@ onMounted(async () => {
     }
 
     toast.add({
-      title: 'Email verified',
-      description: 'Thanks! Your account is now active.'
+      title: t('auth.email_verified.toast_title'),
+      description: t('auth.email_verified.toast_description')
     })
     await router.replace(redirectTo.value)
   } catch {
@@ -53,13 +55,12 @@ onMounted(async () => {
 
     <div>
       <h2 class="text-lg font-semibold">
-        Verifying your session…
+        {{ t('auth.email_verified.verifying_title') }}
       </h2>
       <p class="text-sm text-neutral-500">
-        Redirecting you to the app.
+        {{ t('auth.email_verified.verifying_description') }}
       </p>
     </div>
   </div>
 </template>
-
 

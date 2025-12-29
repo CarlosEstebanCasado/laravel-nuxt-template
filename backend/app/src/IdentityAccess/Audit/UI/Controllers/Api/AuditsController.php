@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class AuditsController extends Controller
 {
     public function __construct(
-        private readonly ListUserAuditsUseCase $useCase
+        private readonly ListUserAuditsUseCase $listUserAuditsUseCase
     ) {
     }
 
@@ -20,7 +20,7 @@ class AuditsController extends Controller
     {
         $user = $this->requireUser($request);
 
-        $result = $this->useCase->execute(
+        $result = $this->listUserAuditsUseCase->execute(
             new ListUserAuditsUseCaseRequest(
                 auditableType: $user::class,
                 auditableId: $this->requireUserId($user),

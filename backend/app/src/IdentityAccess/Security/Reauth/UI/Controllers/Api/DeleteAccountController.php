@@ -15,7 +15,7 @@ use Illuminate\Validation\Rule;
 class DeleteAccountController extends Controller
 {
     public function __construct(
-        private readonly DeleteAccountUseCase $useCase
+        private readonly DeleteAccountUseCase $deleteAccountUseCase
     ) {
     }
 
@@ -42,7 +42,7 @@ class DeleteAccountController extends Controller
             'password.current_password' => __('The provided password does not match your current password.'),
         ]);
 
-        $response = $this->useCase->execute(
+        $response = $this->deleteAccountUseCase->execute(
             new DeleteAccountUseCaseRequest(
                 userId: $this->requireUserId($user),
                 confirmation: $validated['confirmation'],

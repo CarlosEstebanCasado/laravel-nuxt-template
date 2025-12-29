@@ -1,0 +1,202 @@
+<script setup lang="ts">
+import type { FormSubmitEvent } from '@nuxt/ui'
+import type { UserPreferencesPayload } from '~/types/preferences'
+
+type ThemePreference = UserPreferencesPayload['theme']
+type SupportedLocale = UserPreferencesPayload['locale']
+
+definePageMeta({
+  layout: 'dashboard',
+  middleware: 'auth'
+})
+
+const auth = useAuth()
+const { t } = useI18n()
+const toast = useToast()
+
+const form = reactive<{
+  locale: SupportedLocale
+  theme: ThemePreference
+  primary_color: string
+  neutral_color: string
+}>({
+  locale: 'es',
+  theme: 'system',
+  primary_color: 'blue',
+  neutral_color: 'slate'
+})
+
+const isLoading = ref(true)
+const isSaving = ref(false)
+
+const localeOptions = computed(() => auth.preferenceOptions.value.locales)
+const themeOptions = computed(() =>
+  auth.preferenceOptions.value.themes.map((theme) => ({
+    ...theme,
+    label: t(`theme.${theme.value}` as const) || theme.label
+  }))
+)
+
+const primaryColorOptions = computed(() =>
+  auth.preferenceOptions.value.primary_colors.map((color) => ({
+    ...color,
+    label: t(`colors.${color.value}` as const) || color.label
+  }))
+)
+
+const neutralColorOptions = computed(() =>
+  auth.preferenceOptions.value.neutral_colors.map((color) => ({
+    ...color,
+    label: t(`colors.${color.value}` as const) || color.label
+  }))
+)
+
+const syncPreferences = () => {
+  if (!auth.preferences.value) {
+    return
+  }
+
+  form.locale = auth.preferences.value.locale
+  form.theme = auth.preferences.value.theme
+  form.primary_color = auth.preferences.value.primary_color
+  form.neutral_color = auth.preferences.value.neutral_color
+}
+
+onMounted(async () => {
+  try {
+    await auth.fetchUser()
+    await auth.fetchPreferences()
+    syncPreferences()
+  } finally {
+    isLoading.value = false
+  }
+})
+
+watch(
+  () => auth.preferences.value,
+  () => {
+    syncPreferences()
+  }
+)
+
+const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
+  if (isSaving.value) {
+    return
+  }
+
+  isSaving.value = true
+  try {
+    await auth.updatePreferences({
+      locale: event.data.locale,
+      theme: event.data.theme,
+      primary_color: event.data.primary_color,
+      neutral_color: event.data.neutral_color
+    })
+    toast.add({
+      title: t('preferences.success'),
+      color: 'success',
+      icon: 'i-lucide-check'
+    })
+  } catch (error: any) {
+    toast.add({
+      title: t('messages.generic_error'),
+      description: error?.data?.message ?? t('messages.generic_error'),
+      color: 'error'
+    })
+  } finally {
+    isSaving.value = false
+  }
+}
+</script>
+
+<template>
+  <UForm
+    :state="form"
+    @submit="onSubmit"
+  >
+    <UPageCard
+      :title="t('preferences.title')"
+      :description="t('preferences.description')"
+      variant="subtle"
+      orientation="horizontal"
+      class="mb-4"
+    >
+      <UButton
+        type="submit"
+        :label="t('preferences.save')"
+        color="neutral"
+        :loading="isSaving || isLoading"
+        class="w-fit lg:ms-auto"
+      />
+    </UPageCard>
+
+    <UPageCard variant="outline">
+      <UFormField
+        name="locale"
+        :label="t('preferences.language_label')"
+        :description="t('preferences.language_hint')"
+        class="flex max-sm:flex-col justify-between items-start gap-4"
+      >
+        <USelect
+          v-model="form.locale"
+          :items="localeOptions"
+          label-key="label"
+          value-key="value"
+          :disabled="isLoading"
+        />
+      </UFormField>
+
+      <USeparator />
+
+      <UFormField
+        name="theme"
+        :label="t('preferences.theme_label')"
+        :description="t('preferences.theme_hint')"
+        class="flex max-sm:flex-col justify-between items-start gap-4"
+      >
+        <USelect
+          v-model="form.theme"
+          :items="themeOptions"
+          label-key="label"
+          value-key="value"
+          :disabled="isLoading"
+        />
+      </UFormField>
+
+      <USeparator />
+
+      <UFormField
+        name="primary_color"
+        :label="t('preferences.primary_color_label')"
+        :description="t('preferences.primary_color_hint')"
+        class="flex max-sm:flex-col justify-between items-start gap-4"
+      >
+        <USelect
+          v-model="form.primary_color"
+          :items="primaryColorOptions"
+          label-key="label"
+          value-key="value"
+          :disabled="isLoading"
+          class="min-w-35"
+        />
+      </UFormField>
+
+      <USeparator />
+
+      <UFormField
+        name="neutral_color"
+        :label="t('preferences.neutral_color_label')"
+        :description="t('preferences.neutral_color_hint')"
+        class="flex max-sm:flex-col justify-between items-start gap-4"
+      >
+        <USelect
+          v-model="form.neutral_color"
+          :items="neutralColorOptions"
+          label-key="label"
+          value-key="value"
+          :disabled="isLoading"
+        />
+      </UFormField>
+    </UPageCard>
+  </UForm>
+</template>

@@ -1,18 +1,19 @@
 <script setup lang="ts">
 const route = useRoute()
+const { t } = useI18n()
 
 const items = computed(() => [{
-  label: 'Docs',
+  label: t('navigation.docs'),
   to: '/docs',
   active: route.path.startsWith('/docs')
 }, {
-  label: 'Pricing',
+  label: t('navigation.pricing'),
   to: '/pricing'
 }, {
-  label: 'Blog',
+  label: t('navigation.blog'),
   to: '/blog'
 }, {
-  label: 'Changelog',
+  label: t('navigation.changelog'),
   to: '/changelog'
 }])
 </script>
@@ -40,10 +41,11 @@ const items = computed(() => [{
         variant="ghost"
         to="/login"
         class="lg:hidden"
+        :aria-label="t('actions.sign_in')"
       />
 
       <UButton
-        label="Sign in"
+        :label="t('actions.sign_in')"
         color="neutral"
         variant="outline"
         to="/login"
@@ -51,7 +53,7 @@ const items = computed(() => [{
       />
 
       <UButton
-        label="Sign up"
+        :label="t('actions.sign_up')"
         color="neutral"
         trailing-icon="i-lucide-arrow-right"
         class="hidden lg:inline-flex"
@@ -69,7 +71,7 @@ const items = computed(() => [{
       <USeparator class="my-6" />
 
       <UButton
-        label="Sign in"
+        :label="t('actions.sign_in')"
         color="neutral"
         variant="subtle"
         to="/login"
@@ -77,7 +79,7 @@ const items = computed(() => [{
         class="mb-3"
       />
       <UButton
-        label="Sign up"
+        :label="t('actions.sign_up')"
         color="neutral"
         to="/signup"
         block

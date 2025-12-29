@@ -8,7 +8,9 @@ use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 use Illuminate\Support\Carbon;
 use InvalidArgumentException;
 
@@ -29,17 +31,17 @@ final class EloquentUserRepository implements UserRepository
     }
 
     public function createPasswordUser(
-        string $name,
+        UserName $name,
         EmailAddress $email,
         string $plainPassword,
-        \DateTimeImmutable $passwordSetAt
+        DateTimeValue $passwordSetAt
     ): UserId {
         $model = User::query()->create([
-            'name' => $name,
+            'name' => $name->toString(),
             'email' => $email->toString(),
             'password' => $plainPassword,
             'auth_provider' => 'password',
-            'password_set_at' => Carbon::createFromInterface($passwordSetAt),
+            'password_set_at' => Carbon::createFromInterface($passwordSetAt->value()),
         ]);
 
         return new UserId($this->resolveModelId($model));
@@ -47,23 +49,23 @@ final class EloquentUserRepository implements UserRepository
 
     public function upsertOAuthUser(
         EmailAddress $email,
-        string $name,
-        string $provider,
-        \DateTimeImmutable $emailVerifiedAt,
+        UserName $name,
+        AuthProvider $provider,
+        DateTimeValue $emailVerifiedAt,
         string $plainPassword
     ): UserId {
         /** @var User $model */
         $model = User::query()->firstOrNew(['email' => $email->toString()]);
 
         if (! $model->exists) {
-            $model->name = $name;
+            $model->name = $name->toString();
             $model->password = $plainPassword;
-            $model->auth_provider = $provider;
+            $model->auth_provider = $provider->toString();
             $model->password_set_at = null;
         }
 
         if (is_null($model->email_verified_at)) {
-            $model->email_verified_at = Carbon::createFromInterface($emailVerifiedAt);
+            $model->email_verified_at = Carbon::createFromInterface($emailVerifiedAt->value());
         }
 
         $model->save();
@@ -73,14 +75,14 @@ final class EloquentUserRepository implements UserRepository
 
     public function updateProfile(
         UserId $id,
-        string $name,
+        UserName $name,
         EmailAddress $email,
         bool $resetEmailVerification
     ): void {
         $model = User::query()->findOrFail($id->toInt());
 
         $data = [
-            'name' => $name,
+            'name' => $name->toString(),
             'email' => $email->toString(),
         ];
 
@@ -91,7 +93,7 @@ final class EloquentUserRepository implements UserRepository
         $model->forceFill($data)->save();
     }
 
-    public function updatePassword(UserId $id, string $plainPassword, ?\DateTimeImmutable $passwordSetAt): void
+    public function updatePassword(UserId $id, string $plainPassword, ?DateTimeValue $passwordSetAt): void
     {
         $model = User::query()->findOrFail($id->toInt());
 
@@ -100,7 +102,7 @@ final class EloquentUserRepository implements UserRepository
         ];
 
         if ($passwordSetAt !== null) {
-            $data['password_set_at'] = Carbon::createFromInterface($passwordSetAt);
+            $data['password_set_at'] = Carbon::createFromInterface($passwordSetAt->value());
         }
 
         $model->forceFill($data)->save();
@@ -109,24 +111,24 @@ final class EloquentUserRepository implements UserRepository
     private function toDomain(User $model): DomainUser
     {
         $emailVerifiedAt = $model->email_verified_at
-            ? new \DateTimeImmutable($model->email_verified_at->toDateTimeString())
+            ? new DateTimeValue(new \DateTimeImmutable($model->email_verified_at->toDateTimeString()))
             : null;
 
         $passwordSetAt = $model->password_set_at
-            ? new \DateTimeImmutable($model->password_set_at->toDateTimeString())
+            ? new DateTimeValue(new \DateTimeImmutable($model->password_set_at->toDateTimeString()))
             : null;
 
         $createdAt = $model->created_at
-            ? new \DateTimeImmutable($model->created_at->toDateTimeString())
+            ? new DateTimeValue(new \DateTimeImmutable($model->created_at->toDateTimeString()))
             : null;
 
         $updatedAt = $model->updated_at
-            ? new \DateTimeImmutable($model->updated_at->toDateTimeString())
+            ? new DateTimeValue(new \DateTimeImmutable($model->updated_at->toDateTimeString()))
             : null;
 
         return new DomainUser(
             id: new UserId($this->resolveModelId($model)),
-            name: (string) $model->name,
+            name: new UserName((string) $model->name),
             email: new EmailAddress((string) $model->email),
             emailVerifiedAt: $emailVerifiedAt,
             authProvider: new AuthProvider((string) ($model->auth_provider ?? 'password')),
@@ -151,4 +153,3 @@ final class EloquentUserRepository implements UserRepository
         return (int) $id;
     }
 }
-

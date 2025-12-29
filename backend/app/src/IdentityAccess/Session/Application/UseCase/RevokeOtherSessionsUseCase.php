@@ -10,16 +10,16 @@ use App\Src\Shared\Domain\Service\AuditEventRecorder;
 final class RevokeOtherSessionsUseCase
 {
     public function __construct(
-        private readonly SessionRepository $sessions,
-        private readonly AuditEventRecorder $audit
+        private readonly SessionRepository $sessionRepository,
+        private readonly AuditEventRecorder $auditEventRecorder
     ) {
     }
 
     public function execute(RevokeOtherSessionsUseCaseRequest $request): int
     {
-        $revoked = $this->sessions->deleteOthersForUser($request->userId, $request->currentSessionId);
+        $revoked = $this->sessionRepository->deleteOthersForUser($request->userId, $request->currentSessionId);
 
-        $this->audit->recordUserEvent(
+        $this->auditEventRecorder->recordUserEvent(
             userId: $request->userId,
             event: 'sessions_revoked',
             newValues: $request->auditNewValues ?: ['revoked' => $revoked],
@@ -32,7 +32,6 @@ final class RevokeOtherSessionsUseCase
         return $revoked;
     }
 }
-
 
 
 

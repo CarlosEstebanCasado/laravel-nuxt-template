@@ -6,6 +6,8 @@ definePageMeta({
   middleware: 'auth'
 })
 
+const { t } = useI18n()
+
 const { data: members } = await useFetch<Member[]>('/api/members', { default: () => [] })
 
 const q = ref('')
@@ -20,14 +22,14 @@ const filteredMembers = computed(() => {
 <template>
   <div>
     <UPageCard
-      title="Members"
-      description="Invite new members by email address."
+      :title="t('settings.members.title')"
+      :description="t('settings.members.description')"
       variant="naked"
       orientation="horizontal"
       class="mb-4"
     >
       <UButton
-        label="Invite people"
+        :label="t('actions.invite_people')"
         color="neutral"
         class="w-fit lg:ms-auto"
       />
@@ -38,7 +40,7 @@ const filteredMembers = computed(() => {
         <UInput
           v-model="q"
           icon="i-lucide-search"
-          placeholder="Search members"
+          :placeholder="t('actions.search_members')"
           autofocus
           class="w-full"
         />

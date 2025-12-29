@@ -1,0 +1,441 @@
+{
+  "navigation": {
+    "settings": "Configuració",
+    "preferences": "Preferències",
+    "docs": "Docs",
+    "pricing": "Preus",
+    "blog": "Blog",
+    "changelog": "Canvis",
+    "dashboard": "Tauler",
+    "general": "General",
+    "members": "Membres",
+    "notifications": "Notificacions",
+    "security": "Seguretat",
+    "documentation": "Documentació",
+    "overview": "Resum",
+    "inbox": "Bústia",
+    "customers": "Clients",
+    "marketing_site": "Web pública",
+    "support": "Suport"
+  },
+  "actions": {
+    "sign_in": "Inicia sessió",
+    "sign_up": "Crea un compte",
+    "save_changes": "Desa els canvis",
+    "invite_people": "Convida persones",
+    "search_members": "Cerca membres",
+    "subscribe": "Subscriu-te",
+    "cancel": "Cancel·la",
+    "refresh": "Actualitza",
+    "close_other_sessions": "Tanca altres sessions",
+    "load_more": "Carrega'n més",
+    "delete_account": "Elimina el compte",
+    "delete_permanently": "Elimina definitivament",
+    "update": "Actualitza",
+    "sign_out": "Tanca la sessió",
+    "resend": "Torna a enviar",
+    "verify_email": "Verifica el correu"
+  },
+  "footer": {
+    "resources": "Recursos",
+    "features": "Funcions",
+    "company": "Empresa",
+    "help_center": "Centre d'ajuda",
+    "docs": "Docs",
+    "roadmap": "Full de ruta",
+    "changelog": "Canvis",
+    "affiliates": "Afiliats",
+    "portal": "Portal",
+    "jobs": "Feina",
+    "sponsors": "Patrocinadors",
+    "about": "Sobre nosaltres",
+    "pricing": "Preus",
+    "careers": "Carreres",
+    "blog": "Blog",
+    "newsletter_label": "Subscriu-te al butlletí",
+    "newsletter_placeholder": "Introdueix el teu correu",
+    "subscribe_success_title": "Subscripció completada!",
+    "subscribe_success_description": "T'has subscrit al butlletí.",
+    "copyright": "Creat amb Nuxt UI • © {year}"
+  },
+  "templates": {
+    "title": "Plantilles",
+    "starter": "Starter",
+    "landing": "Landing",
+    "docs": "Docs",
+    "saas": "SaaS",
+    "dashboard": "Dashboard",
+    "chat": "Xat",
+    "portfolio": "Portfolio",
+    "changelog": "Canvis"
+  },
+  "userMenu": {
+    "guest": "Convidat",
+    "profile": "Perfil",
+    "billing": "Facturació",
+    "settings": "Configuració",
+    "theme": "Tema",
+    "primary": "Principal",
+    "neutral": "Neutre",
+    "appearance": "Aparença",
+    "light": "Clar",
+    "dark": "Fosc",
+    "templates": "Plantilles",
+    "documentation": "Documentació",
+    "github": "Repositori a GitHub",
+    "logout": "Tanca la sessió"
+  },
+  "sidebar": {
+    "overview": "Resum",
+    "inbox": "Bústia",
+    "customers": "Clients",
+    "marketing_site": "Web pública",
+    "support": "Suport",
+    "go_to": "Vés a",
+    "code": "Codi",
+    "view_source": "Veure el codi de la pàgina"
+  },
+  "cookies": {
+    "message": "Fem servir cookies pròpies per millorar l'experiència al lloc.",
+    "accept": "Acceptar",
+    "opt_out": "Rebutjar"
+  },
+  "auth": {
+    "fields": {
+      "email_label": "Correu",
+      "email_placeholder": "Introdueix el teu correu",
+      "password_label": "Contrasenya",
+      "password_placeholder": "Introdueix la teva contrasenya",
+      "remember_me": "Recorda'm",
+      "name_label": "Nom complet",
+      "name_placeholder": "Introdueix el teu nom complet",
+      "password_confirmation_label": "Confirma la contrasenya",
+      "password_confirmation_placeholder": "Confirma la teva contrasenya"
+    },
+    "login": {
+      "seo_title": "Inicia sessió",
+      "seo_description": "Accedeix al teu compte per continuar",
+      "title": "Benvingut de nou",
+      "cta_text": "No tens compte?",
+      "cta_action": "Crea un compte",
+      "forgot": "Has oblidat la contrasenya?",
+      "footer_text": "En iniciar sessió acceptes els nostres",
+      "footer_link": "Termes del servei",
+      "toast_success_title": "Benvingut de nou!",
+      "toast_success_description": "Sessió iniciada correctament.",
+      "toast_error_title": "No s'ha pogut iniciar sessió",
+      "error_generic": "No hem pogut iniciar sessió, torna-ho a provar."
+    },
+    "signup": {
+      "seo_title": "Crea un compte",
+      "seo_description": "Crea un compte per començar",
+      "title": "Crea un compte",
+      "submit": "Crear compte",
+      "cta_text": "Ja tens compte?",
+      "cta_action": "Inicia sessió",
+      "toast_success_title": "Compte creat",
+      "toast_success_description": "Benvingut!",
+      "toast_error_title": "El registre ha fallat",
+      "footer_text": "En registrar-te acceptes els nostres",
+      "footer_link": "Termes del servei"
+    },
+    "forgot": {
+      "seo_title": "Has oblidat la contrasenya?",
+      "seo_description": "Sol·licita un enllaç de restabliment",
+      "title": "Has oblidat la contrasenya?",
+      "description": "Introdueix el correu associat al compte i t'enviarem instruccions per restablir-la.",
+      "submit": "Enviar enllaç de restabliment",
+      "toast_success_title": "Correu enviat",
+      "toast_success_description": "Si el correu existeix als nostres registres, rebràs un enllaç aviat.",
+      "toast_error_title": "La sol·licitud ha fallat",
+      "toast_error_description": "No hem pogut enviar l'enllaç, torna-ho a provar.",
+      "completed_title": "Revisa la safata",
+      "completed_description": "Si el correu indicat està registrat, rebràs un missatge amb l'enllaç.",
+      "return_login": "Torna a iniciar sessió",
+      "resend": "Torna a enviar el correu",
+      "remembered": "Ja la recordes?"
+    },
+    "reset": {
+      "seo_title": "Restableix la contrasenya",
+      "seo_description": "Defineix una contrasenya nova",
+      "title": "Restableix la contrasenya",
+      "description": "Tria una nova contrasenya per al teu compte. Fes que sigui segura i única.",
+      "submit": "Actualitza la contrasenya",
+      "toast_success_title": "Contrasenya actualitzada",
+      "toast_success_description": "Ara pots iniciar sessió amb la nova contrasenya.",
+      "toast_error_title": "No s'ha pogut restablir",
+      "toast_error_description": "No hem pogut restablir la contrasenya, torna-ho a provar.",
+      "invalid_link_title": "Enllaç no vàlid",
+      "invalid_link_description": "Demana un nou enllaç de restabliment.",
+      "completed_message": "La contrasenya s'ha canviat. Ja la pots utilitzar per iniciar sessió.",
+      "go_login": "Vés a iniciar sessió",
+      "remembered": "Recordaves la contrasenya?"
+    },
+    "verify": {
+      "seo_title": "Verifica el teu correu",
+      "seo_description": "Verifica l'adreça per continuar",
+      "title": "Verifica el teu correu",
+      "message": "Hem enviat un enllaç de verificació a {email}. Obre'l per activar el compte.",
+      "fallback_email": "la teva adreça de correu",
+      "cta_verified": "Ja he verificat el correu",
+      "cta_resend": "Torna a enviar el correu de verificació",
+      "cta_logout": "Tanca la sessió",
+      "toast_refresh_error": "No hem pogut actualitzar l'estat, torna-ho a provar.",
+      "toast_resend_success": "Correu de verificació enviat",
+      "toast_resend_description": "Revisa la safata d'entrada (i el correu brossa).",
+      "toast_resend_error": "No hem pogut enviar el correu de verificació, torna-ho a provar."
+    },
+    "email_verified": {
+      "seo_title": "Correu verificat",
+      "seo_description": "La teva adreça s'ha verificat",
+      "toast_title": "Correu verificat",
+      "toast_description": "Gràcies! El compte ja és actiu.",
+      "verifying_title": "Verificant la sessió…",
+      "verifying_description": "Et redirigim cap a l'aplicació.",
+      "redirecting": "Redirigint…"
+    },
+    "oauth": {
+      "seo_title": "Connectant el compte",
+      "heading": "Finalitzant l'inici de sessió amb {provider}",
+      "description": "Espera mentre completem el procés d'autenticació.",
+      "redirecting": "Redirigint…",
+      "error_title": "No s'ha pogut iniciar sessió",
+      "error_generic": "L'autenticació ha fallat. Torna-ho a provar.",
+      "error_missing_email": "El proveïdor no ha retornat cap correu. Assegura't que sigui públic i torna-ho a provar.",
+      "success_title": "Sessió iniciada correctament",
+      "success_description": "Benvingut de nou!",
+      "default_provider": "el teu compte"
+    }
+  },
+  "dashboard": {
+    "home": {
+      "title": "Inici",
+      "new_mail": "Missatge nou",
+      "new_customer": "Client nou",
+      "notifications_tooltip": "Notificacions"
+    },
+    "notifications": "Notificacions",
+    "stats": {
+      "customers": "Clients",
+      "conversions": "Conversions",
+      "revenue": "Ingressos",
+      "orders": "Comandes"
+    },
+    "periods": {
+      "daily": "Diari",
+      "weekly": "Setmanal",
+      "monthly": "Mensual"
+    },
+    "ranges": {
+      "last_7": "Darrers 7 dies",
+      "last_14": "Darrers 14 dies",
+      "last_30": "Darrers 30 dies",
+      "last_3_months": "Darrers 3 mesos",
+      "last_6_months": "Darrers 6 mesos",
+      "last_year": "Darrer any"
+    },
+    "date_picker_placeholder": "Tria una data",
+    "chart": {
+      "revenue": "Ingressos"
+    },
+    "sales": {
+      "id": "ID",
+      "date": "Data",
+      "status": "Estat",
+      "email": "Correu",
+      "amount": "Import",
+      "status_paid": "Pagat",
+      "status_failed": "Error",
+      "status_refunded": "Reemborsat"
+    }
+  },
+  "settings": {
+    "title": "Configuració",
+    "general": {
+      "title": "Perfil",
+      "description": "Aquesta informació es mostrarà públicament.",
+      "name_label": "Nom",
+      "name_description": "Apareixerà als rebuts, factures i altres comunicacions.",
+      "email_label": "Correu",
+      "email_description": "S'utilitza per iniciar sessió, rebre rebuts i novetats.",
+      "confirm_password_label": "Confirma la contrasenya",
+      "confirm_password_description": "Necessària per canviar el correu.",
+      "password_required": "Confirma la contrasenya per canviar el correu",
+      "toast_success_title": "Perfil actualitzat",
+      "toast_success_description": "Hem desat la configuració.",
+      "toast_verify_title": "Verifica el teu correu",
+      "toast_verify_description": "T'hem enviat un enllaç de verificació. Revisa'l per continuar.",
+      "toast_error_title": "Actualització fallida",
+      "error_fallback": "No hem pogut actualitzar el perfil, torna-ho a provar."
+    },
+    "members": {
+      "title": "Membres",
+      "description": "Convida nous membres amb el seu correu.",
+      "invite": "Convida persones",
+      "search_placeholder": "Cerca membres",
+      "menu": {
+        "label": "Accions",
+        "edit": "Edita el membre",
+        "remove": "Elimina el membre"
+      },
+      "roles": {
+        "member": "Membre",
+        "owner": "Propietari"
+      }
+    },
+    "notifications": {
+      "channels": {
+        "title": "Canals de notificació",
+        "description": "On et podem avisar?",
+        "email_label": "Correu",
+        "email_description": "Rep un resum diari per email.",
+        "desktop_label": "Escriptori",
+        "desktop_description": "Rep notificacions a l'escriptori."
+      },
+      "account": {
+        "title": "Actualitzacions del compte",
+        "description": "Rep novetats sobre Nuxt UI.",
+        "weekly_label": "Resum setmanal",
+        "weekly_description": "Rep un resum setmanal de novetats.",
+        "product_label": "Actualitzacions del producte",
+        "product_description": "Rep un correu mensual amb noves funcions i canvis.",
+        "important_label": "Actualitzacions importants",
+        "important_description": "Rep correus sobre correccions de seguretat, manteniment, etc."
+      }
+    },
+    "security": {
+      "password_section": {
+        "title": "Contrasenya",
+        "description": "Confirma la contrasenya actual abans de definir-ne una de nova.",
+        "current_placeholder": "Contrasenya actual",
+        "new_placeholder": "Nova contrasenya",
+        "confirm_placeholder": "Confirma la nova contrasenya",
+        "button": "Actualitza"
+      },
+      "sessions": {
+        "title": "Sessions",
+        "description": "On tens la sessió iniciada actualment.",
+        "close_others": "Tanca altres sessions",
+        "refresh": "Actualitza",
+        "unable_title": "No hem pogut carregar les sessions",
+        "none_title": "Sense sessions actives",
+        "none_description": "No hem trobat sessions actives per al teu compte.",
+        "current_badge": "Sessió actual",
+        "unknown_device": "Dispositiu desconegut",
+        "ip_label": "IP",
+        "last_active_label": "Última activitat",
+        "sign_out": "Tanca la sessió"
+      },
+      "modals": {
+        "close_sessions": {
+          "title": "Tanca altres sessions",
+          "description": "Es tancarà la sessió a altres navegadors o dispositius on estiguis actiu.",
+          "alert_title": "Continuaràs connectat en aquest dispositiu",
+          "alert_description": "Si creus que algú hi té accés, tancar altres sessions és un bon primer pas."
+        },
+        "sign_out": {
+          "title": "Tanca la sessió seleccionada",
+          "description": "Es tancarà la sessió escollida.",
+          "alert_title": "Aquesta sessió es tancarà"
+        },
+        "account": {
+          "title": "Eliminar compte",
+          "description": "Aquesta acció és permanent.",
+          "alert_title": "Això no es pot desfer",
+          "alert_description": "Escriu DELETE per confirmar. Si el compte té contrasenya, l'hauràs de confirmar.",
+          "confirm_label": "Escriu DELETE per confirmar",
+          "password_label": "Contrasenya",
+          "password_placeholder": "La teva contrasenya actual"
+        }
+      },
+      "activity": {
+        "title": "Activitat recent",
+        "description": "Accions relacionades amb la seguretat del teu compte.",
+        "unable_title": "No hem pogut carregar l'activitat",
+        "empty_title": "Encara no hi ha activitat",
+        "empty_description": "Quan canviïs la contrasenya o tanquis sessions, apareixeran aquí."
+      },
+      "account": {
+        "title": "Compte",
+        "description": "Ja no vols utilitzar el servei? Pots eliminar el compte aquí. Aquesta acció no es pot revertir i s'esborrarà tota la informació."
+      },
+      "toasts": {
+        "sessions_updated": "Sessions actualitzades",
+        "sessions_description": "S'han tancat {count} sessions addicionals.",
+        "session_closed": "Sessió tancada",
+        "session_closed_description": "Aquesta sessió s'ha tancat.",
+        "action_failed": "L'acció ha fallat",
+        "load_more_failed": "No s'ha pogut carregar més activitat",
+        "password_updated": "Contrasenya actualitzada",
+        "password_description": "La contrasenya s'ha canviat correctament.",
+        "delete_confirmation_required": "Cal confirmar",
+        "delete_confirmation_description": "Escriu DELETE per confirmar l'eliminació.",
+        "delete_password_required": "Cal la contrasenya",
+        "delete_password_description": "Confirma la contrasenya per eliminar el compte.",
+        "account_deleted": "Compte eliminat",
+        "account_deleted_description": "S'ha eliminat el compte.",
+        "delete_failed": "No s'ha pogut eliminar el compte"
+      },
+      "errors": {
+        "sessions": "No s'han pogut carregar les sessions.",
+        "activity": "No s'ha pogut carregar l'activitat.",
+        "password": "No hem pogut actualitzar la contrasenya, torna-ho a provar.",
+        "delete": "No hem pogut eliminar el compte, torna-ho a provar."
+      }
+    }
+  },
+  "preferences": {
+    "title": "Preferències",
+    "description": "Tria l'idioma i l'aparença que prefereixis.",
+    "language_label": "Idioma de la interfície",
+    "language_hint": "Aplica l'idioma seleccionat a tot el tauler.",
+    "theme_label": "Tema",
+    "theme_hint": "Adapta l'aspecte al teu sistema o força'n un.",
+    "primary_color_label": "Color principal",
+    "primary_color_hint": "Defineix el color que destacarà les accions i avisos.",
+    "neutral_color_label": "Color neutre",
+    "neutral_color_hint": "Personalitza els tons neutres de superfícies i vores.",
+    "save": "Desa les preferències",
+    "success": "Preferències actualitzades"
+  },
+  "theme": {
+    "system": "Segons el sistema",
+    "light": "Clar",
+    "dark": "Fosc"
+  },
+  "colors": {
+    "red": "Vermell",
+    "orange": "Taronja",
+    "amber": "Ambre",
+    "yellow": "Groc",
+    "lime": "Llima",
+    "green": "Verd",
+    "emerald": "Maragda",
+    "teal": "Verd blavós",
+    "cyan": "Cian",
+    "sky": "Cel",
+    "blue": "Blau",
+    "indigo": "Indi",
+    "violet": "Violeta",
+    "purple": "Porpra",
+    "fuchsia": "Fúcsia",
+    "pink": "Rosa",
+    "rose": "Rosa suau",
+    "slate": "Pissarra",
+    "gray": "Gris",
+    "zinc": "Zinc",
+    "neutral": "Neutre",
+    "stone": "Pedra"
+  },
+  "messages": {
+    "generic_error": "Alguna cosa no ha anat bé. Torna-ho a provar.",
+    "sessions_empty": "No hem trobat sessions actives per al teu compte.",
+    "validation": {
+      "too_short": "Massa curt",
+      "invalid_email": "Correu no vàlid",
+      "password_min": "Ha de tenir almenys 8 caràcters",
+      "passwords_different": "Les contrasenyes han de ser diferents",
+      "passwords_mismatch": "Les contrasenyes no coincideixen"
+    }
+  }
+}

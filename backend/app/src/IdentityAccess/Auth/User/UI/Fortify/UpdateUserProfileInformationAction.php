@@ -13,7 +13,7 @@ use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 class UpdateUserProfileInformationAction implements UpdatesUserProfileInformation
 {
     public function __construct(
-        private readonly UpdateUserProfileUseCase $useCase
+        private readonly UpdateUserProfileUseCase $updateUserProfileUseCase
     ) {
     }
 
@@ -47,7 +47,7 @@ class UpdateUserProfileInformationAction implements UpdatesUserProfileInformatio
             'current_password.current_password' => __('The provided password does not match your current password.'),
         ])->validateWithBag('updateProfileInformation');
 
-        $result = $this->useCase->execute(
+        $result = $this->updateUserProfileUseCase->execute(
             new UpdateUserProfileUseCaseRequest(
                 userId: $this->resolveUserId($user),
                 name: $input['name'],

@@ -5,7 +5,10 @@ namespace App\Src\IdentityAccess\Auth\User\Domain\Repository;
 
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\User;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 
 interface UserRepository
 {
@@ -14,23 +17,23 @@ interface UserRepository
     public function findByEmail(EmailAddress $email): ?User;
 
     public function createPasswordUser(
-        string $name,
+        UserName $name,
         EmailAddress $email,
         string $plainPassword,
-        \DateTimeImmutable $passwordSetAt
+        DateTimeValue $passwordSetAt
     ): UserId;
 
     public function upsertOAuthUser(
         EmailAddress $email,
-        string $name,
-        string $provider,
-        \DateTimeImmutable $emailVerifiedAt,
+        UserName $name,
+        AuthProvider $provider,
+        DateTimeValue $emailVerifiedAt,
         string $plainPassword
     ): UserId;
 
     public function updateProfile(
         UserId $id,
-        string $name,
+        UserName $name,
         EmailAddress $email,
         bool $resetEmailVerification
     ): void;
@@ -38,9 +41,7 @@ interface UserRepository
     /**
      * When $passwordSetAt is null, keep the existing value untouched.
      */
-    public function updatePassword(UserId $id, string $plainPassword, ?\DateTimeImmutable $passwordSetAt): void;
+    public function updatePassword(UserId $id, string $plainPassword, ?DateTimeValue $passwordSetAt): void;
 }
-
-
 
 

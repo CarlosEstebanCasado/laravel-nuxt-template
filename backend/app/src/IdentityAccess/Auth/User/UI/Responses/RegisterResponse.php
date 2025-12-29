@@ -14,7 +14,7 @@ use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 class RegisterResponse implements RegisterResponseContract
 {
     public function __construct(
-        private readonly GetCurrentUserUseCase $useCase
+        private readonly GetCurrentUserUseCase $getCurrentUserUseCase
     ) {
     }
 
@@ -23,7 +23,7 @@ class RegisterResponse implements RegisterResponseContract
         $request = $this->assertRequestInstance($request);
         $user = $this->requireUser($request);
 
-        $result = $this->useCase->execute(
+        $result = $this->getCurrentUserUseCase->execute(
             new GetCurrentUserUseCaseRequest(
                 userId: $this->requireUserId($user),
             )

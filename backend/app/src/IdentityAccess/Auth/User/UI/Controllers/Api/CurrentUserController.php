@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class CurrentUserController extends Controller
 {
     public function __construct(
-        private readonly GetCurrentUserUseCase $useCase
+        private readonly GetCurrentUserUseCase $getCurrentUserUseCase
     ) {
     }
 
@@ -20,7 +20,7 @@ class CurrentUserController extends Controller
     {
         $user = $this->requireUser($request);
 
-        $result = $this->useCase->execute(
+        $result = $this->getCurrentUserUseCase->execute(
             new GetCurrentUserUseCaseRequest(
                 userId: $this->requireUserId($user),
             )

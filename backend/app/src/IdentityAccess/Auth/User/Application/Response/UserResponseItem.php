@@ -14,6 +14,7 @@ final class UserResponseItem
         public ?string $password_set_at,
         public ?string $created_at,
         public ?string $updated_at,
+        public ?UserPreferencesResponseItem $preferences = null,
     ) {
     }
 }

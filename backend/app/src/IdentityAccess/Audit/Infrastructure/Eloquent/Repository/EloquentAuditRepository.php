@@ -7,6 +7,13 @@ use App\Src\IdentityAccess\Audit\Domain\Collection\AuditCollection;
 use App\Src\IdentityAccess\Audit\Domain\Entity\Audit as DomainAudit;
 use App\Src\IdentityAccess\Audit\Domain\Repository\AuditRepository;
 use App\Src\IdentityAccess\Audit\Domain\Response\AuditCollectionResponse;
+use App\Src\IdentityAccess\Audit\Domain\ValueObject\AuditEvent;
+use App\Src\IdentityAccess\Audit\Domain\ValueObject\AuditId;
+use App\Src\IdentityAccess\Audit\Domain\ValueObject\AuditTags;
+use App\Src\IdentityAccess\Audit\Domain\ValueObject\AuditValues;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
+use App\Src\Shared\Domain\ValueObject\IpAddress;
+use App\Src\Shared\Domain\ValueObject\UserAgent;
 use App\Src\Shared\Domain\Response\PaginationResponse;
 use Illuminate\Support\Carbon;
 use InvalidArgumentException;
@@ -41,14 +48,14 @@ final class EloquentAuditRepository implements AuditRepository
                 $newValues = $audit->getAttribute('new_values');
 
                 return new DomainAudit(
-                    id: $this->resolveAuditId($audit),
-                    event: $this->stringOrFallback($audit->getAttribute('event')),
-                    createdAt: $createdAtValue,
-                    oldValues: is_array($oldValues) ? $this->normalizeAuditValues($oldValues) : null,
-                    newValues: is_array($newValues) ? $this->normalizeAuditValues($newValues) : null,
-                    ipAddress: $this->stringOrNull($audit->getAttribute('ip_address')),
-                    userAgent: $this->stringOrNull($audit->getAttribute('user_agent')),
-                    tags: $this->stringOrNull($audit->getAttribute('tags')),
+                    id: new AuditId($this->resolveAuditId($audit)),
+                    event: new AuditEvent($this->stringOrFallback($audit->getAttribute('event'), 'unknown')),
+                    createdAt: new DateTimeValue($createdAtValue),
+                    oldValues: is_array($oldValues) ? new AuditValues($this->normalizeAuditValues($oldValues)) : null,
+                    newValues: is_array($newValues) ? new AuditValues($this->normalizeAuditValues($newValues)) : null,
+                    ipAddress: $this->stringToIpAddress($audit->getAttribute('ip_address')),
+                    userAgent: $this->stringToUserAgent($audit->getAttribute('user_agent')),
+                    tags: $this->stringToTags($audit->getAttribute('tags')),
                 );
             })
             ->all();
@@ -94,9 +101,19 @@ final class EloquentAuditRepository implements AuditRepository
         return $normalized;
     }
 
-    private function stringOrNull(mixed $value): ?string
+    private function stringToIpAddress(mixed $value): ?IpAddress
     {
-        return is_string($value) ? $value : null;
+        return is_string($value) && $value !== '' ? new IpAddress($value) : null;
+    }
+
+    private function stringToUserAgent(mixed $value): ?UserAgent
+    {
+        return is_string($value) && $value !== '' ? new UserAgent($value) : null;
+    }
+
+    private function stringToTags(mixed $value): ?AuditTags
+    {
+        return is_string($value) && $value !== '' ? new AuditTags($value) : null;
     }
 
     private function stringOrFallback(mixed $value, string $fallback = ''): string

@@ -8,6 +8,8 @@ use App\Src\IdentityAccess\Auth\User\Application\UseCase\CreateUserUseCase;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Shared\Mother\EmailMother;
@@ -24,7 +26,7 @@ final class CreateUserUseCaseTest extends TestCase
         parent::setUp();
 
         $this->users = $this->createMock(UserRepository::class);
-        $this->useCase = new CreateUserUseCase(users: $this->users);
+        $this->useCase = new CreateUserUseCase(userRepository: $this->users);
     }
 
     public function test_it_creates_password_user(): void
@@ -40,10 +42,10 @@ final class CreateUserUseCaseTest extends TestCase
             ->expects($this->once())
             ->method('createPasswordUser')
             ->with(
-                $request->name,
+                new UserName($request->name),
                 self::equalTo(new EmailAddress($request->email)),
                 $request->password,
-                $this->isInstanceOf(\DateTimeImmutable::class)
+                $this->isInstanceOf(DateTimeValue::class)
             )
             ->willReturn($userId);
 

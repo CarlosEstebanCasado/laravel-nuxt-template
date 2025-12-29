@@ -9,6 +9,7 @@ const props = defineProps<{
 }>()
 
 const UBadge = resolveComponent('UBadge')
+const { t } = useI18n()
 
 const sampleEmails = [
   'james.anderson@example.com',
@@ -41,15 +42,21 @@ const { data } = await useAsyncData('sales', async () => {
   default: () => []
 })
 
-const columns: TableColumn<Sale>[] = [
+const statusLabels = (status: string) => ({
+  paid: t('dashboard.sales.status_paid'),
+  failed: t('dashboard.sales.status_failed'),
+  refunded: t('dashboard.sales.status_refunded')
+}[status] ?? status)
+
+const columns = computed<TableColumn<Sale>[]>(() => [
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: t('dashboard.sales.id'),
     cell: ({ row }) => `#${row.getValue('id')}`
   },
   {
     accessorKey: 'date',
-    header: 'Date',
+    header: t('dashboard.sales.date'),
     cell: ({ row }) => {
       return new Date(row.getValue('date')).toLocaleString('en-US', {
         day: 'numeric',
@@ -62,26 +69,27 @@ const columns: TableColumn<Sale>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: t('dashboard.sales.status'),
     cell: ({ row }) => {
+      const status = row.getValue('status') as string
       const color = {
         paid: 'success' as const,
         failed: 'error' as const,
         refunded: 'neutral' as const
-      }[row.getValue('status') as string]
+      }[status]
 
       return h(UBadge, { class: 'capitalize', variant: 'subtle', color }, () =>
-        row.getValue('status')
+        statusLabels(status)
       )
     }
   },
   {
     accessorKey: 'email',
-    header: 'Email'
+    header: t('dashboard.sales.email')
   },
   {
     accessorKey: 'amount',
-    header: () => h('div', { class: 'text-right' }, 'Amount'),
+    header: () => h('div', { class: 'text-right' }, t('dashboard.sales.amount')),
     cell: ({ row }) => {
       const amount = Number.parseFloat(row.getValue('amount'))
 
@@ -93,7 +101,7 @@ const columns: TableColumn<Sale>[] = [
       return h('div', { class: 'text-right font-medium' }, formatted)
     }
   }
-]
+])
 </script>
 
 <template>

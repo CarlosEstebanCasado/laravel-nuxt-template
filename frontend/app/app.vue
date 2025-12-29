@@ -1,21 +1,22 @@
 <script setup lang="ts">
 const colorMode = useColorMode()
+const { t, locale: activeLocale } = useI18n()
 
 const color = computed(() => colorMode.value === 'dark' ? '#020618' : 'white')
 
-useHead({
+useHead(() => ({
   meta: [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-    { key: 'theme-color', name: 'theme-color', content: color }
+    { key: 'theme-color', name: 'theme-color', content: color.value }
   ],
   link: [
     { rel: 'icon', href: '/favicon.ico' }
   ],
   htmlAttrs: {
-    lang: 'en'
+    lang: activeLocale.value
   }
-})
+}))
 
 useSeoMeta({
   titleTemplate: '%s - Nuxt SaaS template',
@@ -39,23 +40,23 @@ const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSe
   server: false
 })
 
-const links = [{
-  label: 'Docs',
+const links = computed(() => [{
+  label: t('navigation.docs'),
   icon: 'i-lucide-book',
   to: '/docs/getting-started'
 }, {
-  label: 'Pricing',
+  label: t('navigation.pricing'),
   icon: 'i-lucide-credit-card',
   to: '/pricing'
 }, {
-  label: 'Blog',
+  label: t('navigation.blog'),
   icon: 'i-lucide-pencil',
   to: '/blog'
 }, {
-  label: 'Changelog',
+  label: t('navigation.changelog'),
   icon: 'i-lucide-history',
   to: '/changelog'
-}]
+}])
 
 provide('navigation', navigation)
 </script>

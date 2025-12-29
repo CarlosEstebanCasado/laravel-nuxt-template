@@ -12,7 +12,7 @@ final class ListUserAuditsUseCase
 {
     public function __construct(
         private readonly AuditRepository $auditRepository,
-        private readonly AuditListConverter $responseConverter,
+        private readonly AuditListConverter $auditListConverter,
     ) {
     }
 
@@ -25,7 +25,6 @@ final class ListUserAuditsUseCase
             page: $request->page,
         );
 
-        return $this->responseConverter->toResponse($result);
+        return $this->auditListConverter->toResponse($result);
     }
 }
-

@@ -6,9 +6,12 @@ namespace Tests\Unit\IdentityAccess\Auth\User\Application\UseCase;
 use App\Src\IdentityAccess\Auth\User\Application\Request\OAuthCallbackUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\OAuthCallbackUseCase;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 use App\Src\Shared\Domain\Service\RandomStringGenerator;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Shared\Mother\EmailMother;
@@ -28,17 +31,18 @@ final class OAuthCallbackUseCaseTest extends TestCase
         $this->users = $this->createMock(UserRepository::class);
         $this->random = $this->createMock(RandomStringGenerator::class);
         $this->useCase = new OAuthCallbackUseCase(
-            users: $this->users,
-            random: $this->random
+            userRepository: $this->users,
+            randomStringGenerator: $this->random
         );
     }
 
     public function test_it_uses_provided_name(): void
     {
+        $name = WordMother::random();
         $request = new OAuthCallbackUseCaseRequest(
             provider: WordMother::random(),
             email: EmailMother::random(),
-            name: WordMother::random(),
+            name: $name,
             nickname: WordMother::random()
         );
         $password = WordMother::random();
@@ -55,9 +59,9 @@ final class OAuthCallbackUseCaseTest extends TestCase
             ->method('upsertOAuthUser')
             ->with(
                 self::equalTo(new EmailAddress($request->email)),
-                $request->name,
-                $request->provider,
-                $this->isInstanceOf(\DateTimeImmutable::class),
+                new UserName($name),
+                new AuthProvider($request->provider),
+                $this->isInstanceOf(DateTimeValue::class),
                 $password
             )
             ->willReturn($userId);
@@ -90,9 +94,9 @@ final class OAuthCallbackUseCaseTest extends TestCase
             ->method('upsertOAuthUser')
             ->with(
                 self::equalTo(new EmailAddress($request->email)),
-                $nickname,
-                $request->provider,
-                $this->isInstanceOf(\DateTimeImmutable::class),
+                new UserName($nickname),
+                new AuthProvider($request->provider),
+                $this->isInstanceOf(DateTimeValue::class),
                 $password
             )
             ->willReturn($userId);
@@ -125,9 +129,9 @@ final class OAuthCallbackUseCaseTest extends TestCase
             ->method('upsertOAuthUser')
             ->with(
                 self::equalTo(new EmailAddress($request->email)),
-                $email,
-                $request->provider,
-                $this->isInstanceOf(\DateTimeImmutable::class),
+                new UserName($email),
+                new AuthProvider($request->provider),
+                $this->isInstanceOf(DateTimeValue::class),
                 $password
             )
             ->willReturn($userId);

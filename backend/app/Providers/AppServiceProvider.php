@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
+use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository\EloquentUserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository\EloquentUserRepository;
 use App\Src\IdentityAccess\Audit\Domain\Repository\AuditRepository;
 use App\Src\IdentityAccess\Audit\Infrastructure\Eloquent\Repository\EloquentAuditRepository;
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(SessionRepository::class, DatabaseSessionRepository::class);
         $this->app->bind(AccountRepository::class, EloquentAccountRepository::class);
         $this->app->bind(AuditRepository::class, EloquentAuditRepository::class);
+        $this->app->bind(UserPreferencesRepository::class, EloquentUserPreferencesRepository::class);
     }
 
     /**

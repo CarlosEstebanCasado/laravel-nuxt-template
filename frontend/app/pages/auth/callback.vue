@@ -3,8 +3,10 @@ definePageMeta({
   layout: 'auth',
 })
 
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Connecting your account',
+  title: t('auth.oauth.seo_title'),
 })
 
 const route = useRoute()
@@ -23,7 +25,7 @@ const isProcessing = ref(true)
 const readableProvider = computed(() => {
   const value = provider.value
   if (!value) {
-    return 'your account'
+    return t('auth.oauth.default_provider')
   }
 
   return value.charAt(0).toUpperCase() + value.slice(1)
@@ -31,14 +33,14 @@ const readableProvider = computed(() => {
 
 const resolveErrorMessage = () => {
   if (!errorCode.value) {
-    return 'Authentication failed. Please try again.'
+    return t('auth.oauth.error_generic')
   }
 
   switch (errorCode.value) {
     case 'email_missing':
-      return 'Your provider account did not return an email address. Please ensure your email is publicly available and try again.'
+      return t('auth.oauth.error_missing_email')
     default:
-      return 'Authentication failed. Please try again.'
+      return t('auth.oauth.error_generic')
   }
 }
 
@@ -51,7 +53,7 @@ const finish = (path: string) => {
 onMounted(async () => {
   if (status.value !== 'success') {
     toast.add({
-      title: 'Sign in failed',
+      title: t('auth.oauth.error_title'),
       description: resolveErrorMessage(),
       color: 'error',
     })
@@ -64,14 +66,14 @@ onMounted(async () => {
     await auth.fetchUser(true)
 
     toast.add({
-      title: 'Signed in successfully',
-      description: `Welcome back!`,
+      title: t('auth.oauth.success_title'),
+      description: t('auth.oauth.success_description'),
     })
 
     finish('/dashboard')
   } catch (_error) {
     toast.add({
-      title: 'Sign in failed',
+      title: t('auth.oauth.error_title'),
       description: resolveErrorMessage(),
       color: 'error',
     })
@@ -91,10 +93,10 @@ onMounted(async () => {
 
     <div>
       <h2 class="text-lg font-semibold">
-        Finishing {{ readableProvider }} sign-in
+        {{ t('auth.oauth.heading', { provider: readableProvider }) }}
       </h2>
       <p class="text-sm text-neutral-500">
-        Please wait while we complete the authentication process.
+        {{ t('auth.oauth.description') }}
       </p>
     </div>
 
@@ -102,7 +104,7 @@ onMounted(async () => {
       v-if="!isProcessing"
       class="text-xs text-neutral-400"
     >
-      Redirecting…
+      {{ t('auth.oauth.redirecting') }}
     </div>
   </div>
 </template>

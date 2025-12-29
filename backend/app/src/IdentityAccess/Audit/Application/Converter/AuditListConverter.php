@@ -11,7 +11,7 @@ use App\Src\IdentityAccess\Audit\Domain\Response\AuditCollectionResponse;
 final class AuditListConverter
 {
     public function __construct(
-        private readonly AuditResponseItemConverter $auditItemConverter
+        private readonly AuditResponseItemConverter $auditResponseItemConverter
     ) {
     }
 
@@ -21,7 +21,7 @@ final class AuditListConverter
 
         /** @var Audit $audit */
         foreach ($collectionResponse->items() as $audit) {
-            $response->data[] = $this->auditItemConverter->toResponse($audit);
+            $response->data[] = $this->auditResponseItemConverter->toResponse($audit);
         }
 
         $pagination = $collectionResponse->pagination();
@@ -37,4 +37,3 @@ final class AuditListConverter
         return $response;
     }
 }
-

@@ -5,6 +5,8 @@ import type { Notification } from '~/types'
 const { isNotificationsSlideoverOpen } = useDashboard()
 const dashboardBase = '/dashboard'
 
+const { t } = useI18n()
+
 const { data: notifications } = await useFetch<Notification[]>('/api/notifications', {
   default: () => []
 })
@@ -15,7 +17,7 @@ const items = computed(() => notifications.value ?? [])
 <template>
   <USlideover
     v-model:open="isNotificationsSlideoverOpen"
-    title="Notifications"
+    :title="t('dashboard.notifications')"
   >
     <template #body>
       <NuxtLink

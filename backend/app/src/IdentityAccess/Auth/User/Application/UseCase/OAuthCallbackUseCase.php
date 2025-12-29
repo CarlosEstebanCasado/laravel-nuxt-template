@@ -5,15 +5,18 @@ namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
 
 use App\Src\IdentityAccess\Auth\User\Application\Request\OAuthCallbackUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 use App\Src\Shared\Domain\Service\RandomStringGenerator;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 
 final class OAuthCallbackUseCase
 {
     public function __construct(
-        private readonly UserRepository $users,
-        private readonly RandomStringGenerator $random
+        private readonly UserRepository $userRepository,
+        private readonly RandomStringGenerator $randomStringGenerator
     ) {
     }
 
@@ -27,16 +30,14 @@ final class OAuthCallbackUseCase
 
         // Social accounts typically don't know our local password.
         // We still set a random one for completeness.
-        $randomPassword = $this->random->generate(32);
+        $randomPassword = $this->randomStringGenerator->generate(32);
 
-        return $this->users->upsertOAuthUser(
+        return $this->userRepository->upsertOAuthUser(
             email: $email,
-            name: $displayName,
-            provider: $request->provider,
-            emailVerifiedAt: new \DateTimeImmutable(),
+            name: new UserName($displayName),
+            provider: new AuthProvider($request->provider),
+            emailVerifiedAt: new DateTimeValue(new \DateTimeImmutable()),
             plainPassword: $randomPassword,
         );
     }
 }
-
-

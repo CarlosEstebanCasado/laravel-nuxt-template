@@ -9,9 +9,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('auth_provider')->default('password');
-            $table->timestamp('password_set_at')->nullable();
+        Schema::table('users', function (Blueprint $table): void {
+            $table->string('auth_provider')
+                ->default('password')
+                ->after('remember_token');
+
+            $table->timestamp('password_set_at')
+                ->nullable()
+                ->after('auth_provider');
         });
 
         /*
@@ -49,5 +54,4 @@ return new class extends Migration
         });
     }
 };
-
 

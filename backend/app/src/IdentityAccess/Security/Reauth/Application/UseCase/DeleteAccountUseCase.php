@@ -11,14 +11,14 @@ use App\Src\Shared\Domain\Service\AuditEventRecorder;
 final class DeleteAccountUseCase
 {
     public function __construct(
-        private readonly AccountRepository $accounts,
-        private readonly AuditEventRecorder $audit
+        private readonly AccountRepository $accountRepository,
+        private readonly AuditEventRecorder $auditEventRecorder
     ) {
     }
 
     public function execute(DeleteAccountUseCaseRequest $request): DeleteAccountUseCaseResponse
     {
-        $this->audit->recordUserEvent(
+        $this->auditEventRecorder->recordUserEvent(
             userId: $request->userId,
             event: 'account_deleted',
             newValues: ['confirmation' => $request->confirmation],
@@ -28,10 +28,9 @@ final class DeleteAccountUseCase
             tags: 'security',
         );
 
-        $this->accounts->deleteAccount($request->userId);
+        $this->accountRepository->deleteAccount($request->userId);
 
         return new DeleteAccountUseCaseResponse();
     }
 }
-
 

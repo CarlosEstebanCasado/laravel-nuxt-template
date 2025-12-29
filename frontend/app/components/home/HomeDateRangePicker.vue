@@ -8,14 +8,16 @@ const df = new DateFormatter('en-US', {
 
 const selected = defineModel<Range>({ required: true })
 
-const ranges = [
-  { label: 'Last 7 days', days: 7 },
-  { label: 'Last 14 days', days: 14 },
-  { label: 'Last 30 days', days: 30 },
-  { label: 'Last 3 months', months: 3 },
-  { label: 'Last 6 months', months: 6 },
-  { label: 'Last year', years: 1 }
-]
+const { t } = useI18n()
+
+const rangeOptions = computed(() => [
+  { label: t('dashboard.ranges.last_7'), days: 7 },
+  { label: t('dashboard.ranges.last_14'), days: 14 },
+  { label: t('dashboard.ranges.last_30'), days: 30 },
+  { label: t('dashboard.ranges.last_3_months'), months: 3 },
+  { label: t('dashboard.ranges.last_6_months'), months: 6 },
+  { label: t('dashboard.ranges.last_year'), years: 1 }
+])
 
 const toCalendarDate = (date: Date) => {
   return new CalendarDate(
@@ -95,7 +97,7 @@ const selectRange = (range: { days?: number, months?: number, years?: number }) 
           </template>
         </template>
         <template v-else>
-          Pick a date
+          {{ t('dashboard.date_picker_placeholder') }}
         </template>
       </span>
 
@@ -108,7 +110,7 @@ const selectRange = (range: { days?: number, months?: number, years?: number }) 
       <div class="flex items-stretch sm:divide-x divide-default">
         <div class="hidden sm:flex flex-col justify-center">
           <UButton
-            v-for="(range, index) in ranges"
+            v-for="(range, index) in rangeOptions"
             :key="index"
             :label="range.label"
             color="neutral"
