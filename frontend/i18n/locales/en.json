@@ -353,7 +353,18 @@
         "description": "Security-related actions on your account.",
         "unable_title": "Unable to load activity",
         "empty_title": "No activity yet",
-        "empty_description": "When you perform actions like changing your password or closing sessions, they will appear here."
+        "empty_description": "When you perform actions like changing your password or closing sessions, they will appear here.",
+        "events": {
+          "sessions_revoked": "Closed {count} other session | Closed {count} other sessions",
+          "session_revoked": "Closed a session",
+          "account_deleted": "Account deleted",
+          "password_changed": "Password changed",
+          "email_changed": "Email changed",
+          "profile_updated": "Profile updated",
+          "account_updated": "Account updated",
+          "account_created": "Account created",
+          "generic": "{event}"
+        }
       },
       "account": {
         "title": "Account",

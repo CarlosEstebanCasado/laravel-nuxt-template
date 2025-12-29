@@ -84,6 +84,10 @@ export function useAuth() {
 
   const setActiveLocale = (newLocale: SupportedLocale) => {
     localeState.value = newLocale
+    if (nuxtApp.$i18n?.setLocale) {
+      void nuxtApp.$i18n.setLocale(newLocale)
+      return
+    }
     if (nuxtApp.$i18n?.locale) {
       nuxtApp.$i18n.locale.value = newLocale
     }

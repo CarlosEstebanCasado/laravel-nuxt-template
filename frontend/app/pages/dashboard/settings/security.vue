@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import type { FormError, FormSubmitEvent } from '@nuxt/ui'
-import { format, formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
+import { ca, enUS, es } from 'date-fns/locale'
 
 definePageMeta({
   layout: 'dashboard',
@@ -11,7 +12,7 @@ definePageMeta({
 const auth = useAuth()
 const toast = useToast()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 type SessionInfo = {
   id: string
@@ -87,9 +88,18 @@ const parseUserAgent = (ua: string | null) => {
   return { browser, os, isMobile }
 }
 
-const formatLastActivity = (unixSeconds: number) => format(new Date(unixSeconds * 1000), 'yyyy-MM-dd HH:mm:ss')
+const dateLocale = computed(() => {
+  if (locale.value === 'ca') return ca
+  if (locale.value === 'es') return es
+  return enUS
+})
+
+const formatDateTime = (date: Date) =>
+  new Intl.DateTimeFormat(locale.value, { dateStyle: 'medium', timeStyle: 'short' }).format(date)
+
+const formatLastActivity = (unixSeconds: number) => formatDateTime(new Date(unixSeconds * 1000))
 const formatLastActivityRelative = (unixSeconds: number) =>
-  formatDistanceToNow(new Date(unixSeconds * 1000), { addSuffix: true })
+  formatDistanceToNow(new Date(unixSeconds * 1000), { addSuffix: true, locale: dateLocale.value })
 
 const refreshSessions = async () => {
   isSessionsLoading.value = true
@@ -169,34 +179,35 @@ const confirmRevokeSession = async () => {
   }
 }
 
-const formatAuditTime = (iso: string) => format(new Date(iso), 'yyyy-MM-dd HH:mm:ss')
-const formatAuditRelative = (iso: string) => formatDistanceToNow(new Date(iso), { addSuffix: true })
+const formatAuditTime = (iso: string) => formatDateTime(new Date(iso))
+const formatAuditRelative = (iso: string) =>
+  formatDistanceToNow(new Date(iso), { addSuffix: true, locale: dateLocale.value })
 
 const auditTitle = (audit: AuditEntry) => {
   const event = audit.event
 
   if (event === 'sessions_revoked') {
     const n = Number((audit.new_values as any)?.revoked ?? 0)
-    return n > 0 ? `Closed ${n} other session${n === 1 ? '' : 's'}` : 'Closed other sessions'
+    return t('settings.security.activity.events.sessions_revoked', { count: n })
   }
   if (event === 'session_revoked') {
-    return 'Closed a session'
+    return t('settings.security.activity.events.session_revoked')
   }
   if (event === 'account_deleted') {
-    return 'Account deleted'
+    return t('settings.security.activity.events.account_deleted')
   }
 
   // Model events
   if (event === 'updated') {
-    if ((audit.new_values as any)?.password_set_at) return 'Password changed'
-    if ((audit.new_values as any)?.email) return 'Email changed'
-    if ((audit.new_values as any)?.name) return 'Profile updated'
-    return 'Account updated'
+    if ((audit.new_values as any)?.password_set_at) return t('settings.security.activity.events.password_changed')
+    if ((audit.new_values as any)?.email) return t('settings.security.activity.events.email_changed')
+    if ((audit.new_values as any)?.name) return t('settings.security.activity.events.profile_updated')
+    return t('settings.security.activity.events.account_updated')
   }
-  if (event === 'created') return 'Account created'
-  if (event === 'deleted') return 'Account deleted'
+  if (event === 'created') return t('settings.security.activity.events.account_created')
+  if (event === 'deleted') return t('settings.security.activity.events.account_deleted')
 
-  return event
+  return t('settings.security.activity.events.generic', { event })
 }
 
 const refreshAudits = async (page = 1) => {
