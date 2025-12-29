@@ -1,7 +1,388 @@
 {
   "navigation": {
     "settings": "Ajustes",
-    "preferences": "Preferencias"
+    "preferences": "Preferencias",
+    "docs": "Docs",
+    "pricing": "Precios",
+    "blog": "Blog",
+    "changelog": "Historial",
+    "dashboard": "Panel",
+    "general": "General",
+    "members": "Miembros",
+    "notifications": "Notificaciones",
+    "security": "Seguridad",
+    "documentation": "Documentación",
+    "overview": "Resumen",
+    "inbox": "Bandeja",
+    "customers": "Clientes",
+    "marketing_site": "Sitio público",
+    "support": "Soporte"
+  },
+  "actions": {
+    "sign_in": "Iniciar sesión",
+    "sign_up": "Crear cuenta",
+    "save_changes": "Guardar cambios",
+    "invite_people": "Invitar personas",
+    "search_members": "Buscar miembros",
+    "subscribe": "Suscribirse",
+    "cancel": "Cancelar",
+    "refresh": "Actualizar",
+    "close_other_sessions": "Cerrar otras sesiones",
+    "load_more": "Cargar más",
+    "delete_account": "Eliminar cuenta",
+    "delete_permanently": "Eliminar definitivamente",
+    "update": "Actualizar",
+    "sign_out": "Cerrar sesión",
+    "resend": "Reenviar",
+    "verify_email": "Verificar correo"
+  },
+  "footer": {
+    "resources": "Recursos",
+    "features": "Funciones",
+    "company": "Empresa",
+    "help_center": "Centro de ayuda",
+    "docs": "Docs",
+    "roadmap": "Hoja de ruta",
+    "changelog": "Historial",
+    "affiliates": "Afiliados",
+    "portal": "Portal",
+    "jobs": "Empleo",
+    "sponsors": "Patrocinadores",
+    "about": "Acerca de",
+    "pricing": "Precios",
+    "careers": "Carreras",
+    "blog": "Blog",
+    "newsletter_label": "Suscríbete a nuestro boletín",
+    "newsletter_placeholder": "Introduce tu email",
+    "subscribe_success_title": "¡Suscripción completada!",
+    "subscribe_success_description": "Te has suscrito a nuestro boletín.",
+    "copyright": "Creado con Nuxt UI • © {year}"
+  },
+  "templates": {
+    "title": "Plantillas",
+    "starter": "Starter",
+    "landing": "Landing",
+    "docs": "Docs",
+    "saas": "SaaS",
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "portfolio": "Portfolio",
+    "changelog": "Historial"
+  },
+  "userMenu": {
+    "guest": "Invitado",
+    "profile": "Perfil",
+    "billing": "Facturación",
+    "settings": "Ajustes",
+    "theme": "Tema",
+    "primary": "Principal",
+    "neutral": "Neutro",
+    "appearance": "Apariencia",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "templates": "Plantillas",
+    "documentation": "Documentación",
+    "github": "Repositorio en GitHub",
+    "logout": "Cerrar sesión"
+  },
+  "sidebar": {
+    "overview": "Resumen",
+    "inbox": "Bandeja",
+    "customers": "Clientes",
+    "marketing_site": "Sitio público",
+    "support": "Soporte",
+    "go_to": "Ir a",
+    "code": "Código",
+    "view_source": "Ver código de la página"
+  },
+  "cookies": {
+    "message": "Usamos cookies propias para mejorar tu experiencia en nuestra web.",
+    "accept": "Aceptar",
+    "opt_out": "Rechazar"
+  },
+  "auth": {
+    "fields": {
+      "email_label": "Email",
+      "email_placeholder": "Introduce tu email",
+      "password_label": "Contraseña",
+      "password_placeholder": "Introduce tu contraseña",
+      "remember_me": "Recordarme",
+      "name_label": "Nombre completo",
+      "name_placeholder": "Introduce tu nombre completo",
+      "password_confirmation_label": "Confirmar contraseña",
+      "password_confirmation_placeholder": "Confirma tu contraseña"
+    },
+    "login": {
+      "seo_title": "Iniciar sesión",
+      "seo_description": "Accede a tu cuenta para continuar",
+      "title": "Hola de nuevo",
+      "cta_text": "¿No tienes cuenta?",
+      "cta_action": "Crear cuenta",
+      "forgot": "¿Has olvidado la contraseña?",
+      "footer_text": "Al iniciar sesión aceptas nuestros",
+      "footer_link": "Términos del servicio",
+      "toast_success_title": "¡Bienvenido de nuevo!",
+      "toast_success_description": "Sesión iniciada correctamente.",
+      "toast_error_title": "No se pudo iniciar sesión",
+      "error_generic": "No hemos podido iniciar sesión, inténtalo de nuevo."
+    },
+    "signup": {
+      "seo_title": "Crear cuenta",
+      "seo_description": "Crea una cuenta para empezar",
+      "title": "Crear una cuenta",
+      "submit": "Crear cuenta",
+      "cta_text": "¿Ya tienes cuenta?",
+      "cta_action": "Inicia sesión",
+      "toast_success_title": "Cuenta creada",
+      "toast_success_description": "¡Bienvenido!",
+      "toast_error_title": "El registro ha fallado",
+      "footer_text": "Al registrarte aceptas nuestros",
+      "footer_link": "Términos del servicio"
+    },
+    "forgot": {
+      "seo_title": "¿Olvidaste la contraseña?",
+      "seo_description": "Solicita un enlace de restablecimiento",
+      "title": "¿Olvidaste la contraseña?",
+      "description": "Introduce el correo asociado a tu cuenta y te enviaremos instrucciones para restablecerla.",
+      "submit": "Enviar enlace de restablecimiento",
+      "toast_success_title": "Correo enviado",
+      "toast_success_description": "Si tu email existe en nuestros registros, recibirás un enlace en unos minutos.",
+      "toast_error_title": "Solicitud fallida",
+      "toast_error_description": "No pudimos enviar el enlace, inténtalo de nuevo.",
+      "completed_title": "Revisa tu bandeja",
+      "completed_description": "Si el correo indicado está registrado, recibirás un mensaje con el enlace.",
+      "return_login": "Volver a iniciar sesión",
+      "resend": "Reenviar correo",
+      "remembered": "¿Ya la recuerdas?"
+    },
+    "reset": {
+      "seo_title": "Restablecer contraseña",
+      "seo_description": "Define una nueva contraseña para tu cuenta",
+      "title": "Restablecer contraseña",
+      "description": "Elige una nueva contraseña para tu cuenta. Procura que sea segura y única.",
+      "submit": "Actualizar contraseña",
+      "toast_success_title": "Contraseña actualizada",
+      "toast_success_description": "Ya puedes iniciar sesión con la nueva contraseña.",
+      "toast_error_title": "No se pudo restablecer",
+      "toast_error_description": "No pudimos restablecer la contraseña, inténtalo de nuevo.",
+      "invalid_link_title": "Enlace no válido",
+      "invalid_link_description": "Solicita un nuevo enlace de restablecimiento.",
+      "completed_message": "Tu contraseña se ha cambiado. Ya puedes usarla para iniciar sesión.",
+      "go_login": "Ir al inicio de sesión",
+      "remembered": "¿Recordaste tu contraseña?"
+    },
+    "verify": {
+      "seo_title": "Verifica tu correo",
+      "seo_description": "Verifica tu dirección para continuar",
+      "title": "Verifica tu correo",
+      "message": "Hemos enviado un enlace de verificación a {email}. Ábrelo para activar tu cuenta.",
+      "fallback_email": "tu correo electrónico",
+      "cta_verified": "Ya he verificado mi correo",
+      "cta_resend": "Reenviar correo de verificación",
+      "cta_logout": "Cerrar sesión",
+      "toast_refresh_error": "No pudimos actualizar tu estado, inténtalo de nuevo.",
+      "toast_resend_success": "Correo de verificación enviado",
+      "toast_resend_description": "Revisa tu bandeja (y la carpeta de spam).",
+      "toast_resend_error": "No pudimos enviar el correo de verificación, inténtalo de nuevo."
+    },
+    "email_verified": {
+      "seo_title": "Correo verificado",
+      "seo_description": "Tu dirección se ha verificado",
+      "toast_title": "Correo verificado",
+      "toast_description": "¡Gracias! Tu cuenta ya está activa.",
+      "verifying_title": "Verificando la sesión…",
+      "verifying_description": "Redirigiéndote a la aplicación.",
+      "redirecting": "Redirigiendo…"
+    },
+    "oauth": {
+      "seo_title": "Conectando tu cuenta",
+      "heading": "Finalizando el inicio de sesión con {provider}",
+      "description": "Espera mientras completamos el proceso de autenticación.",
+      "redirecting": "Redirigiendo…",
+      "error_title": "No se pudo iniciar sesión",
+      "error_generic": "La autenticación ha fallado. Inténtalo de nuevo.",
+      "error_missing_email": "El proveedor no devolvió un email. Asegúrate de que sea público e inténtalo de nuevo.",
+      "success_title": "Inicio de sesión correcto",
+      "success_description": "¡Bienvenido de nuevo!",
+      "default_provider": "tu cuenta"
+    }
+  },
+  "dashboard": {
+    "home": {
+      "title": "Inicio",
+      "new_mail": "Nuevo mensaje",
+      "new_customer": "Nuevo cliente",
+      "notifications_tooltip": "Notificaciones"
+    },
+    "notifications": "Notificaciones",
+    "stats": {
+      "customers": "Clientes",
+      "conversions": "Conversiones",
+      "revenue": "Ingresos",
+      "orders": "Pedidos"
+    },
+    "periods": {
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual"
+    },
+    "ranges": {
+      "last_7": "Últimos 7 días",
+      "last_14": "Últimos 14 días",
+      "last_30": "Últimos 30 días",
+      "last_3_months": "Últimos 3 meses",
+      "last_6_months": "Últimos 6 meses",
+      "last_year": "Último año"
+    },
+    "date_picker_placeholder": "Elige una fecha",
+    "chart": {
+      "revenue": "Ingresos"
+    },
+    "sales": {
+      "id": "ID",
+      "date": "Fecha",
+      "status": "Estado",
+      "email": "Email",
+      "amount": "Importe",
+      "status_paid": "Pagado",
+      "status_failed": "Fallido",
+      "status_refunded": "Reembolsado"
+    }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "general": {
+      "title": "Perfil",
+      "description": "Esta información se mostrará públicamente.",
+      "name_label": "Nombre",
+      "name_description": "Aparecerá en recibos, facturas y otras comunicaciones.",
+      "email_label": "Email",
+      "email_description": "Se usa para iniciar sesión, recibir recibos y novedades del producto.",
+      "confirm_password_label": "Confirmar contraseña",
+      "confirm_password_description": "Necesaria para cambiar tu correo.",
+      "password_required": "Confirma tu contraseña para cambiar el email",
+      "toast_success_title": "Perfil actualizado",
+      "toast_success_description": "Hemos guardado tus ajustes.",
+      "toast_verify_title": "Verifica tu correo",
+      "toast_verify_description": "Te enviamos un enlace de verificación. Revísalo para continuar.",
+      "toast_error_title": "Actualización fallida",
+      "error_fallback": "No hemos podido actualizar tu perfil, inténtalo de nuevo."
+    },
+    "members": {
+      "title": "Miembros",
+      "description": "Invita nuevos miembros con su correo.",
+      "invite": "Invitar personas",
+      "search_placeholder": "Buscar miembros",
+      "menu": {
+        "label": "Acciones",
+        "edit": "Editar miembro",
+        "remove": "Eliminar miembro"
+      },
+      "roles": {
+        "member": "Miembro",
+        "owner": "Propietario"
+      }
+    },
+    "notifications": {
+      "channels": {
+        "title": "Canales de notificación",
+        "description": "¿Dónde podemos avisarte?",
+        "email_label": "Email",
+        "email_description": "Recibe un resumen diario por correo.",
+        "desktop_label": "Escritorio",
+        "desktop_description": "Recibe notificaciones en el escritorio."
+      },
+      "account": {
+        "title": "Actualizaciones de la cuenta",
+        "description": "Recibe novedades sobre Nuxt UI.",
+        "weekly_label": "Resumen semanal",
+        "weekly_description": "Recibe un resumen semanal de noticias.",
+        "product_label": "Novedades del producto",
+        "product_description": "Recibe un correo mensual con nuevas funciones y actualizaciones.",
+        "important_label": "Actualizaciones importantes",
+        "important_description": "Recibe correos sobre correcciones de seguridad, mantenimiento, etc."
+      }
+    },
+    "security": {
+      "password": {
+        "title": "Contraseña",
+        "description": "Confirma tu contraseña actual antes de definir una nueva.",
+        "current_placeholder": "Contraseña actual",
+        "new_placeholder": "Nueva contraseña",
+        "confirm_placeholder": "Confirmar nueva contraseña",
+        "button": "Actualizar"
+      },
+      "sessions": {
+        "title": "Sesiones",
+        "description": "Dónde has iniciado sesión actualmente.",
+        "close_others": "Cerrar otras sesiones",
+        "refresh": "Actualizar",
+        "unable_title": "No pudimos cargar las sesiones",
+        "none_title": "Sin sesiones activas",
+        "none_description": "No encontramos sesiones activas para tu cuenta.",
+        "current_badge": "Sesión actual",
+        "unknown_device": "Dispositivo desconocido",
+        "ip_label": "IP",
+        "last_active_label": "Última actividad",
+        "sign_out": "Cerrar sesión"
+      },
+      "modals": {
+        "close_sessions": {
+          "title": "Cerrar otras sesiones",
+          "description": "Cerrarás sesión en otros navegadores o dispositivos donde estés activo.",
+          "alert_title": "Seguirás conectado en este dispositivo",
+          "alert_description": "Si crees que alguien tiene acceso, cerrar otras sesiones es un buen primer paso."
+        },
+        "sign_out": {
+          "title": "Cerrar sesión seleccionada",
+          "description": "Cerrarás la sesión elegida.",
+          "alert_title": "Esta sesión se cerrará"
+        },
+        "account": {
+          "title": "Eliminar cuenta",
+          "description": "Esta acción es permanente.",
+          "alert_title": "Esto no se puede deshacer",
+          "alert_description": "Escribe DELETE para confirmar. Si tu cuenta tiene contraseña, tendrás que confirmarla.",
+          "confirm_label": "Escribe DELETE para confirmar",
+          "password_label": "Contraseña",
+          "password_placeholder": "Tu contraseña actual"
+        }
+      },
+      "activity": {
+        "title": "Actividad reciente",
+        "description": "Acciones relacionadas con la seguridad de tu cuenta.",
+        "unable_title": "No pudimos cargar la actividad",
+        "empty_title": "Aún no hay actividad",
+        "empty_description": "Cuando cambies la contraseña o cierres sesiones, aparecerán aquí."
+      },
+      "account": {
+        "title": "Cuenta",
+        "description": "¿Ya no quieres usar el servicio? Puedes eliminar tu cuenta aquí. Esta acción no se puede revertir y toda la información se borrará."
+      },
+      "toasts": {
+        "sessions_updated": "Sesiones actualizadas",
+        "sessions_description": "Se cerraron {count} sesiones adicionales.",
+        "session_closed": "Sesión cerrada",
+        "session_closed_description": "Esa sesión se ha cerrado.",
+        "action_failed": "Acción fallida",
+        "load_more_failed": "No se pudo cargar más actividad",
+        "password_updated": "Contraseña actualizada",
+        "password_description": "Tu contraseña se cambió correctamente.",
+        "delete_confirmation_required": "Confirmación requerida",
+        "delete_confirmation_description": "Escribe DELETE para confirmar la eliminación.",
+        "delete_password_required": "Contraseña requerida",
+        "delete_password_description": "Confirma tu contraseña para eliminar la cuenta.",
+        "account_deleted": "Cuenta eliminada",
+        "account_deleted_description": "Tu cuenta ha sido eliminada.",
+        "delete_failed": "No se pudo eliminar la cuenta"
+      },
+      "errors": {
+        "sessions": "No se pudieron cargar las sesiones.",
+        "activity": "No se pudo cargar la actividad.",
+        "password": "No pudimos actualizar tu contraseña, inténtalo de nuevo.",
+        "delete": "No pudimos eliminar tu cuenta, inténtalo de nuevo."
+      }
+    }
   },
   "preferences": {
     "title": "Preferencias",
@@ -17,5 +398,16 @@
     "system": "Según el sistema",
     "light": "Claro",
     "dark": "Oscuro"
+  },
+  "messages": {
+    "generic_error": "Algo salió mal. Inténtalo de nuevo.",
+    "sessions_empty": "No encontramos sesiones activas para tu cuenta.",
+    "validation": {
+      "too_short": "Demasiado corto",
+      "invalid_email": "Email no válido",
+      "password_min": "Debe tener al menos 8 caracteres",
+      "passwords_different": "Las contraseñas deben ser distintas",
+      "passwords_mismatch": "Las contraseñas no coinciden"
+    }
   }
 }

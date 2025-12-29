@@ -10,12 +10,13 @@ definePageMeta({
 const auth = useAuth()
 const router = useRouter()
 const toast = useToast()
+const { t } = useI18n()
 const isSubmitting = ref(false)
 const isLoading = ref(true)
 
 const profileSchema = z.object({
-  name: z.string().min(2, 'Too short'),
-  email: z.string().email('Invalid email'),
+  name: z.string().min(2, t('messages.validation.too_short')),
+  email: z.string().email(t('messages.validation.invalid_email')),
 })
 
 type ProfileSchema = z.output<typeof profileSchema>
@@ -45,7 +46,7 @@ const validateProfile = (state: ProfileState): FormError[] => {
   if (requiresPasswordForEmailChange.value && !state.current_password?.trim()) {
     errors.push({
       name: 'current_password',
-      message: 'Please confirm your password to change email',
+      message: t('settings.general.password_required'),
     })
   }
 
@@ -63,7 +64,7 @@ const extractErrorMessage = (error: unknown) => {
   if (typeof data?.message === 'string') {
     return data.message
   }
-  return (error as any)?.message || 'Unable to update your profile, please try again.'
+  return (error as any)?.message || t('settings.general.error_fallback')
 }
 
 const syncFromUser = () => {
@@ -96,8 +97,8 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
     })
 
     toast.add({
-      title: 'Profile updated',
-      description: 'Your settings have been saved.',
+      title: t('settings.general.toast_success_title'),
+      description: t('settings.general.toast_success_description'),
       icon: 'i-lucide-check',
       color: 'success'
     })
@@ -105,8 +106,8 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
     // If the email changed, Fortify will set email_verified_at = null and send a new verification email.
     if (!user?.email_verified_at) {
       toast.add({
-        title: 'Verify your email',
-        description: 'We sent a verification link to your email. Please verify to continue.',
+        title: t('settings.general.toast_verify_title'),
+        description: t('settings.general.toast_verify_description'),
       })
       await router.push(`/auth/verify-email?redirect=${encodeURIComponent('/dashboard/settings')}`)
       return
@@ -115,7 +116,7 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
     profile.current_password = ''
   } catch (error) {
     toast.add({
-      title: 'Update failed',
+      title: t('settings.general.toast_error_title'),
       description: extractErrorMessage(error),
       color: 'error',
     })
@@ -134,15 +135,15 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
     @submit="onSubmit"
   >
     <UPageCard
-      title="Profile"
-      description="These informations will be displayed publicly."
+      :title="t('settings.general.title')"
+      :description="t('settings.general.description')"
       variant="naked"
       orientation="horizontal"
       class="mb-4"
     >
       <UButton
         form="settings"
-        label="Save changes"
+        :label="t('actions.save_changes')"
         color="neutral"
         :loading="isSubmitting || isLoading"
         type="submit"
@@ -153,8 +154,8 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
     <UPageCard variant="subtle">
       <UFormField
         name="name"
-        label="Name"
-        description="Will appear on receipts, invoices, and other communication."
+        :label="t('settings.general.name_label')"
+        :description="t('settings.general.name_description')"
         required
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
@@ -167,8 +168,8 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
       <USeparator />
       <UFormField
         name="email"
-        label="Email"
-        description="Used to sign in, for email receipts and product updates."
+        :label="t('settings.general.email_label')"
+        :description="t('settings.general.email_description')"
         required
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
@@ -184,8 +185,8 @@ async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
       <UFormField
         v-if="requiresPasswordForEmailChange"
         name="current_password"
-        label="Confirm password"
-        description="Required to change your email."
+        :label="t('settings.general.confirm_password_label')"
+        :description="t('settings.general.confirm_password_description')"
         required
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >

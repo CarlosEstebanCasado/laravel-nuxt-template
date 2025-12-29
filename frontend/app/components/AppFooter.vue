@@ -1,38 +1,40 @@
 <script setup lang="ts">
-const columns = [{
-  label: 'Resources',
+const { t } = useI18n()
+
+const columns = computed(() => [{
+  label: t('footer.resources'),
   children: [{
-    label: 'Help center'
+    label: t('footer.help_center')
   }, {
-    label: 'Docs'
+    label: t('footer.docs')
   }, {
-    label: 'Roadmap'
+    label: t('footer.roadmap')
   }, {
-    label: 'Changelog'
+    label: t('footer.changelog')
   }]
 }, {
-  label: 'Features',
+  label: t('footer.features'),
   children: [{
-    label: 'Affiliates'
+    label: t('footer.affiliates')
   }, {
-    label: 'Portal'
+    label: t('footer.portal')
   }, {
-    label: 'Jobs'
+    label: t('footer.jobs')
   }, {
-    label: 'Sponsors'
+    label: t('footer.sponsors')
   }]
 }, {
-  label: 'Company',
+  label: t('footer.company'),
   children: [{
-    label: 'About'
+    label: t('footer.about')
   }, {
-    label: 'Pricing'
+    label: t('footer.pricing')
   }, {
-    label: 'Careers'
+    label: t('footer.careers')
   }, {
-    label: 'Blog'
+    label: t('footer.blog')
   }]
-}]
+}])
 
 const toast = useToast()
 
@@ -43,8 +45,8 @@ function onSubmit() {
   loading.value = true
 
   toast.add({
-    title: 'Subscribed!',
-    description: 'You\'ve been subscribed to our newsletter.'
+    title: t('footer.subscribe_success_title'),
+    description: t('footer.subscribe_success_description')
   })
 }
 </script>
@@ -63,21 +65,21 @@ function onSubmit() {
             <form @submit.prevent="onSubmit">
               <UFormField
                 name="email"
-                label="Subscribe to our newsletter"
+                :label="t('footer.newsletter_label')"
                 size="lg"
               >
                 <UInput
                   v-model="email"
                   type="email"
                   class="w-full"
-                  placeholder="Enter your email"
+                  :placeholder="t('footer.newsletter_placeholder')"
                 >
                   <template #trailing>
                     <UButton
                       type="submit"
                       size="xs"
                       color="neutral"
-                      label="Subscribe"
+                      :label="t('actions.subscribe')"
                     />
                   </template>
                 </UInput>
@@ -90,7 +92,7 @@ function onSubmit() {
 
     <template #left>
       <p class="text-muted text-sm">
-        Built with Nuxt UI • © {{ new Date().getFullYear() }}
+        {{ t('footer.copyright', { year: new Date().getFullYear() }) }}
       </p>
     </template>
 

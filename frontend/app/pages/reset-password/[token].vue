@@ -7,9 +7,11 @@ definePageMeta({
   middleware: 'guest'
 })
 
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Reset password',
-  description: 'Set a new password for your account'
+  title: t('auth.reset.seo_title'),
+  description: t('auth.reset.seo_description')
 })
 
 const route = useRoute()
@@ -24,14 +26,14 @@ const isSubmitting = ref(false)
 const isCompleted = ref(false)
 
 const schema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(8, 'Must be at least 8 characters'),
-  password_confirmation: z.string().min(8, 'Must be at least 8 characters')
+  email: z.string().email(t('messages.validation.invalid_email')),
+  password: z.string().min(8, t('messages.validation.password_min')),
+  password_confirmation: z.string().min(8, t('messages.validation.password_min'))
 }).superRefine((data, ctx) => {
   if (data.password !== data.password_confirmation) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: 'Passwords do not match',
+      message: t('messages.validation.passwords_mismatch'),
       path: ['password_confirmation']
     })
   }
@@ -39,28 +41,28 @@ const schema = z.object({
 
 type Schema = z.output<typeof schema>
 
-const fields = [{
+const fields = computed(() => [{
   name: 'email',
-  label: 'Email',
+  label: t('auth.fields.email_label'),
   type: 'text' as const,
-  placeholder: 'Enter your email',
+  placeholder: t('auth.fields.email_placeholder'),
   autocomplete: 'email',
   required: true
 }, {
   name: 'password',
-  label: 'New password',
+  label: t('auth.fields.password_label'),
   type: 'password' as const,
-  placeholder: 'Enter your new password',
+  placeholder: t('auth.fields.password_placeholder'),
   autocomplete: 'new-password',
   required: true
 }, {
   name: 'password_confirmation',
-  label: 'Confirm password',
+  label: t('auth.fields.password_confirmation_label'),
   type: 'password' as const,
-  placeholder: 'Re-enter your new password',
+  placeholder: t('auth.fields.password_confirmation_placeholder'),
   autocomplete: 'new-password',
   required: true
-}]
+}])
 
 const formState = reactive({
   email: initialEmail,
@@ -72,8 +74,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   if (isSubmitting.value || !token.value) {
     if (!token.value) {
       toast.add({
-        title: 'Reset link invalid',
-        description: 'Please request a new password reset link.',
+        title: t('auth.reset.invalid_link_title'),
+        description: t('auth.reset.invalid_link_description'),
         color: 'error'
       })
       router.push('/forgot-password')
@@ -92,13 +94,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     isCompleted.value = true
     toast.add({
-      title: 'Password updated',
-      description: 'You can now sign in with your new password.'
+      title: t('auth.reset.toast_success_title'),
+      description: t('auth.reset.toast_success_description')
     })
   } catch (error: any) {
-    const message = error?.data?.message || error?.message || 'Unable to reset password, please try again.'
+    const message = error?.data?.message || error?.message || t('auth.reset.toast_error_description')
     toast.add({
-      title: 'Reset failed',
+      title: t('auth.reset.toast_error_title'),
       description: message,
       color: 'error'
     })
@@ -116,36 +118,37 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       :schema="schema"
       :state="formState"
       :loading="isSubmitting"
-      title="Reset password"
+      :title="t('auth.reset.title')"
       icon="i-lucide-lock"
-      :submit="{ label: 'Update password' }"
+      :submit="{ label: t('auth.reset.submit') }"
       @submit="onSubmit"
     >
       <template #description>
-        Choose a new password for your account. Make sure it's strong and unique.
+        {{ t('auth.reset.description') }}
       </template>
 
       <template #footer>
-        Remembered your password? <ULink
+        {{ t('auth.reset.remembered') }}
+        <ULink
           to="/login"
           class="text-primary font-medium"
-        >Return to login</ULink>.
+        >{{ t('auth.forgot.return_login') }}</ULink>.
       </template>
     </UAuthForm>
 
     <UPageCard
       v-else
-      title="Password updated"
+      :title="t('auth.reset.toast_success_title')"
       icon="i-lucide-lock-check"
       class="text-center"
     >
       <p class="text-sm text-muted">
-        Your password has been changed. You can now use it to sign in.
+        {{ t('auth.reset.completed_message') }}
       </p>
 
       <UButton
         class="mt-6"
-        label="Go to login"
+        :label="t('auth.reset.go_login')"
         color="neutral"
         block
         @click="router.push('/login')"

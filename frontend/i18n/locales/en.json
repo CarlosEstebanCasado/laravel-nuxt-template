@@ -1,21 +1,413 @@
 {
   "navigation": {
     "settings": "Settings",
-    "preferences": "Preferences"
+    "preferences": "Preferences",
+    "docs": "Docs",
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "changelog": "Changelog",
+    "dashboard": "Dashboard",
+    "general": "General",
+    "members": "Members",
+    "notifications": "Notifications",
+    "security": "Security",
+    "documentation": "Documentation",
+    "overview": "Overview",
+    "inbox": "Inbox",
+    "customers": "Customers",
+    "marketing_site": "Marketing site",
+    "support": "Support"
+  },
+  "actions": {
+    "sign_in": "Sign in",
+    "sign_up": "Sign up",
+    "save_changes": "Save changes",
+    "invite_people": "Invite people",
+    "search_members": "Search members",
+    "subscribe": "Subscribe",
+    "cancel": "Cancel",
+    "refresh": "Refresh",
+    "close_other_sessions": "Close other sessions",
+    "load_more": "Load more",
+    "delete_account": "Delete account",
+    "delete_permanently": "Delete permanently",
+    "update": "Update",
+    "sign_out": "Sign out",
+    "resend": "Resend",
+    "verify_email": "Verify email"
+  },
+  "footer": {
+    "resources": "Resources",
+    "features": "Features",
+    "company": "Company",
+    "help_center": "Help center",
+    "docs": "Docs",
+    "roadmap": "Roadmap",
+    "changelog": "Changelog",
+    "affiliates": "Affiliates",
+    "portal": "Portal",
+    "jobs": "Jobs",
+    "sponsors": "Sponsors",
+    "about": "About",
+    "pricing": "Pricing",
+    "careers": "Careers",
+    "blog": "Blog",
+    "newsletter_label": "Subscribe to our newsletter",
+    "newsletter_placeholder": "Enter your email",
+    "subscribe_success_title": "Subscribed!",
+    "subscribe_success_description": "You've been subscribed to our newsletter.",
+    "copyright": "Built with Nuxt UI • © {year}"
+  },
+  "templates": {
+    "title": "Templates",
+    "starter": "Starter",
+    "landing": "Landing",
+    "docs": "Docs",
+    "saas": "SaaS",
+    "dashboard": "Dashboard",
+    "chat": "Chat",
+    "portfolio": "Portfolio",
+    "changelog": "Changelog"
+  },
+  "userMenu": {
+    "guest": "Guest",
+    "profile": "Profile",
+    "billing": "Billing",
+    "settings": "Settings",
+    "theme": "Theme",
+    "primary": "Primary",
+    "neutral": "Neutral",
+    "appearance": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "templates": "Templates",
+    "documentation": "Documentation",
+    "github": "GitHub repository",
+    "logout": "Log out"
+  },
+  "sidebar": {
+    "overview": "Overview",
+    "inbox": "Inbox",
+    "customers": "Customers",
+    "marketing_site": "Marketing site",
+    "support": "Support",
+    "go_to": "Go to",
+    "code": "Code",
+    "view_source": "View page source"
+  },
+  "cookies": {
+    "message": "We use first-party cookies to enhance your experience on our website.",
+    "accept": "Accept",
+    "opt_out": "Opt out"
+  },
+  "auth": {
+    "fields": {
+      "email_label": "Email",
+      "email_placeholder": "Enter your email",
+      "password_label": "Password",
+      "password_placeholder": "Enter your password",
+      "remember_me": "Remember me",
+      "name_label": "Full name",
+      "name_placeholder": "Enter your full name",
+      "password_confirmation_label": "Confirm password",
+      "password_confirmation_placeholder": "Confirm your password"
+    },
+    "login": {
+      "seo_title": "Login",
+      "seo_description": "Login to your account to continue",
+      "title": "Welcome back",
+      "cta_text": "Don't have an account?",
+      "cta_action": "Sign up",
+      "forgot": "Forgot password?",
+      "footer_text": "By signing in, you agree to our",
+      "footer_link": "Terms of Service",
+      "toast_success_title": "Welcome back!",
+      "toast_success_description": "You are now signed in.",
+      "toast_error_title": "Unable to sign in",
+      "error_generic": "Unable to sign in, please try again."
+    },
+    "signup": {
+      "seo_title": "Sign up",
+      "seo_description": "Create an account to get started",
+      "title": "Create an account",
+      "submit": "Create account",
+      "cta_text": "Already have an account?",
+      "cta_action": "Login",
+      "toast_success_title": "Account created",
+      "toast_success_description": "Welcome aboard!",
+      "toast_error_title": "Sign up failed",
+      "footer_text": "By signing up, you agree to our",
+      "footer_link": "Terms of Service"
+    },
+    "forgot": {
+      "seo_title": "Forgot password",
+      "seo_description": "Request a password reset link",
+      "title": "Forgot password",
+      "description": "Enter the email associated with your account and we'll send you instructions to reset your password.",
+      "submit": "Send reset link",
+      "toast_success_title": "Email sent",
+      "toast_success_description": "If your email exists in our records, you will receive a reset link shortly.",
+      "toast_error_title": "Request failed",
+      "toast_error_description": "Unable to send reset link, please try again.",
+      "completed_title": "Check your inbox",
+      "completed_description": "If the email you provided is registered, you'll receive a message with a reset link.",
+      "return_login": "Return to login",
+      "resend": "Resend email",
+      "remembered": "Remembered it?"
+    },
+    "reset": {
+      "seo_title": "Reset password",
+      "seo_description": "Set a new password for your account",
+      "title": "Reset password",
+      "description": "Choose a new password for your account. Make sure it's strong and unique.",
+      "submit": "Update password",
+      "toast_success_title": "Password updated",
+      "toast_success_description": "You can now sign in with your new password.",
+      "toast_error_title": "Reset failed",
+      "toast_error_description": "Unable to reset password, please try again.",
+      "invalid_link_title": "Reset link invalid",
+      "invalid_link_description": "Please request a new password reset link.",
+      "completed_message": "Your password has been changed. You can now use it to sign in.",
+      "go_login": "Go to login",
+      "remembered": "Remembered your password?"
+    },
+    "verify": {
+      "seo_title": "Verify your email",
+      "seo_description": "Verify your email address to continue",
+      "title": "Verify your email",
+      "message": "We've sent a verification link to {email}. Please open it to activate your account.",
+      "fallback_email": "your email address",
+      "cta_verified": "I've verified my email",
+      "cta_resend": "Resend verification email",
+      "cta_logout": "Logout",
+      "toast_refresh_error": "Unable to refresh your account status, please try again.",
+      "toast_resend_success": "Verification email sent",
+      "toast_resend_description": "Please check your inbox (and spam folder).",
+      "toast_resend_error": "Unable to send verification email, please try again."
+    },
+    "email_verified": {
+      "seo_title": "Email verified",
+      "seo_description": "Your email address has been verified",
+      "toast_title": "Email verified",
+      "toast_description": "Thanks! Your account is now active.",
+      "verifying_title": "Verifying your session…",
+      "verifying_description": "Redirecting you to the app.",
+      "redirecting": "Redirecting…"
+    },
+    "oauth": {
+      "seo_title": "Connecting your account",
+      "heading": "Finishing {provider} sign-in",
+      "description": "Please wait while we complete the authentication process.",
+      "redirecting": "Redirecting…",
+      "error_title": "Sign in failed",
+      "error_generic": "Authentication failed. Please try again.",
+      "error_missing_email": "Your provider account did not return an email address. Please ensure your email is publicly available and try again.",
+      "success_title": "Signed in successfully",
+      "success_description": "Welcome back!",
+      "default_provider": "your account"
+    }
+  },
+  "dashboard": {
+    "home": {
+      "title": "Home",
+      "new_mail": "New mail",
+      "new_customer": "New customer",
+      "notifications_tooltip": "Notifications"
+    },
+    "notifications": "Notifications",
+    "stats": {
+      "customers": "Customers",
+      "conversions": "Conversions",
+      "revenue": "Revenue",
+      "orders": "Orders"
+    },
+    "periods": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "ranges": {
+      "last_7": "Last 7 days",
+      "last_14": "Last 14 days",
+      "last_30": "Last 30 days",
+      "last_3_months": "Last 3 months",
+      "last_6_months": "Last 6 months",
+      "last_year": "Last year"
+    },
+    "date_picker_placeholder": "Pick a date",
+    "chart": {
+      "revenue": "Revenue"
+    },
+    "sales": {
+      "id": "ID",
+      "date": "Date",
+      "status": "Status",
+      "email": "Email",
+      "amount": "Amount",
+      "status_paid": "Paid",
+      "status_failed": "Failed",
+      "status_refunded": "Refunded"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "general": {
+      "title": "Profile",
+      "description": "This information will be displayed publicly.",
+      "name_label": "Name",
+      "name_description": "Will appear on receipts, invoices, and other communication.",
+      "email_label": "Email",
+      "email_description": "Used to sign in, for email receipts and product updates.",
+      "confirm_password_label": "Confirm password",
+      "confirm_password_description": "Required to change your email.",
+      "password_required": "Please confirm your password to change email",
+      "toast_success_title": "Profile updated",
+      "toast_success_description": "Your settings have been saved.",
+      "toast_verify_title": "Verify your email",
+      "toast_verify_description": "We sent a verification link to your email. Please verify to continue.",
+      "toast_error_title": "Update failed",
+      "error_fallback": "Unable to update your profile, please try again."
+    },
+    "members": {
+      "title": "Members",
+      "description": "Invite new members by email address.",
+      "invite": "Invite people",
+      "search_placeholder": "Search members",
+      "menu": {
+        "label": "Actions",
+        "edit": "Edit member",
+        "remove": "Remove member"
+      },
+      "roles": {
+        "member": "Member",
+        "owner": "Owner"
+      }
+    },
+    "notifications": {
+      "channels": {
+        "title": "Notification channels",
+        "description": "Where can we notify you?",
+        "email_label": "Email",
+        "email_description": "Receive a daily email digest.",
+        "desktop_label": "Desktop",
+        "desktop_description": "Receive desktop notifications."
+      },
+      "account": {
+        "title": "Account updates",
+        "description": "Receive updates about Nuxt UI.",
+        "weekly_label": "Weekly digest",
+        "weekly_description": "Receive a weekly digest of news.",
+        "product_label": "Product updates",
+        "product_description": "Receive a monthly email with all new features and updates.",
+        "important_label": "Important updates",
+        "important_description": "Receive emails about important updates like security fixes, maintenance, etc."
+      }
+    },
+    "security": {
+      "password": {
+        "title": "Password",
+        "description": "Confirm your current password before setting a new one.",
+        "current_placeholder": "Current password",
+        "new_placeholder": "New password",
+        "confirm_placeholder": "Confirm new password",
+        "button": "Update"
+      },
+      "sessions": {
+        "title": "Sessions",
+        "description": "Where your account is currently signed in.",
+        "close_others": "Close other sessions",
+        "refresh": "Refresh",
+        "unable_title": "Unable to load sessions",
+        "none_title": "No active sessions",
+        "none_description": "We couldn't find any active sessions for your account.",
+        "current_badge": "Current session",
+        "unknown_device": "Unknown device",
+        "ip_label": "IP",
+        "last_active_label": "Last active",
+        "sign_out": "Sign out"
+      },
+      "modals": {
+        "close_sessions": {
+          "title": "Close other sessions",
+          "description": "This will sign you out from other browsers/devices where your account is currently active.",
+          "alert_title": "You will stay signed in on this device",
+          "alert_description": "If you think someone else has access, closing other sessions is a good first step."
+        },
+        "sign_out": {
+          "title": "Sign out session",
+          "description": "This will sign out the selected session.",
+          "alert_title": "This session will be signed out"
+        },
+        "account": {
+          "title": "Delete account",
+          "description": "This action is permanent.",
+          "alert_title": "This cannot be undone",
+          "alert_description": "Type DELETE to confirm. If your account has a password, you'll be asked to confirm it.",
+          "confirm_label": "Type DELETE to confirm",
+          "password_label": "Password",
+          "password_placeholder": "Your current password"
+        }
+      },
+      "activity": {
+        "title": "Recent activity",
+        "description": "Security-related actions on your account.",
+        "unable_title": "Unable to load activity",
+        "empty_title": "No activity yet",
+        "empty_description": "When you perform actions like changing your password or closing sessions, they will appear here."
+      },
+      "account": {
+        "title": "Account",
+        "description": "No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently."
+      },
+      "toasts": {
+        "sessions_updated": "Sessions updated",
+        "sessions_description": "Signed out from {count} other session(s).",
+        "session_closed": "Session closed",
+        "session_closed_description": "That session has been signed out.",
+        "action_failed": "Action failed",
+        "load_more_failed": "Unable to load more activity",
+        "password_updated": "Password updated",
+        "password_description": "Your password has been changed successfully.",
+        "delete_confirmation_required": "Confirmation required",
+        "delete_confirmation_description": "Type DELETE to confirm account deletion.",
+        "delete_password_required": "Password required",
+        "delete_password_description": "Please confirm your password to delete your account.",
+        "account_deleted": "Account deleted",
+        "account_deleted_description": "Your account has been removed.",
+        "delete_failed": "Delete failed"
+      },
+      "errors": {
+        "sessions": "Unable to load sessions.",
+        "activity": "Unable to load activity.",
+        "password": "Unable to update your password, please try again.",
+        "delete": "Unable to delete your account, please try again."
+      }
+    }
   },
   "preferences": {
     "title": "Preferences",
     "description": "Choose your preferred language and appearance.",
     "language_label": "Interface language",
-    "language_hint": "Apply the selected language across the dashboard experience.",
+    "language_hint": "Applies the selected language across the dashboard.",
     "theme_label": "Theme",
-    "theme_hint": "Match your system setting or keep a fixed appearance.",
+    "theme_hint": "Match your system or force a specific look.",
     "save": "Save preferences",
     "success": "Preferences updated"
   },
   "theme": {
-    "system": "System default",
+    "system": "System",
     "light": "Light",
     "dark": "Dark"
+  },
+  "messages": {
+    "generic_error": "Something went wrong. Please try again.",
+    "sessions_empty": "We couldn't find any active sessions for your account.",
+    "validation": {
+      "too_short": "Too short",
+      "invalid_email": "Invalid email",
+      "password_min": "Must be at least 8 characters",
+      "passwords_different": "Passwords must be different",
+      "passwords_mismatch": "Passwords do not match"
+    }
   }
 }

@@ -8,6 +8,8 @@ const props = defineProps<{
   range: Range
 }>()
 
+const { t } = useI18n()
+
 const days = computed(() => eachDayOfInterval(props.range))
 
 const periods = computed<Period[]>(() => {
@@ -36,12 +38,17 @@ watch(periods, () => {
     model.value = periods.value[0]!
   }
 })
+
+const periodOptions = computed(() => periods.value.map(period => ({
+  label: t(`dashboard.periods.${period}` as const),
+  value: period
+})))
 </script>
 
 <template>
   <USelect
     v-model="model"
-    :items="periods"
+    :items="periodOptions"
     variant="ghost"
     class="data-[state=open]:bg-elevated"
     :ui="{ value: 'capitalize', itemLabel: 'capitalize', trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"

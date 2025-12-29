@@ -10,13 +10,14 @@ definePageMeta({
 
 const { isNotificationsSlideoverOpen } = useDashboard()
 const dashboardBase = '/dashboard'
+const { t } = useI18n()
 
 const items = [[{
-  label: 'New mail',
+  label: t('dashboard.home.new_mail'),
   icon: 'i-lucide-send',
   to: `${dashboardBase}/inbox`
 }, {
-  label: 'New customer',
+  label: t('dashboard.home.new_customer'),
   icon: 'i-lucide-user-plus',
   to: `${dashboardBase}/customers`
 }]] satisfies DropdownMenuItem[][]
@@ -31,13 +32,13 @@ const period = ref<Period>('daily')
 <template>
   <UDashboardPanel id="home">
     <template #header>
-      <UDashboardNavbar title="Home" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar :title="t('dashboard.home.title')" :ui="{ right: 'gap-3' }">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
 
         <template #right>
-          <UTooltip text="Notifications" :shortcuts="['N']">
+          <UTooltip :text="t('dashboard.home.notifications_tooltip')" :shortcuts="['N']">
             <UButton
               color="neutral"
               variant="ghost"

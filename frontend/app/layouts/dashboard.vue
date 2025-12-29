@@ -8,6 +8,7 @@ useSeoMeta({
 
 const route = useRoute()
 const toast = useToast()
+const { t } = useI18n()
 
 const open = ref(false)
 const dashboardBase = '/dashboard'
@@ -16,57 +17,61 @@ const makeClose = () => {
   open.value = false
 }
 
-const links = [[{
-  label: 'Overview',
+const links = computed<NavigationMenuItem[][]>(() => [[{
+  label: t('sidebar.overview'),
   icon: 'i-lucide-house',
   to: dashboardBase,
   onSelect: makeClose
 }, {
-  label: 'Inbox',
+  label: t('sidebar.inbox'),
   icon: 'i-lucide-inbox',
   to: `${dashboardBase}/inbox`,
   badge: '4',
   onSelect: makeClose
 }, {
-  label: 'Customers',
+  label: t('sidebar.customers'),
   icon: 'i-lucide-users',
   to: `${dashboardBase}/customers`,
   onSelect: makeClose
 }, {
-  label: 'Settings',
+  label: t('navigation.settings'),
   to: `${dashboardBase}/settings`,
   icon: 'i-lucide-settings',
   defaultOpen: true,
   type: 'trigger',
   children: [{
-    label: 'General',
+    label: t('navigation.general'),
     to: `${dashboardBase}/settings`,
     exact: true,
     onSelect: makeClose
   }, {
-    label: 'Members',
+    label: t('navigation.preferences'),
+    to: `${dashboardBase}/settings/preferences`,
+    onSelect: makeClose
+  }, {
+    label: t('navigation.members'),
     to: `${dashboardBase}/settings/members`,
     onSelect: makeClose
   }, {
-    label: 'Notifications',
+    label: t('navigation.notifications'),
     to: `${dashboardBase}/settings/notifications`,
     onSelect: makeClose
   }, {
-    label: 'Security',
+    label: t('navigation.security'),
     to: `${dashboardBase}/settings/security`,
     onSelect: makeClose
   }]
 }], [{
-  label: 'Marketing site',
+  label: t('sidebar.marketing_site'),
   icon: 'i-lucide-globe',
   to: '/',
   onSelect: makeClose
 }, {
-  label: 'Support',
+  label: t('sidebar.support'),
   icon: 'i-lucide-life-buoy',
   to: 'https://ui.nuxt.com',
   target: '_blank'
-}]] satisfies NavigationMenuItem[][]
+}]])
 
 const sourcePath = computed(() => {
   const current = route.path.startsWith(dashboardBase)
@@ -78,14 +83,14 @@ const sourcePath = computed(() => {
 
 const groups = computed(() => [{
   id: 'links',
-  label: 'Go to',
-  items: links.flat()
+  label: t('sidebar.go_to'),
+  items: links.value.flat()
 }, {
   id: 'code',
-  label: 'Code',
+  label: t('sidebar.code'),
   items: [{
     id: 'source',
-    label: 'View page source',
+    label: t('sidebar.view_source'),
     icon: 'i-simple-icons-github',
     to: `https://github.com/nuxt-ui-templates/dashboard/blob/main/app/pages${sourcePath.value}.vue`,
     target: '_blank'
@@ -99,18 +104,18 @@ onMounted(async () => {
   }
 
   toast.add({
-    title: 'We use first-party cookies to enhance your experience on our website.',
+    title: t('cookies.message'),
     duration: 0,
     close: false,
     actions: [{
-      label: 'Accept',
+      label: t('cookies.accept'),
       color: 'neutral',
       variant: 'outline',
       onClick: () => {
         cookie.value = 'accepted'
       }
     }, {
-      label: 'Opt out',
+      label: t('cookies.opt_out'),
       color: 'neutral',
       variant: 'ghost'
     }]

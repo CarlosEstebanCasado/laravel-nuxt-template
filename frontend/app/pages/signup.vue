@@ -7,9 +7,11 @@ definePageMeta({
   middleware: 'guest'
 })
 
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Sign up',
-  description: 'Create an account to get started'
+  title: t('auth.signup.seo_title'),
+  description: t('auth.signup.seo_description')
 })
 
 const toast = useToast()
@@ -18,27 +20,27 @@ const router = useRouter()
 const route = useRoute()
 const isSubmitting = ref(false)
 
-const fields = [{
+const fields = computed(() => [{
   name: 'name',
   type: 'text' as const,
-  label: 'Name',
-  placeholder: 'Enter your name'
+  label: t('auth.fields.name_label'),
+  placeholder: t('auth.fields.name_placeholder')
 }, {
   name: 'email',
   type: 'text' as const,
-  label: 'Email',
-  placeholder: 'Enter your email'
+  label: t('auth.fields.email_label'),
+  placeholder: t('auth.fields.email_placeholder')
 }, {
   name: 'password',
-  label: 'Password',
+  label: t('auth.fields.password_label'),
   type: 'password' as const,
-  placeholder: 'Enter your password'
+  placeholder: t('auth.fields.password_placeholder')
 }, {
   name: 'password_confirmation',
-  label: 'Confirm Password',
+  label: t('auth.fields.password_confirmation_label'),
   type: 'password' as const,
-  placeholder: 'Confirm your password'
-}]
+  placeholder: t('auth.fields.password_confirmation_placeholder')
+}])
 
 const providers = [{
   label: 'Google',
@@ -51,12 +53,12 @@ const providers = [{
 }]
 
 const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email'),
-  password: z.string().min(8, 'Must be at least 8 characters'),
-  password_confirmation: z.string().min(8, 'Must be at least 8 characters')
+  name: z.string().min(1, t('messages.validation.too_short')),
+  email: z.string().email(t('messages.validation.invalid_email')),
+  password: z.string().min(8, t('messages.validation.password_min')),
+  password_confirmation: z.string().min(8, t('messages.validation.password_min'))
 }).refine((data) => data.password === data.password_confirmation, {
-  message: 'Passwords do not match',
+  message: t('messages.validation.passwords_mismatch'),
   path: ['password_confirmation'],
 })
 
@@ -83,7 +85,7 @@ const extractErrorMessage = (error: unknown) => {
     return (error as any).message
   }
 
-  return 'Unable to create your account, please try again.'
+  return t('auth.signup.toast_error_title')
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -97,8 +99,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     const user = await auth.register(event.data)
 
     toast.add({
-      title: 'Account created',
-      description: 'Welcome aboard!',
+      title: t('auth.signup.toast_success_title'),
+      description: t('auth.signup.toast_success_description'),
     })
 
     const redirectTo = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard'
@@ -111,7 +113,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     await router.push(redirectTo)
   } catch (error) {
     toast.add({
-      title: 'Sign up failed',
+      title: t('auth.signup.toast_error_title'),
       description: extractErrorMessage(error),
       color: 'error',
     })
@@ -127,22 +129,24 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     :schema="schema"
     :providers="providers"
     :loading="isSubmitting"
-    title="Create an account"
-    :submit="{ label: 'Create account' }"
+    :title="t('auth.signup.title')"
+    :submit="{ label: t('auth.signup.submit') }"
     @submit="onSubmit"
   >
     <template #description>
-      Already have an account? <ULink
+      {{ t('auth.signup.cta_text') }}
+      <ULink
         to="/login"
         class="text-primary font-medium"
-      >Login</ULink>.
+      >{{ t('auth.signup.cta_action') }}</ULink>.
     </template>
 
     <template #footer>
-      By signing up, you agree to our <ULink
+      {{ t('auth.signup.footer_text') }}
+      <ULink
         to="/"
         class="text-primary font-medium"
-      >Terms of Service</ULink>.
+      >{{ t('auth.signup.footer_link') }}</ULink>.
     </template>
   </UAuthForm>
 </template>

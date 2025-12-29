@@ -9,6 +9,7 @@ const colorMode = useColorMode()
 const appConfig = useAppConfig()
 const auth = useAuth()
 const router = useRouter()
+const { t } = useI18n()
 
 const updateThemePreference = async (theme: 'light' | 'dark') => {
   colorMode.preference = theme
@@ -29,7 +30,7 @@ const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
 const dashboardBase = '/dashboard'
 
 const user = computed(() => {
-  const name = auth.user.value?.name ?? 'Guest'
+  const name = auth.user.value?.name ?? t('userMenu.guest')
   const email = auth.user.value?.email ?? ''
   return {
     name,
@@ -47,20 +48,20 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   description: user.value.email,
   avatar: user.value.avatar
 }], [{
-  label: 'Profile',
+  label: t('userMenu.profile'),
   icon: 'i-lucide-user'
 }, {
-  label: 'Billing',
+  label: t('userMenu.billing'),
   icon: 'i-lucide-credit-card'
 }, {
-  label: 'Settings',
+  label: t('userMenu.settings'),
   icon: 'i-lucide-settings',
   to: `${dashboardBase}/settings`
 }], [{
-  label: 'Theme',
+  label: t('userMenu.theme'),
   icon: 'i-lucide-palette',
   children: [{
-    label: 'Primary',
+    label: t('userMenu.primary'),
     slot: 'chip',
     chip: appConfig.ui.colors.primary,
     content: {
@@ -80,7 +81,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       }
     }))
   }, {
-    label: 'Neutral',
+    label: t('userMenu.neutral'),
     slot: 'chip',
     chip: appConfig.ui.colors.neutral === 'neutral' ? 'old-neutral' : appConfig.ui.colors.neutral,
     content: {
@@ -101,10 +102,10 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     }))
   }]
 }, {
-  label: 'Appearance',
+  label: t('userMenu.appearance'),
   icon: 'i-lucide-sun-moon',
   children: [{
-    label: 'Light',
+    label: t('userMenu.light'),
     icon: 'i-lucide-sun',
     type: 'checkbox',
     checked: colorMode.value === 'light',
@@ -114,7 +115,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       updateThemePreference('light')
     }
   }, {
-    label: 'Dark',
+    label: t('userMenu.dark'),
     icon: 'i-lucide-moon',
     type: 'checkbox',
     checked: colorMode.value === 'dark',
@@ -128,48 +129,48 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     }
   }]
 }], [{
-  label: 'Templates',
+  label: t('userMenu.templates'),
   icon: 'i-lucide-layout-template',
   children: [{
-    label: 'Starter',
+    label: t('templates.starter'),
     to: 'https://starter-template.nuxt.dev/'
   }, {
-    label: 'Landing',
+    label: t('templates.landing'),
     to: 'https://landing-template.nuxt.dev/'
   }, {
-    label: 'Docs',
+    label: t('templates.docs'),
     to: 'https://docs-template.nuxt.dev/'
   }, {
-    label: 'SaaS',
+    label: t('templates.saas'),
     to: 'https://saas-template.nuxt.dev/'
   }, {
-    label: 'Dashboard',
+    label: t('templates.dashboard'),
     to: 'https://dashboard-template.nuxt.dev/',
     color: 'primary',
     checked: true,
     type: 'checkbox'
   }, {
-    label: 'Chat',
+    label: t('templates.chat'),
     to: 'https://chat-template.nuxt.dev/'
   }, {
-    label: 'Portfolio',
+    label: t('templates.portfolio'),
     to: 'https://portfolio-template.nuxt.dev/'
   }, {
-    label: 'Changelog',
+    label: t('templates.changelog'),
     to: 'https://changelog-template.nuxt.dev/'
   }]
 }], [{
-  label: 'Documentation',
+  label: t('userMenu.documentation'),
   icon: 'i-lucide-book-open',
   to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
   target: '_blank'
 }, {
-  label: 'GitHub repository',
+  label: t('userMenu.github'),
   icon: 'i-simple-icons-github',
   to: 'https://github.com/nuxt-ui-templates/dashboard',
   target: '_blank'
 }, {
-  label: 'Log out',
+  label: t('userMenu.logout'),
   icon: 'i-lucide-log-out',
   onSelect: async () => {
     await auth.logout()

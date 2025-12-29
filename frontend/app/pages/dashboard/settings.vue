@@ -7,40 +7,41 @@ definePageMeta({
 })
 
 const dashboardBase = '/dashboard'
+const { t } = useI18n()
 
-const links = [[{
-  label: 'General',
+const links = computed(() => [[{
+  label: t('navigation.general'),
   icon: 'i-lucide-user',
   to: `${dashboardBase}/settings`,
   exact: true
 }, {
-  label: 'Preferences',
+  label: t('navigation.preferences'),
   icon: 'i-lucide-sliders-horizontal',
   to: `${dashboardBase}/settings/preferences`
 }, {
-  label: 'Members',
+  label: t('navigation.members'),
   icon: 'i-lucide-users',
   to: `${dashboardBase}/settings/members`
 }, {
-  label: 'Notifications',
+  label: t('navigation.notifications'),
   icon: 'i-lucide-bell',
   to: `${dashboardBase}/settings/notifications`
 }, {
-  label: 'Security',
+  label: t('navigation.security'),
   icon: 'i-lucide-shield',
   to: `${dashboardBase}/settings/security`
 }], [{
-  label: 'Documentation',
+  label: t('navigation.documentation'),
   icon: 'i-lucide-book-open',
   to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
   target: '_blank'
-}]] satisfies NavigationMenuItem[][]
+}]]) satisfies NavigationMenuItem[][]
 </script>
 
 <template>
   <UDashboardPanel id="settings" :ui="{ body: 'lg:py-12' }">
     <template #header>
-      <UDashboardNavbar title="Settings">
+      <UDashboardNavbar :title="t('settings.title')">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>

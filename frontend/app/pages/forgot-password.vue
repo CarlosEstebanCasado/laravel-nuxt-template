@@ -7,9 +7,11 @@ definePageMeta({
   middleware: 'guest'
 })
 
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Forgot password',
-  description: 'Request a password reset link'
+  title: t('auth.forgot.seo_title'),
+  description: t('auth.forgot.seo_description')
 })
 
 const toast = useToast()
@@ -20,19 +22,19 @@ const isSubmitting = ref(false)
 const isCompleted = ref(false)
 
 const schema = z.object({
-  email: z.string().email('Invalid email')
+  email: z.string().email(t('messages.validation.invalid_email'))
 })
 
 type Schema = z.output<typeof schema>
 
-const fields = [{
+const fields = computed(() => [{
   name: 'email',
   type: 'text' as const,
-  label: 'Email',
-  placeholder: 'Enter your email',
+  label: t('auth.fields.email_label'),
+  placeholder: t('auth.fields.email_placeholder'),
   autocomplete: 'email',
   required: true
-}]
+}])
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   if (isSubmitting.value || isCompleted.value) {
@@ -45,13 +47,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     isCompleted.value = true
     toast.add({
-      title: 'Email sent',
-      description: 'If your email exists in our records, you will receive a reset link shortly.'
+      title: t('auth.forgot.toast_success_title'),
+      description: t('auth.forgot.toast_success_description')
     })
   } catch (error: any) {
-    const message = error?.data?.message || error?.message || 'Unable to send reset link, please try again.'
+    const message = error?.data?.message || error?.message || t('auth.forgot.toast_error_description')
     toast.add({
-      title: 'Request failed',
+      title: t('auth.forgot.toast_error_title'),
       description: message,
       color: 'error'
     })
@@ -68,43 +70,44 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       :fields="fields"
       :schema="schema"
       :loading="isSubmitting"
-      title="Forgot password"
+      :title="t('auth.forgot.title')"
       icon="i-lucide-mail"
-      :submit="{ label: 'Send reset link' }"
+      :submit="{ label: t('auth.forgot.submit') }"
       @submit="onSubmit"
     >
       <template #description>
-        Enter the email associated with your account and we'll send you instructions to reset your password.
+        {{ t('auth.forgot.description') }}
       </template>
 
       <template #footer>
-        Remembered it? <ULink
+        {{ t('auth.forgot.remembered') }}
+        <ULink
           to="/login"
           class="text-primary font-medium"
-        >Return to login</ULink>.
+        >{{ t('auth.forgot.return_login') }}</ULink>.
       </template>
     </UAuthForm>
 
     <UPageCard
       v-else
-      title="Check your inbox"
+      :title="t('auth.forgot.completed_title')"
       icon="i-lucide-mail-check"
       class="text-center"
     >
       <p class="text-sm text-muted">
-        If the email you provided is registered, you'll receive a message with a reset link.
+        {{ t('auth.forgot.completed_description') }}
       </p>
 
       <div class="mt-6 flex flex-col gap-2">
         <UButton
-          label="Return to login"
+          :label="t('auth.forgot.return_login')"
           color="neutral"
           variant="outline"
           block
           @click="router.push('/login')"
         />
         <UButton
-          label="Resend email"
+          :label="t('auth.forgot.resend')"
           color="neutral"
           variant="ghost"
           block

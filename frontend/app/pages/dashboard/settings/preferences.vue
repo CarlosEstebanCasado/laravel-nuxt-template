@@ -19,7 +19,12 @@ const isLoading = ref(true)
 const isSaving = ref(false)
 
 const localeOptions = computed(() => auth.preferenceOptions.value.locales)
-const themeOptions = computed(() => auth.preferenceOptions.value.themes)
+const themeOptions = computed(() =>
+  auth.preferenceOptions.value.themes.map((theme) => ({
+    ...theme,
+    label: t(`theme.${theme.value}` as const) ?? theme.label
+  }))
+)
 
 const syncPreferences = () => {
   if (!auth.preferences.value) {
@@ -58,8 +63,8 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
     })
   } catch (error: any) {
     toast.add({
-      title: 'Error',
-      description: error?.data?.message ?? 'Unable to save preferences.',
+      title: t('messages.generic_error'),
+      description: error?.data?.message ?? t('messages.generic_error'),
       color: 'error'
     })
   } finally {

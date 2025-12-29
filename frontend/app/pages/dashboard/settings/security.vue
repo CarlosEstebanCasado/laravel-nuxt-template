@@ -11,6 +11,7 @@ definePageMeta({
 const auth = useAuth()
 const toast = useToast()
 const router = useRouter()
+const { t } = useI18n()
 
 type SessionInfo = {
   id: string
@@ -98,7 +99,7 @@ const refreshSessions = async () => {
   } catch (error: any) {
     // If sessions are not enabled (SESSION_DRIVER not database/redis) or user not verified, show a friendly message.
     sessions.value = []
-    sessionsError.value = error?.data?.message || error?.message || 'Unable to load sessions.'
+    sessionsError.value = error?.data?.message || error?.message || t('settings.security.errors.sessions')
   } finally {
     isSessionsLoading.value = false
   }
@@ -114,8 +115,8 @@ const confirmRevokeOtherSessions = async () => {
     const result = await auth.revokeOtherSessions()
 
     toast.add({
-      title: 'Sessions updated',
-      description: `Signed out from ${result.revoked} other session${result.revoked === 1 ? '' : 's'}.`,
+      title: t('settings.security.toasts.sessions_updated'),
+      description: t('settings.security.toasts.sessions_description', { count: result.revoked }),
       color: 'success',
       icon: 'i-lucide-check',
     })
@@ -124,7 +125,7 @@ const confirmRevokeOtherSessions = async () => {
     await refreshSessions()
   } catch (error) {
     toast.add({
-      title: 'Action failed',
+      title: t('settings.security.toasts.action_failed'),
       description: extractErrorMessage(error),
       color: 'error',
     })
@@ -148,8 +149,8 @@ const confirmRevokeSession = async () => {
     await auth.revokeSession(sessionToRevoke.value.id)
 
     toast.add({
-      title: 'Session closed',
-      description: 'That session has been signed out.',
+      title: t('settings.security.toasts.session_closed'),
+      description: t('settings.security.toasts.session_closed_description'),
       color: 'success',
       icon: 'i-lucide-check',
     })
@@ -159,7 +160,7 @@ const confirmRevokeSession = async () => {
     await refreshSessions()
   } catch (error) {
     toast.add({
-      title: 'Action failed',
+      title: t('settings.security.toasts.action_failed'),
       description: extractErrorMessage(error),
       color: 'error',
     })
@@ -224,12 +225,12 @@ const refreshAudits = async (page = 1) => {
 
     auditsMeta.value = response.meta
   } catch (error: any) {
-    const message = error?.data?.message || error?.message || 'Unable to load activity.'
+    const message = error?.data?.message || error?.message || t('settings.security.errors.activity')
 
     // For "Load more", keep already-loaded items visible and just surface the error.
     if (isLoadMore) {
       toast.add({
-        title: 'Unable to load more activity',
+        title: t('settings.security.toasts.load_more_failed'),
         description: message,
         color: 'warning',
         icon: 'i-lucide-alert-triangle',
@@ -251,9 +252,9 @@ onMounted(() => {
 })
 
 const passwordSchema = z.object({
-  current_password: z.string().min(8, 'Must be at least 8 characters'),
-  password: z.string().min(8, 'Must be at least 8 characters'),
-  password_confirmation: z.string().min(8, 'Must be at least 8 characters')
+  current_password: z.string().min(8, t('messages.validation.password_min')),
+  password: z.string().min(8, t('messages.validation.password_min')),
+  password_confirmation: z.string().min(8, t('messages.validation.password_min'))
 })
 
 type PasswordSchema = z.output<typeof passwordSchema>
@@ -267,10 +268,10 @@ const password = reactive<Partial<PasswordSchema>>({
 const validate = (state: Partial<PasswordSchema>): FormError[] => {
   const errors: FormError[] = []
   if (state.current_password && state.password && state.current_password === state.password) {
-    errors.push({ name: 'password', message: 'Passwords must be different' })
+    errors.push({ name: 'password', message: t('messages.validation.passwords_different') })
   }
   if (state.password && state.password_confirmation && state.password !== state.password_confirmation) {
-    errors.push({ name: 'password_confirmation', message: 'Passwords do not match' })
+    errors.push({ name: 'password_confirmation', message: t('messages.validation.passwords_mismatch') })
   }
   return errors
 }
@@ -286,7 +287,7 @@ const extractErrorMessage = (error: unknown) => {
   if (typeof data?.message === 'string') {
     return data.message
   }
-  return (error as any)?.message || 'Unable to update your password, please try again.'
+  return (error as any)?.message || t('settings.security.errors.password')
 }
 
 const isSubmitting = ref(false)
@@ -307,8 +308,8 @@ async function onSubmit(event: FormSubmitEvent<PasswordSchema>) {
   try {
     await auth.updatePassword(event.data)
     toast.add({
-      title: 'Password updated',
-      description: 'Your password has been changed successfully.',
+      title: t('settings.security.toasts.password_updated'),
+      description: t('settings.security.toasts.password_description'),
       color: 'success',
       icon: 'i-lucide-check'
     })
@@ -318,7 +319,7 @@ async function onSubmit(event: FormSubmitEvent<PasswordSchema>) {
     password.password_confirmation = undefined
   } catch (error) {
     toast.add({
-      title: 'Update failed',
+      title: t('settings.security.toasts.action_failed'),
       description: extractErrorMessage(error),
       color: 'error',
     })
@@ -338,7 +339,7 @@ const extractDeleteErrorMessage = (error: unknown) => {
   if (typeof data?.message === 'string') {
     return data.message
   }
-  return (error as any)?.message || 'Unable to delete your account, please try again.'
+  return (error as any)?.message || t('settings.security.errors.delete')
 }
 
 const confirmDelete = async () => {
@@ -348,8 +349,8 @@ const confirmDelete = async () => {
 
   if (deleteState.confirmation !== 'DELETE') {
     toast.add({
-      title: 'Confirmation required',
-      description: 'Type DELETE to confirm account deletion.',
+      title: t('settings.security.toasts.delete_confirmation_required'),
+      description: t('settings.security.toasts.delete_confirmation_description'),
       color: 'error'
     })
     return
@@ -357,8 +358,8 @@ const confirmDelete = async () => {
 
   if (requiresPasswordForSensitiveActions.value && !deleteState.password?.trim()) {
     toast.add({
-      title: 'Password required',
-      description: 'Please confirm your password to delete your account.',
+      title: t('settings.security.toasts.delete_password_required'),
+      description: t('settings.security.toasts.delete_password_description'),
       color: 'error',
     })
     return
@@ -372,8 +373,8 @@ const confirmDelete = async () => {
     })
 
     toast.add({
-      title: 'Account deleted',
-      description: 'Your account has been removed.',
+      title: t('settings.security.toasts.account_deleted'),
+      description: t('settings.security.toasts.account_deleted_description'),
       color: 'success'
     })
 
@@ -381,7 +382,7 @@ const confirmDelete = async () => {
     await router.replace('/signup')
   } catch (error) {
     toast.add({
-      title: 'Delete failed',
+      title: t('settings.security.toasts.delete_failed'),
       description: extractDeleteErrorMessage(error),
       color: 'error'
     })
@@ -393,8 +394,8 @@ const confirmDelete = async () => {
 
 <template>
   <UPageCard
-    title="Password"
-    description="Confirm your current password before setting a new one."
+    :title="t('settings.security.password.title')"
+    :description="t('settings.security.password.description')"
     variant="subtle"
   >
     <UForm
@@ -408,7 +409,7 @@ const confirmDelete = async () => {
         <UInput
           v-model="password.current_password"
           type="password"
-          placeholder="Current password"
+          :placeholder="t('settings.security.password.current_placeholder')"
           class="w-full"
         />
       </UFormField>
@@ -417,7 +418,7 @@ const confirmDelete = async () => {
         <UInput
           v-model="password.password"
           type="password"
-          placeholder="New password"
+          :placeholder="t('settings.security.password.new_placeholder')"
           class="w-full"
         />
       </UFormField>
@@ -426,25 +427,25 @@ const confirmDelete = async () => {
         <UInput
           v-model="password.password_confirmation"
           type="password"
-          placeholder="Confirm new password"
+          :placeholder="t('settings.security.password.confirm_placeholder')"
           class="w-full"
         />
       </UFormField>
 
-      <UButton label="Update" class="w-fit" type="submit" :loading="isSubmitting" />
+      <UButton :label="t('settings.security.password.button')" class="w-fit" type="submit" :loading="isSubmitting" />
     </UForm>
   </UPageCard>
 
   <UPageCard
-    title="Sessions"
-    description="Where your account is currently signed in."
+    :title="t('settings.security.sessions.title')"
+    :description="t('settings.security.sessions.description')"
     variant="subtle"
     class="mt-6"
   >
     <div class="flex flex-col gap-3 max-w-2xl">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <UButton
-          label="Close other sessions"
+          :label="t('actions.close_other_sessions')"
           icon="i-lucide-log-out"
           color="neutral"
           variant="subtle"
@@ -454,7 +455,7 @@ const confirmDelete = async () => {
         />
 
         <UButton
-          label="Refresh"
+          :label="t('actions.refresh')"
           icon="i-lucide-refresh-cw"
           color="neutral"
           variant="ghost"
@@ -471,7 +472,7 @@ const confirmDelete = async () => {
 
       <UAlert
         v-else-if="sessionsError"
-        title="Unable to load sessions"
+        :title="t('settings.security.sessions.unable_title')"
         :description="sessionsError"
         color="warning"
         variant="subtle"
@@ -479,8 +480,8 @@ const confirmDelete = async () => {
 
       <UAlert
         v-else-if="sessions.length === 0"
-        title="No active sessions"
-        description="We couldn't find any active sessions for your account."
+        :title="t('settings.security.sessions.none_title')"
+        :description="t('settings.security.sessions.none_description')"
         icon="i-lucide-monitor"
         color="neutral"
         variant="subtle"
@@ -505,13 +506,13 @@ const confirmDelete = async () => {
                 {{ parseUserAgent(session.user_agent).browser }} · {{ parseUserAgent(session.user_agent).os }}
               </div>
               <UBadge v-if="session.is_current" color="success" variant="subtle">
-                Current session
+                {{ t('settings.security.sessions.current_badge') }}
               </UBadge>
             </div>
 
-            <UTooltip :text="session.user_agent || 'Unknown device'" :content="{ align: 'start', collisionPadding: 16 }">
+            <UTooltip :text="session.user_agent || t('settings.security.sessions.unknown_device')" :content="{ align: 'start', collisionPadding: 16 }">
               <div class="text-xs text-muted line-clamp-2">
-                {{ session.user_agent || 'Unknown device' }}
+                {{ session.user_agent || t('settings.security.sessions.unknown_device') }}
               </div>
             </UTooltip>
 
@@ -519,13 +520,13 @@ const confirmDelete = async () => {
               <div class="flex items-center gap-2 min-w-0">
                 <UIcon name="i-lucide-network" class="size-4 shrink-0" />
                 <span class="truncate">
-                  IP: <span class="font-medium text-default">{{ session.ip_address || 'Unknown' }}</span>
+                  {{ t('settings.security.sessions.ip_label') }}: <span class="font-medium text-default">{{ session.ip_address || t('settings.security.sessions.unknown_device') }}</span>
                 </span>
               </div>
               <div class="flex items-center gap-2 min-w-0">
                 <UIcon name="i-lucide-clock" class="size-4 shrink-0" />
                 <span class="truncate">
-                  Last active: <span class="font-medium text-default">{{ formatLastActivityRelative(session.last_activity) }}</span>
+                  {{ t('settings.security.sessions.last_active_label') }}: <span class="font-medium text-default">{{ formatLastActivityRelative(session.last_activity) }}</span>
                 </span>
               </div>
               <div class="flex items-center gap-2 sm:col-span-2 min-w-0">
@@ -540,7 +541,7 @@ const confirmDelete = async () => {
           <div class="shrink-0">
             <UButton
               v-if="!session.is_current"
-              label="Sign out"
+              :label="t('actions.sign_out')"
               icon="i-lucide-log-out"
               color="neutral"
               variant="ghost"
@@ -554,14 +555,14 @@ const confirmDelete = async () => {
 
     <UModal
       v-model:open="isRevokeOthersOpen"
-      title="Close other sessions"
-      description="This will sign you out from other browsers/devices where your account is currently active."
+      :title="t('settings.security.modals.close_sessions.title')"
+      :description="t('settings.security.modals.close_sessions.description')"
     >
       <template #body>
         <div class="space-y-4">
           <UAlert
-            title="You will stay signed in on this device"
-            description="If you think someone else has access, closing other sessions is a good first step."
+            :title="t('settings.security.modals.close_sessions.alert_title')"
+            :description="t('settings.security.modals.close_sessions.alert_description')"
             icon="i-lucide-shield"
             color="neutral"
             variant="subtle"
@@ -569,14 +570,14 @@ const confirmDelete = async () => {
 
           <div class="flex justify-end gap-2">
             <UButton
-              label="Cancel"
+              :label="t('actions.cancel')"
               color="neutral"
               variant="subtle"
               :disabled="isRevokingOthers"
               @click="isRevokeOthersOpen = false"
             />
             <UButton
-              label="Close other sessions"
+              :label="t('actions.close_other_sessions')"
               color="neutral"
               :loading="isRevokingOthers"
               @click="confirmRevokeOtherSessions"
@@ -588,14 +589,14 @@ const confirmDelete = async () => {
 
     <UModal
       v-model:open="isRevokeSessionOpen"
-      title="Sign out session"
-      description="This will sign out the selected session."
+      :title="t('settings.security.modals.sign_out.title')"
+      :description="t('settings.security.modals.sign_out.description')"
     >
       <template #body>
         <div class="space-y-4">
           <UAlert
-            title="This session will be signed out"
-            :description="sessionToRevoke?.user_agent || 'Unknown device'"
+            :title="t('settings.security.modals.sign_out.alert_title')"
+            :description="sessionToRevoke?.user_agent || t('settings.security.sessions.unknown_device')"
             icon="i-lucide-log-out"
             color="neutral"
             variant="subtle"
@@ -603,14 +604,14 @@ const confirmDelete = async () => {
 
           <div class="flex justify-end gap-2">
             <UButton
-              label="Cancel"
+              :label="t('actions.cancel')"
               color="neutral"
               variant="subtle"
               :disabled="isRevokingSession"
               @click="isRevokeSessionOpen = false"
             />
             <UButton
-              label="Sign out session"
+              :label="t('settings.security.sessions.sign_out')"
               color="neutral"
               :loading="isRevokingSession"
               @click="confirmRevokeSession"
@@ -622,15 +623,15 @@ const confirmDelete = async () => {
   </UPageCard>
 
   <UPageCard
-    title="Recent activity"
-    description="Security-related actions on your account."
+    :title="t('settings.security.activity.title')"
+    :description="t('settings.security.activity.description')"
     variant="subtle"
     class="mt-6"
   >
     <div class="flex flex-col gap-3 max-w-2xl">
       <div class="flex justify-end">
         <UButton
-          label="Refresh"
+          :label="t('actions.refresh')"
           icon="i-lucide-refresh-cw"
           color="neutral"
           variant="ghost"
@@ -648,7 +649,7 @@ const confirmDelete = async () => {
 
       <UAlert
         v-else-if="auditsError"
-        title="Unable to load activity"
+        :title="t('settings.security.activity.unable_title')"
         :description="auditsError"
         color="warning"
         variant="subtle"
@@ -656,8 +657,8 @@ const confirmDelete = async () => {
 
       <UAlert
         v-else-if="audits.length === 0"
-        title="No activity yet"
-        description="When you perform actions like changing your password or closing sessions, they will appear here."
+        :title="t('settings.security.activity.empty_title')"
+        :description="t('settings.security.activity.empty_description')"
         icon="i-lucide-activity"
         color="neutral"
         variant="subtle"
@@ -698,7 +699,7 @@ const confirmDelete = async () => {
 
         <div v-if="auditsMeta && auditsMeta.total > audits.length" class="flex justify-end">
           <UButton
-            label="Load more"
+            :label="t('actions.load_more')"
             color="neutral"
             variant="subtle"
             size="sm"
@@ -712,46 +713,46 @@ const confirmDelete = async () => {
   </UPageCard>
 
   <UPageCard
-    title="Account"
-    description="No longer want to use our service? You can delete your account here. This action is not reversible. All information related to this account will be deleted permanently."
+    :title="t('settings.security.account.title')"
+    :description="t('settings.security.account.description')"
     class="bg-linear-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
-      <UModal v-model:open="isDeleteOpen" title="Delete account" description="This action is permanent.">
-        <UButton label="Delete account" color="error" />
+      <UModal v-model:open="isDeleteOpen" :title="t('settings.security.modals.account.title')" :description="t('settings.security.modals.account.description')">
+        <UButton :label="t('actions.delete_account')" color="error" />
 
         <template #body>
           <div class="space-y-4">
             <UAlert
-              title="This cannot be undone"
-              description="Type DELETE to confirm. If your account has a password, you'll be asked to confirm it."
+              :title="t('settings.security.modals.account.alert_title')"
+              :description="t('settings.security.modals.account.alert_description')"
               color="error"
               variant="subtle"
             />
 
-            <UFormField name="confirmation" label="Type DELETE to confirm">
+            <UFormField name="confirmation" :label="t('settings.security.modals.account.confirm_label')">
               <UInput v-model="deleteState.confirmation" placeholder="DELETE" />
             </UFormField>
 
             <UFormField
               v-if="requiresPasswordForSensitiveActions"
               name="password"
-              label="Password"
+              :label="t('settings.security.modals.account.password_label')"
               required
             >
-              <UInput v-model="deleteState.password" type="password" placeholder="Your current password" />
+              <UInput v-model="deleteState.password" type="password" :placeholder="t('settings.security.modals.account.password_placeholder')" />
             </UFormField>
 
             <div class="flex justify-end gap-2">
               <UButton
-                label="Cancel"
+                :label="t('actions.cancel')"
                 color="neutral"
                 variant="subtle"
                 :disabled="isDeleting"
                 @click="isDeleteOpen = false"
               />
               <UButton
-                label="Delete permanently"
+                :label="t('actions.delete_permanently')"
                 color="error"
                 :loading="isDeleting"
                 @click="confirmDelete"
