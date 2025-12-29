@@ -5,40 +5,9 @@ defineProps<{
   collapsed?: boolean
 }>()
 
-const colorMode = useColorMode()
-const appConfig = useAppConfig()
 const auth = useAuth()
 const router = useRouter()
 const { t } = useI18n()
-
-const updateThemePreference = async (theme: 'system' | 'light' | 'dark') => {
-  colorMode.preference = theme
-  if (!auth.isAuthenticated.value) {
-    return
-  }
-
-  try {
-    await auth.updatePreferences({ theme })
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-const colors = ['red', 'orange', 'amber', 'yellow', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet', 'purple', 'fuchsia', 'pink', 'rose']
-const neutrals = ['slate', 'gray', 'zinc', 'neutral', 'stone']
-const translateColor = (color: string) => t(`colors.${color}` as const) ?? color
-
-const persistColorPreference = async (payload: { primary_color?: string, neutral_color?: string }) => {
-  if (!auth.isAuthenticated.value) {
-    return
-  }
-
-  try {
-    await auth.updatePreferences(payload)
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 const dashboardBase = '/dashboard'
 
@@ -70,89 +39,6 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   label: t('userMenu.settings'),
   icon: 'i-lucide-settings',
   to: `${dashboardBase}/settings`
-}], [{
-  label: t('userMenu.theme'),
-  icon: 'i-lucide-palette',
-  children: [{
-    label: t('userMenu.primary'),
-    slot: 'chip',
-    chip: appConfig.ui.colors.primary,
-    content: {
-      align: 'center',
-      collisionPadding: 16
-    },
-    children: colors.map(color => ({
-      label: translateColor(color),
-      chip: color,
-      slot: 'chip',
-      checked: appConfig.ui.colors.primary === color,
-      type: 'checkbox',
-      onSelect: (e) => {
-        e.preventDefault()
-
-        appConfig.ui.colors.primary = color
-
-        if (auth.preferences.value?.primary_color === color) {
-          return
-        }
-
-        void persistColorPreference({ primary_color: color })
-      }
-    }))
-  }, {
-    label: t('userMenu.neutral'),
-    slot: 'chip',
-    chip: appConfig.ui.colors.neutral === 'neutral' ? 'old-neutral' : appConfig.ui.colors.neutral,
-    content: {
-      align: 'end',
-      collisionPadding: 16
-    },
-    children: neutrals.map(color => ({
-      label: translateColor(color),
-      chip: color === 'neutral' ? 'old-neutral' : color,
-      slot: 'chip',
-      type: 'checkbox',
-      checked: appConfig.ui.colors.neutral === color,
-      onSelect: (e) => {
-        e.preventDefault()
-
-        appConfig.ui.colors.neutral = color
-
-        if (auth.preferences.value?.neutral_color === color) {
-          return
-        }
-
-        void persistColorPreference({ neutral_color: color })
-      }
-    }))
-  }]
-}, {
-  label: t('userMenu.appearance'),
-  icon: 'i-lucide-sun-moon',
-  children: [{
-    label: t('userMenu.light'),
-    icon: 'i-lucide-sun',
-    type: 'checkbox',
-    checked: colorMode.value === 'light',
-    onSelect(e: Event) {
-      e.preventDefault()
-
-      updateThemePreference('light')
-    }
-  }, {
-    label: t('userMenu.dark'),
-    icon: 'i-lucide-moon',
-    type: 'checkbox',
-    checked: colorMode.value === 'dark',
-    onUpdateChecked(checked: boolean) {
-      if (checked) {
-        updateThemePreference('dark')
-      }
-    },
-    onSelect(e: Event) {
-      e.preventDefault()
-    }
-  }]
 }], [{
   label: t('userMenu.templates'),
   icon: 'i-lucide-layout-template',
@@ -226,16 +112,5 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
       }"
     />
 
-    <template #chip-leading="{ item }">
-      <div class="inline-flex items-center justify-center shrink-0 size-5">
-        <span
-          class="rounded-full ring ring-bg bg-(--chip-light) dark:bg-(--chip-dark) size-2"
-          :style="{
-            '--chip-light': `var(--color-${(item as any).chip}-500)`,
-            '--chip-dark': `var(--color-${(item as any).chip}-400)`
-          }"
-        />
-      </div>
-    </template>
   </UDropdownMenu>
 </template>
