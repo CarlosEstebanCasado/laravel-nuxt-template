@@ -266,7 +266,7 @@ export function useAuth() {
 
     const authUser = handleAuthSuccess(response)
     await fetchPreferences(true).catch((error) => {
-      console.error('Failed to sync user preferences after login', error)
+      console.error(error)
       return null
     })
     return authUser
@@ -291,7 +291,7 @@ export function useAuth() {
 
     const authUser = handleAuthSuccess(response)
     await fetchPreferences(true).catch((error) => {
-      console.error('Failed to sync user preferences after registration', error)
+      console.error(error)
       return null
     })
     return authUser
@@ -430,7 +430,10 @@ export function useAuth() {
       )
       user.value = response.data
       if (user.value) {
-        await fetchPreferences(true)
+        await fetchPreferences(true).catch((error) => {
+          console.error(error)
+          return null
+        })
       } else {
         resetPreferences()
       }
