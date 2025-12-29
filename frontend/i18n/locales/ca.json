@@ -304,7 +304,7 @@
       }
     },
     "security": {
-      "password": {
+      "password_section": {
         "title": "Contrasenya",
         "description": "Confirma la contrasenya actual abans de definir-ne una de nova.",
         "current_placeholder": "Contrasenya actual",

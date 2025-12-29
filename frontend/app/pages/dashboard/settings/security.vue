@@ -394,8 +394,8 @@ const confirmDelete = async () => {
 
 <template>
   <UPageCard
-    :title="t('settings.security.password.title')"
-    :description="t('settings.security.password.description')"
+    :title="t('settings.security.password_section.title')"
+    :description="t('settings.security.password_section.description')"
     variant="subtle"
   >
     <UForm
@@ -409,7 +409,7 @@ const confirmDelete = async () => {
         <UInput
           v-model="password.current_password"
           type="password"
-          :placeholder="t('settings.security.password.current_placeholder')"
+          :placeholder="t('settings.security.password_section.current_placeholder')"
           class="w-full"
         />
       </UFormField>
@@ -418,7 +418,7 @@ const confirmDelete = async () => {
         <UInput
           v-model="password.password"
           type="password"
-          :placeholder="t('settings.security.password.new_placeholder')"
+          :placeholder="t('settings.security.password_section.new_placeholder')"
           class="w-full"
         />
       </UFormField>
@@ -427,12 +427,12 @@ const confirmDelete = async () => {
         <UInput
           v-model="password.password_confirmation"
           type="password"
-          :placeholder="t('settings.security.password.confirm_placeholder')"
+          :placeholder="t('settings.security.password_section.confirm_placeholder')"
           class="w-full"
         />
       </UFormField>
 
-      <UButton :label="t('settings.security.password.button')" class="w-fit" type="submit" :loading="isSubmitting" />
+      <UButton :label="t('settings.security.password_section.button')" class="w-fit" type="submit" :loading="isSubmitting" />
     </UForm>
   </UPageCard>
 
