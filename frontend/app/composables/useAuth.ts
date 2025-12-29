@@ -2,6 +2,8 @@ import { joinURL } from 'ufo'
 import type { AuthResponse, AuthUser } from '~/types/auth'
 import type { PreferencesResponse, UserPreferencesPayload } from '~/types/preferences'
 
+type SupportedLocale = 'es' | 'en' | 'ca'
+
 const CSRF_ENDPOINT = '/sanctum/csrf-cookie'
 
 const useAuthUserState = () => useState<AuthUser | null>('auth:user', () => null)
@@ -75,12 +77,12 @@ export function useAuth() {
   const preferences = usePreferencesState()
   const preferencesFetched = usePreferencesFetchedState()
   const preferenceOptions = usePreferenceOptionsState()
-  const localeState = useState<string>('auth:active-locale', () => nuxtApp.$i18n?.locale.value ?? 'es')
+  const localeState = useState<SupportedLocale>('auth:active-locale', () => (nuxtApp.$i18n?.locale.value as SupportedLocale) ?? 'es')
   const colorMode = useColorMode()
 
   const getActiveLocale = () => nuxtApp.$i18n?.locale ?? localeState
 
-  const setActiveLocale = (newLocale: string) => {
+  const setActiveLocale = (newLocale: SupportedLocale) => {
     localeState.value = newLocale
     if (nuxtApp.$i18n?.locale) {
       nuxtApp.$i18n.locale.value = newLocale

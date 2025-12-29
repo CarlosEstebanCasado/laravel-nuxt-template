@@ -114,5 +114,5 @@ export default defineNuxtConfig({
       { code: 'ca', iso: 'ca-ES', file: 'ca.json', name: 'Català' }
     ],
     vueI18n: './i18n.config.ts'
-  }
+  } as any
 })

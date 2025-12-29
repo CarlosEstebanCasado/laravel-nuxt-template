@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
+import type { UserPreferencesPayload } from '~/types/preferences'
+
+type ThemePreference = UserPreferencesPayload['theme']
+type SupportedLocale = UserPreferencesPayload['locale']
 
 definePageMeta({
   layout: 'dashboard',
@@ -10,7 +14,12 @@ const auth = useAuth()
 const { t } = useI18n()
 const toast = useToast()
 
-const form = reactive({
+const form = reactive<{
+  locale: SupportedLocale
+  theme: ThemePreference
+  primary_color: string
+  neutral_color: string
+}>({
   locale: 'es',
   theme: 'system',
   primary_color: 'blue',

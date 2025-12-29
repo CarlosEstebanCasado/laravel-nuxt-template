@@ -9,7 +9,7 @@ definePageMeta({
 const dashboardBase = '/dashboard'
 const { t } = useI18n()
 
-const links = computed(() => [[{
+const links = computed<NavigationMenuItem[][]>(() => [[{
   label: t('navigation.general'),
   icon: 'i-lucide-user',
   to: `${dashboardBase}/settings`,
@@ -35,7 +35,7 @@ const links = computed(() => [[{
   icon: 'i-lucide-book-open',
   to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
   target: '_blank'
-}]]) satisfies NavigationMenuItem[][]
+}]])
 </script>
 
 <template>

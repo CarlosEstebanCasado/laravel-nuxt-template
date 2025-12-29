@@ -6,7 +6,6 @@ namespace Tests\Unit\IdentityAccess\Auth\User\Domain\Entity;
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\UserPreferences;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use Tests\Unit\IdentityAccess\Auth\User\Domain\ValueObject\UserIdMother;
-use Tests\Unit\Shared\Mother\WordMother;
 
 final class UserPreferencesMother
 {
@@ -15,7 +14,9 @@ final class UserPreferencesMother
         return new UserPreferences(
             $userId ?? UserIdMother::random(),
             locale: 'es',
-            theme: 'system'
+            theme: 'system',
+            primaryColor: 'blue',
+            neutralColor: 'slate'
         );
     }
 
@@ -24,7 +25,9 @@ final class UserPreferencesMother
         return new UserPreferences(
             $userId,
             $locale,
-            'system'
+            'system',
+            'blue',
+            'slate'
         );
     }
 
@@ -33,7 +36,9 @@ final class UserPreferencesMother
         return new UserPreferences(
             $userId,
             'es',
-            $theme
+            $theme,
+            'blue',
+            'slate'
         );
     }
 }

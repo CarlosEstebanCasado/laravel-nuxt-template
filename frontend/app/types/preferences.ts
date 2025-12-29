@@ -4,7 +4,7 @@ export interface PreferenceOption {
 }
 
 export interface UserPreferencesPayload {
-  locale: string
+  locale: 'es' | 'en' | 'ca'
   theme: 'system' | 'light' | 'dark'
   primary_color: string
   neutral_color: string

@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { DropdownMenuItem } from '@nuxt/ui'
+
 const { t } = useI18n()
 
-const items = computed(() => [{
+const items = computed<DropdownMenuItem[]>(() => [{
   label: t('templates.starter'),
   to: 'https://starter-template.nuxt.dev/'
 }, {
@@ -28,7 +30,7 @@ const items = computed(() => [{
 }, {
   label: t('templates.changelog'),
   to: 'https://changelog-template.nuxt.dev/'
-}])
+}] as DropdownMenuItem[])
 </script>
 
 <template>
