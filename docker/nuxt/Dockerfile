@@ -1,5 +1,13 @@
 FROM node:20-alpine
 
+RUN apk add --no-cache \
+    g++ \
+    make \
+    python3 \
+    vips-dev
+
+ENV npm_config_build_from_source=true
+
 WORKDIR /usr/src/app
 
 EXPOSE 3000

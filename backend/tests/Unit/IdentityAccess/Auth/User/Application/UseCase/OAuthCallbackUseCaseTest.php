@@ -38,10 +38,11 @@ final class OAuthCallbackUseCaseTest extends TestCase
 
     public function test_it_uses_provided_name(): void
     {
+        $name = WordMother::random();
         $request = new OAuthCallbackUseCaseRequest(
             provider: WordMother::random(),
             email: EmailMother::random(),
-            name: WordMother::random(),
+            name: $name,
             nickname: WordMother::random()
         );
         $password = WordMother::random();
@@ -58,7 +59,7 @@ final class OAuthCallbackUseCaseTest extends TestCase
             ->method('upsertOAuthUser')
             ->with(
                 self::equalTo(new EmailAddress($request->email)),
-                new UserName($request->name),
+                new UserName($name),
                 new AuthProvider($request->provider),
                 $this->isInstanceOf(DateTimeValue::class),
                 $password
