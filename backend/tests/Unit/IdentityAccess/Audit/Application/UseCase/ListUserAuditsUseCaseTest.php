@@ -28,7 +28,7 @@ final class ListUserAuditsUseCaseTest extends TestCase
         $this->responseConverter = new AuditListConverter(new AuditResponseItemConverter());
         $this->useCase = new ListUserAuditsUseCase(
             auditRepository: $this->auditRepository,
-            responseConverter: $this->responseConverter
+            auditListConverter: $this->responseConverter
         );
     }
 

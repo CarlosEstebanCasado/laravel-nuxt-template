@@ -28,7 +28,7 @@ final class ListUserSessionsUseCaseTest extends TestCase
         $this->converter = new SessionListConverter(new SessionResponseItemConverter());
         $this->useCase = new ListUserSessionsUseCase(
             sessionRepository: $this->sessions,
-            converter: $this->converter
+            sessionListConverter: $this->converter
         );
     }
 

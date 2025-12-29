@@ -29,8 +29,8 @@ final class DeleteAccountUseCaseTest extends TestCase
         $this->accounts = $this->createMock(AccountRepository::class);
         $this->audit = $this->createMock(AuditEventRecorder::class);
         $this->useCase = new DeleteAccountUseCase(
-            accounts: $this->accounts,
-            audit: $this->audit
+            accountRepository: $this->accounts,
+            auditEventRecorder: $this->audit
         );
     }
 

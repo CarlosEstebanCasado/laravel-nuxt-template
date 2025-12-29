@@ -22,7 +22,7 @@ final class UpdateUserPasswordUseCaseTest extends TestCase
         parent::setUp();
 
         $this->users = $this->createMock(UserRepository::class);
-        $this->useCase = new UpdateUserPasswordUseCase(users: $this->users);
+        $this->useCase = new UpdateUserPasswordUseCase(userRepository: $this->users);
     }
 
     public function test_it_updates_user_password(): void

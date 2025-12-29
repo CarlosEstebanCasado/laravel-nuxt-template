@@ -25,7 +25,7 @@ final class UpdateUserProfileUseCaseTest extends TestCase
         parent::setUp();
 
         $this->users = $this->createMock(UserRepository::class);
-        $this->useCase = new UpdateUserProfileUseCase(users: $this->users);
+        $this->useCase = new UpdateUserProfileUseCase(userRepository: $this->users);
     }
 
     public function test_it_resets_email_verification_when_required(): void

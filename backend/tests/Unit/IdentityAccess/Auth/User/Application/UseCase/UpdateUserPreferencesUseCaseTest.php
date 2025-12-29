@@ -24,7 +24,7 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
         $this->repository = $this->createMock(UserPreferencesRepository::class);
         $getUseCase = new GetUserPreferencesUseCase($this->repository);
         $this->useCase = new UpdateUserPreferencesUseCase(
-            preferences: $this->repository,
+            userPreferencesRepository: $this->repository,
             getUserPreferencesUseCase: $getUseCase
         );
     }

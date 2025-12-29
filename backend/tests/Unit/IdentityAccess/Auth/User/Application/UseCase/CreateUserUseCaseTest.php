@@ -24,7 +24,7 @@ final class CreateUserUseCaseTest extends TestCase
         parent::setUp();
 
         $this->users = $this->createMock(UserRepository::class);
-        $this->useCase = new CreateUserUseCase(users: $this->users);
+        $this->useCase = new CreateUserUseCase(userRepository: $this->users);
     }
 
     public function test_it_creates_password_user(): void

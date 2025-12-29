@@ -28,8 +28,8 @@ final class OAuthCallbackUseCaseTest extends TestCase
         $this->users = $this->createMock(UserRepository::class);
         $this->random = $this->createMock(RandomStringGenerator::class);
         $this->useCase = new OAuthCallbackUseCase(
-            users: $this->users,
-            random: $this->random
+            userRepository: $this->users,
+            randomStringGenerator: $this->random
         );
     }
 

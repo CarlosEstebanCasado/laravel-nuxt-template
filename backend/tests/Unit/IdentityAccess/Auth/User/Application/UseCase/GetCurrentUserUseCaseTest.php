@@ -30,9 +30,9 @@ final class GetCurrentUserUseCaseTest extends TestCase
         $this->preferences = $this->createMock(UserPreferencesRepository::class);
         $this->converter = new UserResponseConverter(new UserResponseItemConverter());
         $this->useCase = new GetCurrentUserUseCase(
-            users: $this->users,
-            preferences: $this->preferences,
-            converter: $this->converter
+            userRepository: $this->users,
+            userPreferencesRepository: $this->preferences,
+            userResponseConverter: $this->converter
         );
     }
 
