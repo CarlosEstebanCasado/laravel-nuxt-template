@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 class DeleteSessionController extends Controller
 {
     public function __construct(
-        private readonly RevokeSessionUseCase $useCase
+        private readonly RevokeSessionUseCase $revokeSessionUseCase
     ) {
     }
 
@@ -30,7 +30,7 @@ class DeleteSessionController extends Controller
         $currentSessionId = $request->session()->getId();
 
         try {
-            $revoked = $this->useCase->execute(new RevokeSessionUseCaseRequest(
+            $revoked = $this->revokeSessionUseCase->execute(new RevokeSessionUseCaseRequest(
                 userId: $userId,
                 sessionId: $id,
                 currentSessionId: (string) $currentSessionId,
@@ -53,4 +53,3 @@ class DeleteSessionController extends Controller
         return response()->json(status: 204);
     }
 }
-

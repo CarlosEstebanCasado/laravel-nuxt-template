@@ -12,14 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureHorizonAccess
 {
     public function __construct(
-        private readonly AuthFactory $auth
+        private readonly AuthFactory $authFactory
     ) {
     }
 
     public function handle(Request $request, Closure $next): Response
     {
         /** @var StatefulGuard $guard */
-        $guard = $this->auth->guard();
+        $guard = $this->authFactory->guard();
 
         // Only allow access to authenticated users.
         if (! $guard->check()) {

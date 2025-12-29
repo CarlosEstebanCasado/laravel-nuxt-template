@@ -15,7 +15,7 @@ class UpdateUserPasswordAction implements UpdatesUserPasswords
     use PasswordValidationRules;
 
     public function __construct(
-        private readonly UpdateUserPasswordUseCase $useCase
+        private readonly UpdateUserPasswordUseCase $updateUserPasswordUseCase
     ) {
     }
 
@@ -33,7 +33,7 @@ class UpdateUserPasswordAction implements UpdatesUserPasswords
             'current_password.current_password' => __('The provided password does not match your current password.'),
         ])->validateWithBag('updatePassword');
 
-        $this->useCase->execute(new UpdateUserPasswordUseCaseRequest(
+        $this->updateUserPasswordUseCase->execute(new UpdateUserPasswordUseCaseRequest(
             userId: $this->resolveUserId($user),
             password: $input['password'],
         ));

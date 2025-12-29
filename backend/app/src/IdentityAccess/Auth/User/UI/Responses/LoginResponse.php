@@ -14,7 +14,7 @@ use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 class LoginResponse implements LoginResponseContract
 {
     public function __construct(
-        private readonly GetCurrentUserUseCase $useCase
+        private readonly GetCurrentUserUseCase $getCurrentUserUseCase
     ) {
     }
 
@@ -23,7 +23,7 @@ class LoginResponse implements LoginResponseContract
         $request = $this->assertRequestInstance($request);
         $user = $this->requireUser($request);
 
-        $result = $this->useCase->execute(
+        $result = $this->getCurrentUserUseCase->execute(
             new GetCurrentUserUseCaseRequest(
                 userId: $this->requireUserId($user),
             )

@@ -15,8 +15,8 @@ use Illuminate\Validation\Rule;
 final class UserPreferencesController extends Controller
 {
     public function __construct(
-        private readonly GetUserPreferencesUseCase $getPreferences,
-        private readonly UpdateUserPreferencesUseCase $updatePreferences
+        private readonly GetUserPreferencesUseCase $getUserPreferencesUseCase,
+        private readonly UpdateUserPreferencesUseCase $updateUserPreferencesUseCase
     ) {
     }
 
@@ -24,7 +24,7 @@ final class UserPreferencesController extends Controller
     {
         $user = $this->requireUser($request);
 
-        $result = $this->getPreferences->execute(
+        $result = $this->getUserPreferencesUseCase->execute(
             new GetUserPreferencesUseCaseRequest(
                 userId: $this->requireUserId($user)
             )
@@ -69,7 +69,7 @@ final class UserPreferencesController extends Controller
             return $this->show($request);
         }
 
-        $result = $this->updatePreferences->execute(
+        $result = $this->updateUserPreferencesUseCase->execute(
             new UpdateUserPreferencesUseCaseRequest(
                 userId: $this->requireUserId($user),
                 locale: $validated['locale'] ?? null,

@@ -11,7 +11,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 final class UpdateUserProfileUseCase
 {
     public function __construct(
-        private readonly UserRepository $users
+        private readonly UserRepository $userRepository
     ) {
     }
 
@@ -23,7 +23,7 @@ final class UpdateUserProfileUseCase
         // Here we only decide whether to reset verification state.
         $resetEmailVerification = $request->isEmailChanging && $request->mustVerifyEmail;
 
-        $this->users->updateProfile(
+        $this->userRepository->updateProfile(
             id: $userId,
             name: $request->name,
             email: new EmailAddress($request->email),
@@ -35,5 +35,4 @@ final class UpdateUserProfileUseCase
         );
     }
 }
-
 

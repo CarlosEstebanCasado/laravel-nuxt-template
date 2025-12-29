@@ -11,8 +11,8 @@ use App\Src\Shared\Domain\Service\AuditEventRecorder;
 final class RevokeSessionUseCase
 {
     public function __construct(
-        private readonly SessionRepository $sessions,
-        private readonly AuditEventRecorder $audit
+        private readonly SessionRepository $sessionRepository,
+        private readonly AuditEventRecorder $auditEventRecorder
     ) {
     }
 
@@ -25,13 +25,13 @@ final class RevokeSessionUseCase
             throw new CannotRevokeCurrentSession('You cannot revoke the current session.');
         }
 
-        $deleted = $this->sessions->deleteForUser($request->sessionId, $request->userId);
+        $deleted = $this->sessionRepository->deleteForUser($request->sessionId, $request->userId);
 
         if ($deleted === 0) {
             return false;
         }
 
-        $this->audit->recordUserEvent(
+        $this->auditEventRecorder->recordUserEvent(
             userId: $request->userId,
             event: 'session_revoked',
             newValues: $request->auditNewValues ?: ['session_id' => $request->sessionId],
@@ -44,7 +44,6 @@ final class RevokeSessionUseCase
         return true;
     }
 }
-
 
 
 

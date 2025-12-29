@@ -14,7 +14,7 @@ use InvalidArgumentException;
 final class UpdateUserPreferencesUseCase
 {
     public function __construct(
-        private readonly UserPreferencesRepository $preferences,
+        private readonly UserPreferencesRepository $userPreferencesRepository,
         private readonly GetUserPreferencesUseCase $getUserPreferencesUseCase
     ) {
     }
@@ -23,7 +23,7 @@ final class UpdateUserPreferencesUseCase
     {
         $userId = new UserId($request->userId);
 
-        $preferences = $this->preferences->find($userId)
+        $preferences = $this->userPreferencesRepository->find($userId)
             ?? UserPreferences::default($userId);
 
         if ($request->locale !== null) {
@@ -46,7 +46,7 @@ final class UpdateUserPreferencesUseCase
             $preferences->updateNeutralColor($request->neutralColor);
         }
 
-        $this->preferences->save($preferences);
+        $this->userPreferencesRepository->save($preferences);
 
         return $this->getUserPreferencesUseCase->execute(
             new GetUserPreferencesUseCaseRequest(

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class SetLocaleFromRequest
 {
     public function __construct(
-        private readonly UserPreferencesRepository $preferences
+        private readonly UserPreferencesRepository $userPreferencesRepository
     ) {
     }
 
@@ -49,7 +49,7 @@ final class SetLocaleFromRequest
             $userId = is_numeric($authIdentifier) ? (int) $authIdentifier : null;
 
             if ($userId !== null) {
-                $preferences = $this->preferences->find(new UserId($userId));
+                $preferences = $this->userPreferencesRepository->find(new UserId($userId));
 
                 if ($preferences && in_array($preferences->locale(), $supportedLocales, true)) {
                     return $preferences->locale();

@@ -10,20 +10,19 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 final class UpdateUserPasswordUseCase
 {
     public function __construct(
-        private readonly UserRepository $users
+        private readonly UserRepository $userRepository
     ) {
     }
 
     public function execute(UpdateUserPasswordUseCaseRequest $request): void
     {
-        $this->users->updatePassword(
+        $this->userRepository->updatePassword(
             id: new UserId($request->userId),
             plainPassword: $request->password,
             passwordSetAt: new \DateTimeImmutable(),
         );
     }
 }
-
 
 
 

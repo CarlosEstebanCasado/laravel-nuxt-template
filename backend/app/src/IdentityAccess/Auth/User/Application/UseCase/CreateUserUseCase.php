@@ -11,13 +11,13 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 final class CreateUserUseCase
 {
     public function __construct(
-        private readonly UserRepository $users
+        private readonly UserRepository $userRepository
     ) {
     }
 
     public function execute(CreateUserUseCaseRequest $request): UserId
     {
-        return $this->users->createPasswordUser(
+        return $this->userRepository->createPasswordUser(
             name: $request->name,
             email: new EmailAddress($request->email),
             plainPassword: $request->password,
@@ -25,7 +25,6 @@ final class CreateUserUseCase
         );
     }
 }
-
 
 
 

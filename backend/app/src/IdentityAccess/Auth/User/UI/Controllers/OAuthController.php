@@ -22,7 +22,7 @@ class OAuthController extends Controller
     private array $providers = ['google', 'github'];
 
     public function __construct(
-        private readonly OAuthCallbackUseCase $callbackUseCase
+        private readonly OAuthCallbackUseCase $oAuthCallbackUseCase
     ) {
     }
 
@@ -47,7 +47,7 @@ class OAuthController extends Controller
             return $this->redirectToFrontend($provider, 'error', 'email_missing');
         }
 
-        $userId = $this->callbackUseCase->execute(new OAuthCallbackUseCaseRequest(
+        $userId = $this->oAuthCallbackUseCase->execute(new OAuthCallbackUseCaseRequest(
             provider: $provider,
             email: (string) $socialUser->getEmail(),
             name: $socialUser->getName(),

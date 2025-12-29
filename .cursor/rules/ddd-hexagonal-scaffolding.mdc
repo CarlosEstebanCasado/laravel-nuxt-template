@@ -101,6 +101,11 @@ backend/app/src/{Context}/{Module}/
   - Non-Eloquent adapter: `.../Infrastructure/{AdapterName}{Entity}Repository.php` (if needed)
 - **Mappers** (Domain ↔ Persistence/DTO): `.../Infrastructure/Mapper/**`
 - **Migrations**: cuando añadas columnas nuevas en cualquier tabla debes declararlas justo antes de `created_at`/`updated_at` en la migración. Así, al inspeccionar la tabla en la base de datos, los campos de tracking permanecen al final y las nuevas columnas quedan agrupadas con el resto de datos del dominio.
+- **Controllers**: son single-action. Cada controlador debe tener un único método público `__invoke()` y estar asociado a un solo endpoint. Nunca reutilizar un controlador para varios endpoints ni añadir métodos públicos extra.
+- **Dependency injection**: los nombres de las variables inyectadas deben coincidir exactamente con el nombre del fichero/clase (sin abreviar ni renombrar) para evitar ambigüedad.
+- **Entities**: todas las propiedades de las entidades deben ser Value Objects propios del dominio. No se permiten tipos primitivos (string/int/bool/array) como propiedades de entidades.
+- **Domain services**: cualquier acción que modifique parámetros de una entidad debe implementarse en un servicio de dominio. Evita mutaciones directas en entidades desde Application/Infrastructure/UI para poder reutilizar la lógica sin romper la arquitectura hexagonal.
+- **Eloquent models**: todos los modelos Eloquent deben estar auditados para registrar cualquier modificación.
 
 ## Localization + User Preferences
 - **Locales soportados** se declaran en `config/app.php` (`supported_locales`) y cualquier servicio que los necesite deberá leerlos desde configuración (nunca hardcodearlos). Cuando el contenedor no está bootstrapped (tests unitarios puros) debemos proveer un fallback seguro en el propio servicio.

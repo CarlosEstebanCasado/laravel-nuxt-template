@@ -14,7 +14,7 @@ class ResetUserPasswordAction implements ResetsUserPasswords
     use PasswordValidationRules;
 
     public function __construct(
-        private readonly ResetUserPasswordUseCase $useCase
+        private readonly ResetUserPasswordUseCase $resetUserPasswordUseCase
     ) {
     }
 
@@ -29,7 +29,7 @@ class ResetUserPasswordAction implements ResetsUserPasswords
             'password' => $this->passwordRules(),
         ])->validate();
 
-        $this->useCase->execute(new ResetUserPasswordUseCaseRequest(
+        $this->resetUserPasswordUseCase->execute(new ResetUserPasswordUseCaseRequest(
             userId: $this->resolveUserId($user),
             password: $input['password'],
         ));

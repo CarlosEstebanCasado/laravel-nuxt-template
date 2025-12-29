@@ -12,8 +12,8 @@ use App\Src\Shared\Domain\Service\RandomStringGenerator;
 final class OAuthCallbackUseCase
 {
     public function __construct(
-        private readonly UserRepository $users,
-        private readonly RandomStringGenerator $random
+        private readonly UserRepository $userRepository,
+        private readonly RandomStringGenerator $randomStringGenerator
     ) {
     }
 
@@ -27,9 +27,9 @@ final class OAuthCallbackUseCase
 
         // Social accounts typically don't know our local password.
         // We still set a random one for completeness.
-        $randomPassword = $this->random->generate(32);
+        $randomPassword = $this->randomStringGenerator->generate(32);
 
-        return $this->users->upsertOAuthUser(
+        return $this->userRepository->upsertOAuthUser(
             email: $email,
             name: $displayName,
             provider: $request->provider,
@@ -38,5 +38,4 @@ final class OAuthCallbackUseCase
         );
     }
 }
-
 

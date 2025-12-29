@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class RevokeOtherSessionsController extends Controller
 {
     public function __construct(
-        private readonly RevokeOtherSessionsUseCase $useCase
+        private readonly RevokeOtherSessionsUseCase $revokeOtherSessionsUseCase
     ) {
     }
 
@@ -28,7 +28,7 @@ class RevokeOtherSessionsController extends Controller
         $userId = $this->requireUserId($user);
         $currentSessionId = $request->session()->getId();
 
-        $revoked = $this->useCase->execute(new RevokeOtherSessionsUseCaseRequest(
+        $revoked = $this->revokeOtherSessionsUseCase->execute(new RevokeOtherSessionsUseCaseRequest(
             userId: $userId,
             currentSessionId: (string) $currentSessionId,
             url: $request->fullUrl(),
@@ -43,4 +43,3 @@ class RevokeOtherSessionsController extends Controller
         ]);
     }
 }
-

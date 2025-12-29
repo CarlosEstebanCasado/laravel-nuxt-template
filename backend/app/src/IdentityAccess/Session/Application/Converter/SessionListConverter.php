@@ -10,7 +10,7 @@ use App\Src\IdentityAccess\Session\Domain\Response\SessionCollectionResponse;
 final class SessionListConverter
 {
     public function __construct(
-        private readonly SessionResponseItemConverter $itemConverter
+        private readonly SessionResponseItemConverter $sessionResponseItemConverter
     ) {
     }
 
@@ -27,7 +27,7 @@ final class SessionListConverter
                 ? $session->markCurrent()
                 : $session;
 
-            $response->data[] = $this->itemConverter->toResponse($normalizedSession, $currentSessionId);
+            $response->data[] = $this->sessionResponseItemConverter->toResponse($normalizedSession, $currentSessionId);
         }
 
         return $response;

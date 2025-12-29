@@ -12,7 +12,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 final class GetUserPreferencesUseCase
 {
     public function __construct(
-        private readonly UserPreferencesRepository $preferences
+        private readonly UserPreferencesRepository $userPreferencesRepository
     ) {
     }
 
@@ -20,7 +20,7 @@ final class GetUserPreferencesUseCase
     {
         $userId = new UserId($request->userId);
 
-        $preferences = $this->preferences->find($userId)
+        $preferences = $this->userPreferencesRepository->find($userId)
             ?? UserPreferences::default($userId);
 
         return $this->buildResponse($preferences);

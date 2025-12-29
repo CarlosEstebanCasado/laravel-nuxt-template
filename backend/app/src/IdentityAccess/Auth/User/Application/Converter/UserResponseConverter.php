@@ -12,13 +12,13 @@ use App\Src\IdentityAccess\Auth\User\Domain\Entity\UserPreferences;
 final class UserResponseConverter
 {
     public function __construct(
-        private readonly UserResponseItemConverter $itemConverter
+        private readonly UserResponseItemConverter $userResponseItemConverter
     ) {
     }
 
     public function toResponse(User $user, ?UserPreferences $preferences = null): GetCurrentUserUseCaseResponse
     {
-        $response = $this->itemConverter->toResponse($user);
+        $response = $this->userResponseItemConverter->toResponse($user);
 
         if ($preferences !== null) {
             $response = new UserResponseItem(
