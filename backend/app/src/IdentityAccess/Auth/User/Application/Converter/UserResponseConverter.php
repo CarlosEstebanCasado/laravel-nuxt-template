@@ -31,10 +31,10 @@ final class UserResponseConverter
                 created_at: $response->created_at,
                 updated_at: $response->updated_at,
                 preferences: new UserPreferencesResponseItem(
-                    locale: $preferences->locale(),
-                    theme: $preferences->theme(),
-                    primary_color: $preferences->primaryColor(),
-                    neutral_color: $preferences->neutralColor(),
+                    locale: $preferences->locale()->toString(),
+                    theme: $preferences->theme()->toString(),
+                    primary_color: $preferences->primaryColor()->toString(),
+                    neutral_color: $preferences->neutralColor()->toString(),
                 ),
             );
         }

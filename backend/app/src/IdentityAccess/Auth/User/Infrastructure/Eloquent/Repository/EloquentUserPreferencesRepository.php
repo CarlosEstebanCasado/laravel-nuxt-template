@@ -5,8 +5,13 @@ namespace App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository;
 
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\UserPreferences;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\UserPreference;
+use InvalidArgumentException;
 
 final class EloquentUserPreferencesRepository implements UserPreferencesRepository
 {
@@ -31,10 +36,10 @@ final class EloquentUserPreferencesRepository implements UserPreferencesReposito
             'user_id' => $preferences->userId()->toInt(),
         ]);
 
-        $model->setAttribute('locale', $preferences->locale());
-        $model->setAttribute('theme', $preferences->theme());
-        $model->setAttribute('primary_color', $preferences->primaryColor());
-        $model->setAttribute('neutral_color', $preferences->neutralColor());
+        $model->setAttribute('locale', $preferences->locale()->toString());
+        $model->setAttribute('theme', $preferences->theme()->toString());
+        $model->setAttribute('primary_color', $preferences->primaryColor()->toString());
+        $model->setAttribute('neutral_color', $preferences->neutralColor()->toString());
         $model->save();
     }
 
@@ -63,14 +68,18 @@ final class EloquentUserPreferencesRepository implements UserPreferencesReposito
             ? $neutralColorValue
             : (is_string($fallbackNeutral) ? $fallbackNeutral : 'slate');
 
-        $userId = new UserId($isNumericId ? (int) $userIdValue : 0);
+        if (! $isNumericId) {
+            throw new InvalidArgumentException('User preferences user_id must be numeric.');
+        }
+
+        $userId = new UserId((int) $userIdValue);
 
         return new UserPreferences(
             $userId,
-            $locale,
-            $theme,
-            $primaryColor,
-            $neutralColor
+            new Locale($locale),
+            new Theme($theme),
+            new PrimaryColor($primaryColor),
+            new NeutralColor($neutralColor)
         );
     }
 }

@@ -7,6 +7,10 @@ use App\Src\IdentityAccess\Auth\User\Application\Request\GetUserPreferencesUseCa
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\GetUserPreferencesUseCase;
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\UserPreferences;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase as BaseTestCase;
@@ -49,7 +53,13 @@ final class GetUserPreferencesUseCaseTest extends BaseTestCase
     public function test_it_returns_saved_preferences(): void
     {
         $userId = new UserId(10);
-        $preferences = UserPreferences::create($userId, 'ca', 'dark', 'emerald', 'slate');
+        $preferences = UserPreferences::create(
+            $userId,
+            new Locale('ca'),
+            new Theme('dark'),
+            new PrimaryColor('emerald'),
+            new NeutralColor('slate')
+        );
 
         $this->repository
             ->expects($this->once())

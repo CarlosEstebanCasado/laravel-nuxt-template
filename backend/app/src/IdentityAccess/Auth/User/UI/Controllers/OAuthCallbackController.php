@@ -5,18 +5,16 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Controllers;
 
 use App\Src\IdentityAccess\Auth\User\Application\Request\OAuthCallbackUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\OAuthCallbackUseCase;
-use App\Src\Shared\UI\Controllers\Controller;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Shared\UI\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-class OAuthController extends Controller
+final class OAuthCallbackController extends Controller
 {
     /**
-     * Providers allowed for OAuth authentication.
-     *
      * @var array<int, string>
      */
     private array $providers = ['google', 'github'];
@@ -26,14 +24,7 @@ class OAuthController extends Controller
     ) {
     }
 
-    public function redirect(string $provider): RedirectResponse
-    {
-        $this->ensureProviderIsSupported($provider);
-
-        return Socialite::driver($provider)->redirect();
-    }
-
-    public function callback(string $provider): RedirectResponse
+    public function __invoke(string $provider): RedirectResponse
     {
         $this->ensureProviderIsSupported($provider);
 

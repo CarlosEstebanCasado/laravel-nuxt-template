@@ -30,10 +30,10 @@ final class GetUserPreferencesUseCase
     {
         return new GetUserPreferencesUseCaseResponse(
             data: [
-                'locale' => $preferences->locale(),
-                'theme' => $preferences->theme(),
-                'primary_color' => $preferences->primaryColor(),
-                'neutral_color' => $preferences->neutralColor(),
+                'locale' => $preferences->locale()->toString(),
+                'theme' => $preferences->theme()->toString(),
+                'primary_color' => $preferences->primaryColor()->toString(),
+                'neutral_color' => $preferences->neutralColor()->toString(),
             ],
             available_locales: $this->availableLocales(),
             available_themes: $this->availableThemes(),

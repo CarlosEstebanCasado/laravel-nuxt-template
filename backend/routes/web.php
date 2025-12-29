@@ -1,6 +1,7 @@
 <?php
 
-use App\Src\IdentityAccess\Auth\User\UI\Controllers\OAuthController;
+use App\Src\IdentityAccess\Auth\User\UI\Controllers\OAuthCallbackController;
+use App\Src\IdentityAccess\Auth\User\UI\Controllers\OAuthRedirectController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -13,9 +14,9 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::prefix('auth/oauth')->group(function (): void {
-    Route::get('{provider}', [OAuthController::class, 'redirect'])
+    Route::get('{provider}', OAuthRedirectController::class)
         ->name('oauth.redirect');
 
-    Route::get('{provider}/callback', [OAuthController::class, 'callback'])
+    Route::get('{provider}/callback', OAuthCallbackController::class)
         ->name('oauth.callback');
 });

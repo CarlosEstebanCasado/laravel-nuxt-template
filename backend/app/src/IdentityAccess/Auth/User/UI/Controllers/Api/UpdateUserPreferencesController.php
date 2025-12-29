@@ -12,28 +12,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-final class UserPreferencesController extends Controller
+final class UpdateUserPreferencesController extends Controller
 {
     public function __construct(
-        private readonly GetUserPreferencesUseCase $getUserPreferencesUseCase,
-        private readonly UpdateUserPreferencesUseCase $updateUserPreferencesUseCase
+        private readonly UpdateUserPreferencesUseCase $updateUserPreferencesUseCase,
+        private readonly GetUserPreferencesUseCase $getUserPreferencesUseCase
     ) {
     }
 
-    public function show(Request $request): JsonResponse
-    {
-        $user = $this->requireUser($request);
-
-        $result = $this->getUserPreferencesUseCase->execute(
-            new GetUserPreferencesUseCaseRequest(
-                userId: $this->requireUserId($user)
-            )
-        );
-
-        return response()->json($result);
-    }
-
-    public function update(Request $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         $user = $this->requireUser($request);
 
@@ -66,7 +53,13 @@ final class UserPreferencesController extends Controller
         ]);
 
         if ($validated === []) {
-            return $this->show($request);
+            $result = $this->getUserPreferencesUseCase->execute(
+                new GetUserPreferencesUseCaseRequest(
+                    userId: $this->requireUserId($user)
+                )
+            );
+
+            return response()->json($result);
         }
 
         $result = $this->updateUserPreferencesUseCase->execute(

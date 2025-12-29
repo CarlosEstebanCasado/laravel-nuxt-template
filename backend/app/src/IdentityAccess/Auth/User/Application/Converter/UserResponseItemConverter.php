@@ -12,7 +12,7 @@ final class UserResponseItemConverter
     {
         return new UserResponseItem(
             id: $user->id()->toInt(),
-            name: $user->name(),
+            name: $user->name()->toString(),
             email: $user->email()->toString(),
             email_verified_at: $this->formatDate($user->emailVerifiedAt()),
             auth_provider: $user->authProvider()->toString(),
@@ -22,8 +22,8 @@ final class UserResponseItemConverter
         );
     }
 
-    private function formatDate(?\DateTimeImmutable $date): ?string
+    private function formatDate(?\App\Src\Shared\Domain\ValueObject\DateTimeValue $date): ?string
     {
-        return $date?->format('Y-m-d\TH:i:sP');
+        return $date?->value()->format('Y-m-d\TH:i:sP');
     }
 }

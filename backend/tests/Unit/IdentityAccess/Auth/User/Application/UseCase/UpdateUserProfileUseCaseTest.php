@@ -9,6 +9,7 @@ use App\Src\IdentityAccess\Auth\User\Application\UseCase\UpdateUserProfileUseCas
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Shared\Mother\EmailMother;
@@ -43,7 +44,7 @@ final class UpdateUserProfileUseCaseTest extends TestCase
             ->method('updateProfile')
             ->with(
                 self::equalTo(new UserId($request->userId)),
-                $request->name,
+                new UserName($request->name),
                 self::equalTo(new EmailAddress($request->email)),
                 true
             );
@@ -69,7 +70,7 @@ final class UpdateUserProfileUseCaseTest extends TestCase
             ->method('updateProfile')
             ->with(
                 self::equalTo(new UserId($request->userId)),
-                $request->name,
+                new UserName($request->name),
                 self::equalTo(new EmailAddress($request->email)),
                 false
             );

@@ -8,6 +8,11 @@ use App\Src\IdentityAccess\Auth\User\Application\UseCase\GetUserPreferencesUseCa
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\UpdateUserPreferencesUseCase;
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\UserPreferences;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
+use App\Src\IdentityAccess\Auth\User\Domain\Service\UserPreferencesUpdater;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase as BaseTestCase;
@@ -25,7 +30,8 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
         $getUseCase = new GetUserPreferencesUseCase($this->repository);
         $this->useCase = new UpdateUserPreferencesUseCase(
             userPreferencesRepository: $this->repository,
-            getUserPreferencesUseCase: $getUseCase
+            getUserPreferencesUseCase: $getUseCase,
+            userPreferencesUpdater: new UserPreferencesUpdater()
         );
     }
 
@@ -33,7 +39,13 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
     {
         $userId = new UserId(5);
         $existing = UserPreferences::default($userId);
-        $updated = UserPreferences::create($userId, 'en', 'dark', 'emerald', 'gray');
+        $updated = UserPreferences::create(
+            $userId,
+            new Locale('en'),
+            new Theme('dark'),
+            new PrimaryColor('emerald'),
+            new NeutralColor('gray')
+        );
 
         $this->repository
             ->expects($this->exactly(2))
@@ -45,10 +57,10 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
             ->expects($this->once())
             ->method('save')
             ->with($this->callback(function (UserPreferences $preferences) {
-                return $preferences->locale() === 'en'
-                    && $preferences->theme() === 'dark'
-                    && $preferences->primaryColor() === 'emerald'
-                    && $preferences->neutralColor() === 'gray';
+                return $preferences->locale()->toString() === 'en'
+                    && $preferences->theme()->toString() === 'dark'
+                    && $preferences->primaryColor()->toString() === 'emerald'
+                    && $preferences->neutralColor()->toString() === 'gray';
             }));
 
         $response = $this->useCase->execute(

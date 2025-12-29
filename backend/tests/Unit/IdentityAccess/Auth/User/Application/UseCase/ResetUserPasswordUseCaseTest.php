@@ -38,7 +38,7 @@ final class ResetUserPasswordUseCaseTest extends TestCase
             ->with(
                 self::equalTo(new UserId($request->userId)),
                 $request->password,
-                null
+                $this->isNull()
             );
 
         $this->useCase->execute(request: $request);

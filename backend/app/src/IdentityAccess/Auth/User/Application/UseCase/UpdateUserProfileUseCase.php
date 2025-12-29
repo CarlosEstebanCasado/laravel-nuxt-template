@@ -7,6 +7,7 @@ use App\Src\IdentityAccess\Auth\User\Application\Request\UpdateUserProfileUseCas
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 
 final class UpdateUserProfileUseCase
 {
@@ -25,7 +26,7 @@ final class UpdateUserProfileUseCase
 
         $this->userRepository->updateProfile(
             id: $userId,
-            name: $request->name,
+            name: new UserName($request->name),
             email: new EmailAddress($request->email),
             resetEmailVerification: $resetEmailVerification,
         );
@@ -35,4 +36,3 @@ final class UpdateUserProfileUseCase
         );
     }
 }
-

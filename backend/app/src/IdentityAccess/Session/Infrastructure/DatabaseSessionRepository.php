@@ -7,6 +7,11 @@ use App\Src\IdentityAccess\Session\Domain\Collection\SessionCollection;
 use App\Src\IdentityAccess\Session\Domain\Entity\SessionInfo;
 use App\Src\IdentityAccess\Session\Domain\Repository\SessionRepository;
 use App\Src\IdentityAccess\Session\Domain\Response\SessionCollectionResponse;
+use App\Src\IdentityAccess\Session\Domain\ValueObject\SessionCurrent;
+use App\Src\IdentityAccess\Session\Domain\ValueObject\SessionId;
+use App\Src\IdentityAccess\Session\Domain\ValueObject\SessionLastActivity;
+use App\Src\Shared\Domain\ValueObject\IpAddress;
+use App\Src\Shared\Domain\ValueObject\UserAgent;
 use Illuminate\Support\Facades\DB;
 
 final class DatabaseSessionRepository implements SessionRepository
@@ -23,12 +28,19 @@ final class DatabaseSessionRepository implements SessionRepository
                 'last_activity',
             ])
             ->map(function ($row) {
+                $ipAddress = is_string($row->ip_address) && $row->ip_address !== ''
+                    ? new IpAddress($row->ip_address)
+                    : null;
+                $userAgent = is_string($row->user_agent) && $row->user_agent !== ''
+                    ? new UserAgent($row->user_agent)
+                    : null;
+
                 return new SessionInfo(
-                    id: (string) $row->id,
-                    ipAddress: $row->ip_address,
-                    userAgent: $row->user_agent,
-                    lastActivity: (int) $row->last_activity,
-                    isCurrent: false,
+                    id: new SessionId((string) $row->id),
+                    ipAddress: $ipAddress,
+                    userAgent: $userAgent,
+                    lastActivity: new SessionLastActivity((int) $row->last_activity),
+                    isCurrent: new SessionCurrent(false),
                 );
             })
             ->values()
@@ -55,5 +67,4 @@ final class DatabaseSessionRepository implements SessionRepository
             ->delete();
     }
 }
-
 

@@ -3,25 +3,29 @@ declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Domain\Entity;
 
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 
 final class UserPreferences
 {
     public function __construct(
         private readonly UserId $userId,
-        private string $locale,
-        private string $theme,
-        private string $primaryColor,
-        private string $neutralColor,
+        private readonly Locale $locale,
+        private readonly Theme $theme,
+        private readonly PrimaryColor $primaryColor,
+        private readonly NeutralColor $neutralColor,
     ) {
     }
 
     public static function create(
         UserId $userId,
-        string $locale,
-        string $theme,
-        string $primaryColor,
-        string $neutralColor
+        Locale $locale,
+        Theme $theme,
+        PrimaryColor $primaryColor,
+        NeutralColor $neutralColor
     ): self {
         return new self($userId, $locale, $theme, $primaryColor, $neutralColor);
     }
@@ -43,10 +47,10 @@ final class UserPreferences
 
         return new self(
             $userId,
-            $defaultLocale,
-            $defaultTheme,
-            $defaultPrimary,
-            $defaultNeutral
+            new Locale($defaultLocale),
+            new Theme($defaultTheme),
+            new PrimaryColor($defaultPrimary),
+            new NeutralColor($defaultNeutral)
         );
     }
 
@@ -55,44 +59,24 @@ final class UserPreferences
         return $this->userId;
     }
 
-    public function locale(): string
+    public function locale(): Locale
     {
         return $this->locale;
     }
 
-    public function theme(): string
+    public function theme(): Theme
     {
         return $this->theme;
     }
 
-    public function primaryColor(): string
+    public function primaryColor(): PrimaryColor
     {
         return $this->primaryColor;
     }
 
-    public function neutralColor(): string
+    public function neutralColor(): NeutralColor
     {
         return $this->neutralColor;
-    }
-
-    public function updateLocale(string $locale): void
-    {
-        $this->locale = $locale;
-    }
-
-    public function updateTheme(string $theme): void
-    {
-        $this->theme = $theme;
-    }
-
-    public function updatePrimaryColor(string $color): void
-    {
-        $this->primaryColor = $color;
-    }
-
-    public function updateNeutralColor(string $color): void
-    {
-        $this->neutralColor = $color;
     }
 
     private static function configString(string $key, string $fallback): string

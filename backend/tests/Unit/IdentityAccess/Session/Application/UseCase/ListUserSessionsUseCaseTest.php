@@ -8,6 +8,7 @@ use App\Src\IdentityAccess\Session\Application\Converter\SessionResponseItemConv
 use App\Src\IdentityAccess\Session\Application\Request\ListUserSessionsUseCaseRequest;
 use App\Src\IdentityAccess\Session\Application\UseCase\ListUserSessionsUseCase;
 use App\Src\IdentityAccess\Session\Domain\Repository\SessionRepository;
+use App\Src\IdentityAccess\Session\Domain\Service\SessionInfoCurrentMarker;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\IdentityAccess\Session\Domain\Response\SessionCollectionResponseMother;
@@ -25,7 +26,10 @@ final class ListUserSessionsUseCaseTest extends TestCase
         parent::setUp();
 
         $this->sessions = $this->createMock(SessionRepository::class);
-        $this->converter = new SessionListConverter(new SessionResponseItemConverter());
+        $this->converter = new SessionListConverter(
+            new SessionResponseItemConverter(),
+            new SessionInfoCurrentMarker()
+        );
         $this->useCase = new ListUserSessionsUseCase(
             sessionRepository: $this->sessions,
             sessionListConverter: $this->converter
@@ -39,7 +43,10 @@ final class ListUserSessionsUseCaseTest extends TestCase
             currentSessionId: WordMother::random()
         );
         $collection = SessionCollectionResponseMother::random();
-        $expectedConverter = new SessionListConverter(new SessionResponseItemConverter());
+        $expectedConverter = new SessionListConverter(
+            new SessionResponseItemConverter(),
+            new SessionInfoCurrentMarker()
+        );
         $expected = $expectedConverter->toResponse($collection, $request->currentSessionId);
 
         $this->sessions

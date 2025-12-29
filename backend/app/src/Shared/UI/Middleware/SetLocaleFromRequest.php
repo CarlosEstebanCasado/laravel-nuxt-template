@@ -51,8 +51,8 @@ final class SetLocaleFromRequest
             if ($userId !== null) {
                 $preferences = $this->userPreferencesRepository->find(new UserId($userId));
 
-                if ($preferences && in_array($preferences->locale(), $supportedLocales, true)) {
-                    return $preferences->locale();
+                if ($preferences && in_array($preferences->locale()->toString(), $supportedLocales, true)) {
+                    return $preferences->locale()->toString();
                 }
             }
         }

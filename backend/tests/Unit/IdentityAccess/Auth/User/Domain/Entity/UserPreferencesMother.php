@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace Tests\Unit\IdentityAccess\Auth\User\Domain\Entity;
 
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\UserPreferences;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use Tests\Unit\IdentityAccess\Auth\User\Domain\ValueObject\UserIdMother;
 
@@ -13,10 +17,10 @@ final class UserPreferencesMother
     {
         return new UserPreferences(
             $userId ?? UserIdMother::random(),
-            locale: 'es',
-            theme: 'system',
-            primaryColor: 'blue',
-            neutralColor: 'slate'
+            new Locale('es'),
+            new Theme('system'),
+            new PrimaryColor('blue'),
+            new NeutralColor('slate')
         );
     }
 
@@ -24,10 +28,10 @@ final class UserPreferencesMother
     {
         return new UserPreferences(
             $userId,
-            $locale,
-            'system',
-            'blue',
-            'slate'
+            new Locale($locale),
+            new Theme('system'),
+            new PrimaryColor('blue'),
+            new NeutralColor('slate')
         );
     }
 
@@ -35,10 +39,10 @@ final class UserPreferencesMother
     {
         return new UserPreferences(
             $userId,
-            'es',
-            $theme,
-            'blue',
-            'slate'
+            new Locale('es'),
+            new Theme($theme),
+            new PrimaryColor('blue'),
+            new NeutralColor('slate')
         );
     }
 }

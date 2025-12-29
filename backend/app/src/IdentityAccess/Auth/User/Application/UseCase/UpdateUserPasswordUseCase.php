@@ -6,6 +6,7 @@ namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
 use App\Src\IdentityAccess\Auth\User\Application\Request\UpdateUserPasswordUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 
 final class UpdateUserPasswordUseCase
 {
@@ -19,10 +20,9 @@ final class UpdateUserPasswordUseCase
         $this->userRepository->updatePassword(
             id: new UserId($request->userId),
             plainPassword: $request->password,
-            passwordSetAt: new \DateTimeImmutable(),
+            passwordSetAt: new DateTimeValue(new \DateTimeImmutable()),
         );
     }
 }
-
 
 

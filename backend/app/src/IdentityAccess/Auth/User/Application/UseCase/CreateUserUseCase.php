@@ -7,6 +7,8 @@ use App\Src\IdentityAccess\Auth\User\Application\Request\CreateUserUseCaseReques
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 
 final class CreateUserUseCase
 {
@@ -18,13 +20,12 @@ final class CreateUserUseCase
     public function execute(CreateUserUseCaseRequest $request): UserId
     {
         return $this->userRepository->createPasswordUser(
-            name: $request->name,
+            name: new UserName($request->name),
             email: new EmailAddress($request->email),
             plainPassword: $request->password,
-            passwordSetAt: new \DateTimeImmutable(),
+            passwordSetAt: new DateTimeValue(new \DateTimeImmutable()),
         );
     }
 }
-
 
 

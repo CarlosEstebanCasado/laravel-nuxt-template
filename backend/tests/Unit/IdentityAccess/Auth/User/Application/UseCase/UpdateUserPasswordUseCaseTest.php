@@ -7,6 +7,7 @@ use App\Src\IdentityAccess\Auth\User\Application\Request\UpdateUserPasswordUseCa
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\UpdateUserPasswordUseCase;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Tests\Unit\Shared\Mother\IntegerMother;
@@ -38,7 +39,7 @@ final class UpdateUserPasswordUseCaseTest extends TestCase
             ->with(
                 self::equalTo(new UserId($request->userId)),
                 $request->password,
-                $this->isInstanceOf(\DateTimeImmutable::class)
+                $this->isInstanceOf(DateTimeValue::class)
             );
 
         $this->useCase->execute(request: $request);

@@ -79,8 +79,8 @@ abstract class Collection implements Countable, IteratorAggregate
     public function sort(string $field = 'created_at', string $order = 'desc'): array
     {
         usort($this->items, function ($a, $b) use ($field, $order) {
-            $aValue = $this->extractSortableValue($a, $field);
-            $bValue = $this->extractSortableValue($b, $field);
+            $aValue = $this->normalizeValue($this->extractSortableValue($a, $field));
+            $bValue = $this->normalizeValue($this->extractSortableValue($b, $field));
 
             $result = $aValue <=> $bValue;
 
@@ -105,7 +105,7 @@ abstract class Collection implements Countable, IteratorAggregate
                 $currentValue = $this->descendValue($currentValue, $part);
             }
 
-            $groupKey = $this->stringifyGroupKey($currentValue);
+            $groupKey = $this->stringifyGroupKey($this->normalizeValue($currentValue));
 
             if (! isset($groupedResult[$groupKey])) {
                 $groupedResult[$groupKey] = [];
@@ -219,5 +219,28 @@ abstract class Collection implements Countable, IteratorAggregate
             'Unable to convert group key to string. Received %s',
             get_debug_type($value)
         ));
+    }
+
+    private function normalizeValue(mixed $value): mixed
+    {
+        if ($value instanceof \DateTimeInterface) {
+            return $value->getTimestamp();
+        }
+
+        if (is_object($value)) {
+            if (method_exists($value, 'toString')) {
+                return $value->toString();
+            }
+
+            if (method_exists($value, 'toInt')) {
+                return $value->toInt();
+            }
+
+            if (method_exists($value, 'value')) {
+                return $this->normalizeValue($value->value());
+            }
+        }
+
+        return $value;
     }
 }
