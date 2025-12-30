@@ -182,13 +182,19 @@ const confirmRevokeSession = async () => {
 const formatAuditTime = (iso: string) => formatDateTime(new Date(iso))
 const formatAuditRelative = (iso: string) =>
   formatDistanceToNow(new Date(iso), { addSuffix: true, locale: dateLocale.value })
+const tWithPlural = (key: string, count: number, params: Record<string, unknown> = {}) =>
+  (t as unknown as (key: string, count: number, params?: Record<string, unknown>) => string)(
+    key,
+    count,
+    { ...params, count }
+  )
 
 const auditTitle = (audit: AuditEntry) => {
   const event = audit.event
 
   if (event === 'sessions_revoked') {
     const n = Number((audit.new_values as any)?.revoked ?? 0)
-    return t('settings.security.activity.events.sessions_revoked', n, { count: n })
+    return tWithPlural('settings.security.activity.events.sessions_revoked', n)
   }
   if (event === 'session_revoked') {
     return t('settings.security.activity.events.session_revoked')
