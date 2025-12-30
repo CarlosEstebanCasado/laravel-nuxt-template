@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 EXPOSE 3000
 
-CMD ["sh", "-lc", "npm install && NODE_OPTIONS=--max-old-space-size=4096 npx nuxt dev --hostname 0.0.0.0 --port 3000"]
+CMD ["sh", "-lc", "npm install && NODE_OPTIONS=--max-old-space-size=4096 npm run dev -- --hostname 0.0.0.0 --port 3000"]
 
 # Production steps (reference)
 # COPY package*.json ./

@@ -52,17 +52,39 @@ const providers = [{
   onClick: () => handleProvider('github')
 }]
 
+const requiredField = () => t('messages.validation.required')
+const requiredString = (message: string) =>
+  z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z.string().min(1, message)
+  )
+const requiredEmail = (message: string) =>
+  z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z.string().min(1, requiredField()).email(message)
+  )
+
 const schema = z.object({
-  name: z.string().min(1, t('messages.validation.too_short')),
-  email: z.string().email(t('messages.validation.invalid_email')),
-  password: z.string().min(8, t('messages.validation.password_min')),
-  password_confirmation: z.string().min(8, t('messages.validation.password_min'))
+  name: requiredString(requiredField()),
+  email: requiredEmail(t('messages.validation.invalid_email')),
+  password: z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z
+      .string()
+      .min(1, requiredField())
+      .min(8, t('messages.validation.password_min'))
+  ),
+  password_confirmation: z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z
+      .string()
+      .min(1, requiredField())
+      .min(8, t('messages.validation.password_min'))
+  )
 }).refine((data) => data.password === data.password_confirmation, {
   message: t('messages.validation.passwords_mismatch'),
   path: ['password_confirmation'],
 })
-
-type Schema = z.output<typeof schema>
 
 const handleProvider = (provider: 'google' | 'github') => {
   auth.loginWithProvider(provider)
@@ -88,7 +110,14 @@ const extractErrorMessage = (error: unknown) => {
   return t('auth.signup.toast_error_title')
 }
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event?: FormSubmitEvent<Record<string, unknown>>) {
+  const data = event?.data ?? {}
+  const payload = {
+    name: String(data.name ?? ''),
+    email: String(data.email ?? ''),
+    password: String(data.password ?? ''),
+    password_confirmation: String(data.password_confirmation ?? '')
+  }
   if (isSubmitting.value) {
     return
   }
@@ -96,7 +125,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   isSubmitting.value = true
 
   try {
-    const user = await auth.register(event.data)
+    const user = await auth.register(payload)
 
     toast.add({
       title: t('auth.signup.toast_success_title'),

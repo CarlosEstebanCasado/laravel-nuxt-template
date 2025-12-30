@@ -1,9 +1,17 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
+const sharpOptionalPackages = [
+  '@img/sharp-linux-x64',
+  '@img/sharp-libvips-linux-x64',
+  '@img/sharp-linuxmusl-x64',
+  '@img/sharp-libvips-linuxmusl-x64'
+]
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
 
   modules: [
+    '~/modules/ensure-nuxt-image-binaries',
     '@nuxt/image',
     '@nuxt/ui',
     '@nuxt/content',
@@ -86,10 +94,33 @@ export default defineNuxtConfig({
     prerender: {
       routes: ['/'],
       crawlLinks: true
-    }
+    },
+    ...(process.env.NODE_ENV === 'production'
+      ? {
+          externals: {
+            trace: true,
+            inline: sharpOptionalPackages,
+            traceInclude: sharpOptionalPackages
+          }
+        }
+      : {})
   },
 
   vite: {
+    build: {
+      rollupOptions: {
+        onwarn(warning, warn) {
+          if (
+            warning.code === 'UNRESOLVED_IMPORT' &&
+            sharpOptionalPackages.some((pkg) => warning.message.includes(pkg))
+          ) {
+            return
+          }
+
+          warn(warning)
+        }
+      }
+    },
     server: {
       allowedHosts: ['nuxt', 'gateway', 'gateway-api', 'app.project.dev'],
       hmr: false

@@ -353,7 +353,18 @@
         "description": "Acciones relacionadas con la seguridad de tu cuenta.",
         "unable_title": "No pudimos cargar la actividad",
         "empty_title": "Aún no hay actividad",
-        "empty_description": "Cuando cambies la contraseña o cierres sesiones, aparecerán aquí."
+        "empty_description": "Cuando cambies la contraseña o cierres sesiones, aparecerán aquí.",
+        "events": {
+          "sessions_revoked": "Se ha cerrado {count} sesión adicional | Se han cerrado {count} sesiones adicionales",
+          "session_revoked": "Se ha cerrado una sesión",
+          "account_deleted": "Cuenta eliminada",
+          "password_changed": "Contraseña cambiada",
+          "email_changed": "Email cambiado",
+          "profile_updated": "Perfil actualizado",
+          "account_updated": "Cuenta actualizada",
+          "account_created": "Cuenta creada",
+          "generic": "{event}"
+        }
       },
       "account": {
         "title": "Cuenta",
@@ -431,6 +442,7 @@
     "generic_error": "Algo salió mal. Inténtalo de nuevo.",
     "sessions_empty": "No encontramos sesiones activas para tu cuenta.",
     "validation": {
+      "required": "Este campo es obligatorio",
       "too_short": "Demasiado corto",
       "invalid_email": "Email no válido",
       "password_min": "Debe tener al menos 8 caracteres",

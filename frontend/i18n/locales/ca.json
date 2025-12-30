@@ -353,7 +353,18 @@
         "description": "Accions relacionades amb la seguretat del teu compte.",
         "unable_title": "No hem pogut carregar l'activitat",
         "empty_title": "Encara no hi ha activitat",
-        "empty_description": "Quan canviïs la contrasenya o tanquis sessions, apareixeran aquí."
+        "empty_description": "Quan canviïs la contrasenya o tanquis sessions, apareixeran aquí.",
+        "events": {
+          "sessions_revoked": "S'ha tancat {count} sessió addicional | S'han tancat {count} sessions addicionals",
+          "session_revoked": "S'ha tancat una sessió",
+          "account_deleted": "Compte eliminat",
+          "password_changed": "Contrasenya canviada",
+          "email_changed": "Correu canviat",
+          "profile_updated": "Perfil actualitzat",
+          "account_updated": "Compte actualitzat",
+          "account_created": "Compte creat",
+          "generic": "{event}"
+        }
       },
       "account": {
         "title": "Compte",
@@ -431,6 +442,7 @@
     "generic_error": "Alguna cosa no ha anat bé. Torna-ho a provar.",
     "sessions_empty": "No hem trobat sessions actives per al teu compte.",
     "validation": {
+      "required": "Aquest camp es obligatori",
       "too_short": "Massa curt",
       "invalid_email": "Correu no vàlid",
       "password_min": "Ha de tenir almenys 8 caràcters",

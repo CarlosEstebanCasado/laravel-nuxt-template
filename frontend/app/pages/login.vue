@@ -20,6 +20,8 @@ const router = useRouter()
 const route = useRoute()
 const isSubmitting = ref(false)
 
+const requiredField = () => t('messages.validation.required')
+
 const fields = computed(() => [{
   name: 'email',
   type: 'text' as const,
@@ -49,11 +51,21 @@ const providers = [{
 
 const schema = z.object({
   remember: z.boolean().optional(),
-  email: z.string().email(t('messages.validation.invalid_email')),
-  password: z.string().min(8, t('messages.validation.password_min'))
+  email: z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z
+      .string()
+      .min(1, requiredField())
+      .email(t('messages.validation.invalid_email'))
+  ),
+  password: z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z
+      .string()
+      .min(1, requiredField())
+      .min(8, t('messages.validation.password_min'))
+  )
 })
-
-type Schema = z.output<typeof schema>
 
 const handleProvider = (provider: 'google' | 'github') => {
   auth.loginWithProvider(provider)
@@ -79,7 +91,14 @@ const extractErrorMessage = (error: unknown) => {
   return t('auth.login.error_generic')
 }
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event?: FormSubmitEvent<Record<string, unknown>>) {
+  const data = event?.data ?? {}
+  const payload = {
+    email: String(data.email ?? ''),
+    password: String(data.password ?? ''),
+    remember: data.remember === true
+  }
+
   if (isSubmitting.value) {
     return
   }
@@ -87,7 +106,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   isSubmitting.value = true
 
   try {
-    const user = await auth.login(event.data)
+    const user = await auth.login(payload)
 
     toast.add({
       title: t('auth.login.toast_success_title'),

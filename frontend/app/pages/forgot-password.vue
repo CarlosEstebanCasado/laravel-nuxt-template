@@ -21,11 +21,17 @@ const router = useRouter()
 const isSubmitting = ref(false)
 const isCompleted = ref(false)
 
-const schema = z.object({
-  email: z.string().email(t('messages.validation.invalid_email'))
-})
+const requiredField = () => t('messages.validation.required')
 
-type Schema = z.output<typeof schema>
+const schema = z.object({
+  email: z.preprocess(
+    (value) => (typeof value === 'string' ? value : ''),
+    z
+      .string()
+      .min(1, requiredField())
+      .email(t('messages.validation.invalid_email'))
+  )
+})
 
 const fields = computed(() => [{
   name: 'email',
@@ -36,14 +42,19 @@ const fields = computed(() => [{
   required: true
 }])
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event?: FormSubmitEvent<Record<string, unknown>>) {
+  const data = event?.data ?? {}
+  const payload = {
+    email: String(data.email ?? '')
+  }
+
   if (isSubmitting.value || isCompleted.value) {
     return
   }
 
   isSubmitting.value = true
   try {
-    await auth.requestPasswordReset({ email: event.data.email })
+    await auth.requestPasswordReset(payload)
 
     isCompleted.value = true
     toast.add({
