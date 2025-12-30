@@ -188,7 +188,7 @@ const auditTitle = (audit: AuditEntry) => {
 
   if (event === 'sessions_revoked') {
     const n = Number((audit.new_values as any)?.revoked ?? 0)
-    return t('settings.security.activity.events.sessions_revoked', { count: n })
+    return t('settings.security.activity.events.sessions_revoked', n, { count: n })
   }
   if (event === 'session_revoked') {
     return t('settings.security.activity.events.session_revoked')

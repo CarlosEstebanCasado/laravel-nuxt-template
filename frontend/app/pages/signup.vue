@@ -61,7 +61,7 @@ const requiredString = (message: string) =>
 const requiredEmail = (message: string) =>
   z.preprocess(
     (value) => (typeof value === 'string' ? value : ''),
-    z.string().email(message)
+    z.string().min(1, requiredField()).email(message)
   )
 
 const schema = z.object({

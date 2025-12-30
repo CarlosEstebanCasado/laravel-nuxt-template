@@ -72,21 +72,24 @@ const run = async () => {
   let child = startNuxt()
   let restarted = false
 
-  const ensureLoop = keepEnsuringDevShared()
+  const attachExitHandler = (processRef) => {
+    processRef.on('exit', async (code) => {
+      await keepEnsuringDevShared()
 
-  child.on('exit', async (code) => {
-    await ensureLoop
+      if (!restarted) {
+        restarted = true
+        await syncVueCjsProd()
+        child = startNuxt()
+        attachExitHandler(child)
+        keepEnsuringDevShared()
+        return
+      }
 
-    if (!restarted) {
-      restarted = true
-    await syncVueCjsProd()
-      child = startNuxt()
-      keepEnsuringDevShared()
-      return
-    }
+      process.exit(code ?? 0)
+    })
+  }
 
-    process.exit(code ?? 0)
-  })
+  attachExitHandler(child)
 }
 
 await run()
