@@ -355,7 +355,7 @@
         "empty_title": "Encara no hi ha activitat",
         "empty_description": "Quan canviïs la contrasenya o tanquis sessions, apareixeran aquí.",
         "events": {
-          "sessions_revoked": "S'han tancat {count} sessió addicional | S'han tancat {count} sessions addicionals",
+          "sessions_revoked": "S'ha tancat {count} sessió addicional | S'han tancat {count} sessions addicionals",
           "session_revoked": "S'ha tancat una sessió",
           "account_deleted": "Compte eliminat",
           "password_changed": "Contrasenya canviada",

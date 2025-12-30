@@ -355,7 +355,7 @@
         "empty_title": "Aún no hay actividad",
         "empty_description": "Cuando cambies la contraseña o cierres sesiones, aparecerán aquí.",
         "events": {
-          "sessions_revoked": "Se han cerrado {count} sesión adicional | Se han cerrado {count} sesiones adicionales",
+          "sessions_revoked": "Se ha cerrado {count} sesión adicional | Se han cerrado {count} sesiones adicionales",
           "session_revoked": "Se ha cerrado una sesión",
           "account_deleted": "Cuenta eliminada",
           "password_changed": "Contraseña cambiada",
