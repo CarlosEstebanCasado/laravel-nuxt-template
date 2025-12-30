@@ -69,11 +69,17 @@ const schema = z.object({
   email: requiredEmail(t('messages.validation.invalid_email')),
   password: z.preprocess(
     (value) => (typeof value === 'string' ? value : ''),
-    z.string().min(8, t('messages.validation.password_min'))
+    z
+      .string()
+      .min(1, requiredField())
+      .min(8, t('messages.validation.password_min'))
   ),
   password_confirmation: z.preprocess(
     (value) => (typeof value === 'string' ? value : ''),
-    z.string().min(8, t('messages.validation.password_min'))
+    z
+      .string()
+      .min(1, requiredField())
+      .min(8, t('messages.validation.password_min'))
   )
 }).refine((data) => data.password === data.password_confirmation, {
   message: t('messages.validation.passwords_mismatch'),
