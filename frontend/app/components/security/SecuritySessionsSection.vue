@@ -157,7 +157,7 @@ const extractErrorMessage = (error: unknown) => {
   if (typeof data?.message === 'string') {
     return data.message
   }
-  return (error as any)?.message || t('settings.security.errors.password')
+  return (error as any)?.message || t('settings.security.errors.sessions')
 }
 
 onMounted(() => {

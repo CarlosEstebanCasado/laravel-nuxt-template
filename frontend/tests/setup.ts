@@ -36,13 +36,17 @@ Object.assign(globalThis, {
 const stub = (name: string) => ({
   name,
   props: ['title', 'description', 'label', 'open', 'variant', 'color', 'icon', 'loading', 'disabled'],
-  template: `<div :data-stub="'${name}'"><slot /><slot name="header" /><slot name="body" /><slot name="footer" />{{ title }}{{ description }}{{ label }}</div>`
+  template: `<div :data-stub="'${name}'"><slot /><slot name="header" /><slot name="body" /><slot name="footer" /><slot name="right" />{{ title }}{{ description }}{{ label }}</div>`
 })
 
 config.global.stubs = {
   UPageCard: stub('UPageCard'),
   UHeader: stub('UHeader'),
-  UFooter: stub('UFooter'),
+  UFooter: {
+    name: 'UFooter',
+    props: ['ui'],
+    template: `<div data-stub="UFooter"><slot /><slot name="top" /><slot name="left" /><slot name="right" /></div>`
+  },
   UFooterColumns: stub('UFooterColumns'),
   UContainer: stub('UContainer'),
   UForm: stub('UForm'),
@@ -69,6 +73,13 @@ config.global.stubs = {
     template: `<nav data-stub="UNavigationMenu"></nav>`
   },
   UColorModeButton: stub('UColorModeButton'),
+  NuxtLink: {
+    name: 'NuxtLink',
+    props: ['to'],
+    template: `<a :href="to"><slot /></a>`
+  },
+  AppLogo: stub('AppLogo'),
+  TemplateMenu: stub('TemplateMenu'),
   USeparator: stub('USeparator'),
   UAuthForm: {
     name: 'UAuthForm',

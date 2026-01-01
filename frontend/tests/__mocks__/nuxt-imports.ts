@@ -39,6 +39,7 @@ let routerMock = {
 }
 
 let routeMock = {
+  path: '/',
   query: {},
   params: {}
 }

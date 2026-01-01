@@ -5,7 +5,7 @@ import AppFooter from '~/components/AppFooter.vue'
 describe('AppFooter', () => {
   it('renders footer columns', () => {
     const wrapper = mount(AppFooter)
-    const columns = wrapper.findComponent({ name: 'UFooterColumns' }).props('columns') as unknown[]
+    const columns = (wrapper.vm as { columns: unknown[] }).columns
 
     expect(columns).toHaveLength(3)
   })
