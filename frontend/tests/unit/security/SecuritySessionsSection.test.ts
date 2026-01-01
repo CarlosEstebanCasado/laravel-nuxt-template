@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { __setAuthMock, __setToastMock } from '#imports'
-import SecuritySessionsSection from '~/app/components/security/SecuritySessionsSection.vue'
+import SecuritySessionsSection from '~/components/security/SecuritySessionsSection.vue'
 
 describe('SecuritySessionsSection', () => {
   it('renders sessions after loading', async () => {

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { __setAuthMock, __setToastMock } from '#imports'
-import SecurityActivitySection from '~/app/components/security/SecurityActivitySection.vue'
+import SecurityActivitySection from '~/components/security/SecurityActivitySection.vue'
 
 describe('SecurityActivitySection', () => {
   it('renders audit entries', async () => {

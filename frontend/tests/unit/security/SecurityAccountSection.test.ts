@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { __setAuthMock, __setToastMock, __setRouterMock } from '#imports'
-import SecurityAccountSection from '~/app/components/security/SecurityAccountSection.vue'
+import SecurityAccountSection from '~/components/security/SecurityAccountSection.vue'
 
 describe('SecurityAccountSection', () => {
   it('renders the delete account action', () => {

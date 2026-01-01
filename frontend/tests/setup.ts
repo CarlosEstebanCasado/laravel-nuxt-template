@@ -1,4 +1,27 @@
 import { config } from '@vue/test-utils'
+import {
+  computed,
+  onMounted,
+  reactive,
+  ref,
+  useAuth,
+  useI18n,
+  useRouter,
+  useToast
+} from '#imports'
+import { useSecurityAuditFormat } from '~/composables/useSecurityAuditFormat'
+
+Object.assign(globalThis, {
+  computed,
+  onMounted,
+  reactive,
+  ref,
+  useAuth,
+  useI18n,
+  useRouter,
+  useToast,
+  useSecurityAuditFormat
+})
 
 const stub = (name: string) => ({
   name,

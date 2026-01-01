@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { __setAuthMock, __setToastMock } from '#imports'
-import SecurityPasswordSection from '~/app/components/security/SecurityPasswordSection.vue'
+import SecurityPasswordSection from '~/components/security/SecurityPasswordSection.vue'
 
 describe('SecurityPasswordSection', () => {
   it('renders the password section title', () => {

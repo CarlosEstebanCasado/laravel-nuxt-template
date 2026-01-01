@@ -140,5 +140,6 @@ ci-frontend:
 		npm audit --audit-level=high && \
 		npx eslint . && \
 		npx vue-tsc --noEmit && \
+		npm test && \
 		npm run build \
 	'
