@@ -14,6 +14,10 @@ let authMock = {
   fetchUser: vi.fn(),
   fetchPreferences: vi.fn(),
   updatePreferences: vi.fn(),
+  requestPasswordReset: vi.fn(),
+  resetPassword: vi.fn(),
+  resendEmailVerification: vi.fn(),
+  logout: vi.fn().mockResolvedValue(undefined),
   preferences: ref(null),
   preferenceOptions: ref({
     locales: [],
@@ -33,6 +37,11 @@ let routerMock = {
   push: vi.fn()
 }
 
+let routeMock = {
+  query: {},
+  params: {}
+}
+
 const localeRef = ref('es')
 const tMock = (key: string) => key
 
@@ -48,6 +57,10 @@ export const __setRouterMock = (next: Partial<typeof routerMock>) => {
   routerMock = { ...routerMock, ...next }
 }
 
+export const __setRouteMock = (next: Partial<typeof routeMock>) => {
+  routeMock = { ...routeMock, ...next }
+}
+
 export const __setLocale = (next: string) => {
   localeRef.value = next
 }
@@ -55,7 +68,7 @@ export const __setLocale = (next: string) => {
 export const useAuth = () => authMock
 export const useToast = () => toastMock
 export const useRouter = () => routerMock
-export const useRoute = () => ({ query: {} })
+export const useRoute = () => routeMock
 export const useI18n = () => ({ t: tMock, locale: localeRef })
 export const definePageMeta = () => {}
 export const useSeoMeta = () => {}

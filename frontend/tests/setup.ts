@@ -49,17 +49,17 @@ config.global.stubs = {
     props: ['label', 'loading', 'disabled'],
     template: `<button type="button" :disabled="disabled" @click="$emit('click')">{{ label }}<slot /></button>`
   },
-  UAuthForm: {
-    name: 'UAuthForm',
-    props: ['title', 'loading', 'fields', 'schema', 'providers'],
-    template: `<button type="button" data-stub="UAuthForm" @click="$emit('submit', { data: {} })">{{ title }}</button>`
-  },
   USelect: {
     name: 'USelect',
     props: ['modelValue', 'items', 'labelKey', 'valueKey', 'disabled'],
     template: `<select data-stub="USelect"></select>`
   },
   USeparator: stub('USeparator'),
+  UAuthForm: {
+    name: 'UAuthForm',
+    props: ['title', 'loading', 'fields', 'schema', 'state', 'providers', 'submit'],
+    template: `<button type="button" data-stub="UAuthForm" @click="$emit('submit', { data: {} })">{{ title }}</button>`
+  },
   ULink: {
     name: 'ULink',
     props: ['to'],
