@@ -46,6 +46,8 @@ let routeMock = {
 
 const localeRef = ref('es')
 const tMock = (key: string) => key
+const localePathMock = (path: string) => path
+const switchLocalePathMock = (value: string) => `/${value}`
 
 export const __setAuthMock = (next: Partial<typeof authMock>) => {
   authMock = { ...authMock, ...next }
@@ -71,8 +73,11 @@ export const useAuth = () => authMock
 export const useToast = () => toastMock
 export const useRouter = () => routerMock
 export const useRoute = () => routeMock
-export const useI18n = () => ({ t: tMock, locale: localeRef })
+export const useI18n = () => ({ t: tMock, locale: localeRef, locales: ref([]) })
+export const useLocalePath = () => localePathMock
+export const useSwitchLocalePath = () => switchLocalePathMock
 export const definePageMeta = () => {}
+export const defineI18nRoute = () => {}
 export const useSeoMeta = () => {}
 export const useHead = () => {}
 

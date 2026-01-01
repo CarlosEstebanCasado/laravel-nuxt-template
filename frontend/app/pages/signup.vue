@@ -2,6 +2,8 @@
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'auth',
   middleware: 'guest'

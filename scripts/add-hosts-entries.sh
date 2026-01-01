@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DOMAINS=("app.project.dev" "api.project.dev")
+DOMAINS=("app.project.dev" "api.project.dev" "project.dev")
 LINUX_HOSTS="/etc/hosts"
 WINDOWS_HOSTS="/mnt/c/Windows/System32/drivers/etc/hosts"
 

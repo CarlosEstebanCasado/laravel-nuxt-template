@@ -5,6 +5,8 @@ import type { UserPreferencesPayload } from '~/types/preferences'
 type ThemePreference = UserPreferencesPayload['theme']
 type SupportedLocale = UserPreferencesPayload['locale']
 
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'

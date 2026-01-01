@@ -2,6 +2,8 @@ Generate the development certificates by running `./scripts/generate-dev-certs.s
 
 - `app.project.dev.crt`
 - `app.project.dev.key`
+- `project.dev.crt`
+- `project.dev.key`
 - `api.project.dev.crt`
 - `api.project.dev.key`
 

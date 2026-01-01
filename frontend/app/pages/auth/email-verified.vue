@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'auth',
   middleware: 'auth'
@@ -63,4 +65,3 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-

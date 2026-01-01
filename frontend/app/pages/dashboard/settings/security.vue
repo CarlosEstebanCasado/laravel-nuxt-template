@@ -4,6 +4,8 @@ import SecurityActivitySection from '~/components/security/SecurityActivitySecti
 import SecurityPasswordSection from '~/components/security/SecurityPasswordSection.vue'
 import SecuritySessionsSection from '~/components/security/SecuritySessionsSection.vue'
 
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'

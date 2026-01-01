@@ -35,7 +35,8 @@ export default defineNuxtConfig({
       internalApiBase: process.env.NUXT_PUBLIC_INTERNAL_API_BASE || 'http://gateway-api',
       apiPrefix: process.env.NUXT_PUBLIC_API_PREFIX || '/api/v1',
       authPrefix: process.env.NUXT_PUBLIC_AUTH_PREFIX || '/auth',
-      appBaseUrl: process.env.NUXT_PUBLIC_APP_BASE_URL || 'https://app.project.dev'
+      appBaseUrl: process.env.NUXT_PUBLIC_APP_BASE_URL || 'https://app.project.dev',
+      siteBaseUrl: process.env.NUXT_PUBLIC_SITE_BASE_URL || 'https://project.dev'
     }
   },
 
@@ -43,6 +44,9 @@ export default defineNuxtConfig({
   // currently don't include it in the route rules type. Cast to keep TS happy.
   routeRules: {
     '/docs': { redirect: '/docs/getting-started', prerender: false },
+    '/es/docs': { redirect: '/es/docs/getting-started', prerender: false },
+    '/en/docs': { redirect: '/en/docs/getting-started', prerender: false },
+    '/ca/docs': { redirect: '/ca/docs/getting-started', prerender: false },
 
     // Private area: keep it SPA/CSR only (avoid SSR + keep auth purely client-side).
     '/dashboard': {
@@ -122,13 +126,13 @@ export default defineNuxtConfig({
       }
     },
     server: {
-      allowedHosts: ['nuxt', 'gateway', 'gateway-api', 'app.project.dev'],
+      allowedHosts: ['nuxt', 'gateway', 'gateway-api', 'app.project.dev', 'project.dev'],
       hmr: false
     }
   },
 
   i18n: {
-    strategy: 'no_prefix',
+    strategy: 'prefix',
     defaultLocale: 'es',
     lazy: true,
     langDir: 'i18n/locales',

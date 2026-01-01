@@ -2,6 +2,8 @@
 import * as z from 'zod'
 import type { FormError, FormSubmitEvent } from '@nuxt/ui'
 
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'

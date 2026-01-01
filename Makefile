@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed refresh-db qa phpstan test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db
+.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed refresh-db config-clear-backend qa phpstan test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db
 
 help:
 	@echo "Available targets:"
@@ -12,6 +12,7 @@ help:
 	@echo "  make migrate  - Ejecutar migraciones en el contenedor api"
 	@echo "  make seed     - Ejecutar migraciones y seed en el contenedor api"
 	@echo "  make refresh-db - Refrescar BD (migrate:fresh) y ejecutar seed"
+	@echo "  make config-clear-backend - Limpiar cache de config en backend"
 	@echo "  make qa       - Ejecutar linting/análisis estático definidos"
 	@echo "  make test     - Alias de CI local (equivalente a make ci)"
 	@echo "  make ci       - Ejecutar CI local (backend + frontend)"
@@ -52,6 +53,9 @@ seed: migrate
 
 refresh-db:
 	docker compose exec api php artisan migrate:fresh --force --seed
+
+config-clear-backend:
+	docker compose exec api php artisan config:clear
 
 qa:
 	@if [ -f backend/vendor/bin/phpstan ]; then \
