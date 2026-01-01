@@ -8,6 +8,9 @@ let authMock = {
   listAudits: vi.fn(),
   updatePassword: vi.fn(),
   deleteAccount: vi.fn(),
+  login: vi.fn(),
+  register: vi.fn(),
+  loginWithProvider: vi.fn(),
   user: ref({ auth_provider: 'password', password_set_at: null })
 }
 
@@ -44,5 +47,8 @@ export const useToast = () => toastMock
 export const useRouter = () => routerMock
 export const useRoute = () => ({ query: {} })
 export const useI18n = () => ({ t: tMock, locale: localeRef })
+export const definePageMeta = () => {}
+export const useSeoMeta = () => {}
+export const useHead = () => {}
 
 export { computed, onMounted, reactive, ref }
