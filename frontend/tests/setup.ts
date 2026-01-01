@@ -41,6 +41,10 @@ const stub = (name: string) => ({
 
 config.global.stubs = {
   UPageCard: stub('UPageCard'),
+  UHeader: stub('UHeader'),
+  UFooter: stub('UFooter'),
+  UFooterColumns: stub('UFooterColumns'),
+  UContainer: stub('UContainer'),
   UForm: stub('UForm'),
   UFormField: stub('UFormField'),
   UInput: stub('UInput'),
@@ -54,6 +58,17 @@ config.global.stubs = {
     props: ['modelValue', 'items', 'labelKey', 'valueKey', 'disabled'],
     template: `<select data-stub="USelect"></select>`
   },
+  UDropdownMenu: {
+    name: 'UDropdownMenu',
+    props: ['items', 'content', 'ui', 'modal', 'size'],
+    template: `<div data-stub="UDropdownMenu"><slot /></div>`
+  },
+  UNavigationMenu: {
+    name: 'UNavigationMenu',
+    props: ['items', 'variant', 'orientation'],
+    template: `<nav data-stub="UNavigationMenu"></nav>`
+  },
+  UColorModeButton: stub('UColorModeButton'),
   USeparator: stub('USeparator'),
   UAuthForm: {
     name: 'UAuthForm',

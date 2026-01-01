@@ -54,17 +54,32 @@ const validateProfile = (state: ProfileState): FormError[] => {
 }
 
 const extractErrorMessage = (error: unknown) => {
-  const data = (error as any)?.data ?? (error as any)?.response?._data
-  if (data?.errors) {
-    const firstError = Object.values(data.errors).flat()[0]
+  const fallback = t('settings.general.error_fallback')
+  if (!error || typeof error !== 'object') {
+    return fallback
+  }
+
+  const errorObject = error as {
+    data?: { message?: unknown; errors?: Record<string, unknown> }
+    response?: { _data?: { message?: unknown; errors?: Record<string, unknown> } }
+    message?: unknown
+  }
+
+  const data = errorObject.data ?? errorObject.response?._data
+  const errors = data?.errors
+
+  if (errors && typeof errors === 'object') {
+    const firstError = Object.values(errors).flat()[0]
     if (typeof firstError === 'string') {
       return firstError
     }
   }
+
   if (typeof data?.message === 'string') {
     return data.message
   }
-  return (error as any)?.message || t('settings.general.error_fallback')
+
+  return typeof errorObject.message === 'string' ? errorObject.message : fallback
 }
 
 const syncFromUser = () => {

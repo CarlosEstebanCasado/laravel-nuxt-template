@@ -8,6 +8,7 @@ let authMock = {
   listAudits: vi.fn(),
   updatePassword: vi.fn(),
   deleteAccount: vi.fn(),
+  updateProfile: vi.fn(),
   login: vi.fn(),
   register: vi.fn(),
   loginWithProvider: vi.fn(),
