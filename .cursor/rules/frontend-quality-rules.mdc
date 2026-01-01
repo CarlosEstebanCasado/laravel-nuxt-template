@@ -1,0 +1,14 @@
+---
+alwaysApply: true
+---
+
+# Reglas de Calidad Frontend (Nuxt/Vue)
+
+- **Tests obligatorios**: todo componente Vue debe tener test unitario. Excepcion: wrappers sin logica (solo composicion y `definePageMeta`) no requieren test.
+- **I18n en toda la UI**: no hay texto hardcoded en plantillas ni en validaciones; todo va por `t()` y keys en `frontend/i18n/locales/*.json`.
+- **Errores traducidos**: cualquier mensaje de error mostrado al usuario debe estar traducido; nunca exponer mensajes en ingles cuando el locale es otro.
+- **Validaciones consistentes**: validaciones de formularios deben devolver primero "required" y despues reglas especificas (email, min, etc.) para evitar mensajes confusos.
+- **Componentes pequenos y enfocados**: si un componente crece o mezcla responsabilidades, dividir en secciones y/o composables reutilizables.
+- **Composables para logica**: extraer logica compartida (formateos, mapeos, transformaciones) a composables en `frontend/app/composables`.
+- **Tipos estrictos**: no usar `any` en props/emitters/handlers; mantener tipos alineados con `frontend/app/types`.
+- **API segura**: manejo de errores con feedback claro y traducido; no bloquear flujos correctos si fallan llamadas secundarias.
