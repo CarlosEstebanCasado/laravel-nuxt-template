@@ -5,6 +5,7 @@ import {
   onMounted,
   reactive,
   ref,
+  watch,
   useHead,
   useAuth,
   useI18n,
@@ -21,6 +22,7 @@ Object.assign(globalThis, {
   onMounted,
   reactive,
   ref,
+  watch,
   useHead,
   useAuth,
   useI18n,
@@ -52,6 +54,12 @@ config.global.stubs = {
     props: ['title', 'loading', 'fields', 'schema', 'providers'],
     template: `<button type="button" data-stub="UAuthForm" @click="$emit('submit', { data: {} })">{{ title }}</button>`
   },
+  USelect: {
+    name: 'USelect',
+    props: ['modelValue', 'items', 'labelKey', 'valueKey', 'disabled'],
+    template: `<select data-stub="USelect"></select>`
+  },
+  USeparator: stub('USeparator'),
   ULink: {
     name: 'ULink',
     props: ['to'],

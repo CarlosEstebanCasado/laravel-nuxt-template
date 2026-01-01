@@ -1,4 +1,4 @@
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { vi } from 'vitest'
 
 let authMock = {
@@ -11,6 +11,16 @@ let authMock = {
   login: vi.fn(),
   register: vi.fn(),
   loginWithProvider: vi.fn(),
+  fetchUser: vi.fn(),
+  fetchPreferences: vi.fn(),
+  updatePreferences: vi.fn(),
+  preferences: ref(null),
+  preferenceOptions: ref({
+    locales: [],
+    themes: [],
+    primary_colors: [],
+    neutral_colors: []
+  }),
   user: ref({ auth_provider: 'password', password_set_at: null })
 }
 
@@ -51,4 +61,4 @@ export const definePageMeta = () => {}
 export const useSeoMeta = () => {}
 export const useHead = () => {}
 
-export { computed, onMounted, reactive, ref }
+export { computed, onMounted, reactive, ref, watch }
