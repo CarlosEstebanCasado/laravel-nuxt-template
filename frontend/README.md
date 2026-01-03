@@ -14,7 +14,7 @@ npm run build     # compilar para producción
 npm run preview   # previsualizar la build
 ```
 
-> Dentro del stack Docker puedes seguir usando `make up` / `make up-build` para exponer la app en `https://app.project.dev`.
+> Dentro del stack Docker puedes seguir usando `make up` / `make up-build` para exponer la web pública en `https://project.dev` y el dashboard en `https://app.project.dev`.
 
 ## Configuración
 - Variables públicas (`NUXT_PUBLIC_*`) definidas en el `.env` raíz del monorepo o clonadas desde `frontend/.env.example`.
