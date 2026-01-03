@@ -5,6 +5,8 @@ import { getPaginationRowModel } from '@tanstack/table-core'
 import type { Row } from '@tanstack/table-core'
 import type { User } from '~/types'
 
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'

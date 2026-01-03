@@ -19,22 +19,25 @@ Docker Addendum — Stack, Gateway & Deploy
 
 - Red única `internal` (bridge) para que todos los servicios se comuniquen por nombre DNS (`api`, `nuxt`, `postgres`, etc.).
 - `nginx` es el **único** servicio que expone puertos al host. Redirige:
-- `app.project.dev` → `nuxt:3000` (SSR).
+- `project.dev` → `nuxt:3000` (público).
+- `app.project.dev` → `nuxt:3000` (dashboard).
 - `api.project.dev` → `api:9000` (FastCGI).
 - Añade a `/etc/hosts`:
   ```
+127.0.0.1 project.dev
 127.0.0.1 app.project.dev
 127.0.0.1 api.project.dev
+  ```
 
 Puedes automatizar estos pasos con:
 
 - `make hosts` para añadir las entradas en `/etc/hosts` (detecta Linux, macOS, Windows/WSL).
 - `make certs` para generar los certificados TLS de desarrollo.
 - `make trust-ca` para instalar mkcert/certutil en `~/.local/bin`, registrar la CA en NSS y confiarla en Brave (snap).
-- Define en `.env` los dominios para Sanctum/Fortify: `SESSION_DOMAIN=.project.dev`, `SANCTUM_STATEFUL_DOMAINS=app.project.dev` y `FRONTEND_URL=https://app.project.dev`.
+- Define en `.env` los dominios para Sanctum/Fortify y CORS: `SESSION_DOMAIN=.project.dev`, `SANCTUM_STATEFUL_DOMAINS=app.project.dev`, `FRONTEND_URL=https://app.project.dev` y `CORS_ALLOWED_ORIGINS=https://app.project.dev,https://project.dev`.
+- Define en `.env` frontend: `NUXT_PUBLIC_APP_BASE_URL=https://app.project.dev` y `NUXT_PUBLIC_SITE_BASE_URL=https://project.dev`.
 
 > Si tienes `mkcert`, ejecútalo con `mkcert -install` la primera vez para confiar en la CA local.
-  ```
 - Para probar cookies `Secure`, expón también 443 (`"443:443"`) y monta certificados auto-firmados/mkcert en `docker/nginx/certs`. En producción usa ACME/Let’s Encrypt.
 
 ---
@@ -49,7 +52,8 @@ Puedes automatizar estos pasos con:
 │  │  ├─ nginx.conf
 │  │  ├─ conf.d/
 │  │  │  ├─ api.conf
-│  │  │  └─ app.conf
+│  │  │  ├─ app.conf
+│  │  │  └─ web.conf
 │  │  └─ certs/                # dev TLS (opcional)
 │  ├─ php/
 │  │  ├─ Dockerfile            # php-fpm + extensiones + composer
@@ -166,6 +170,7 @@ services:
       NITRO_PORT: 3000
       NUXT_PUBLIC_API_BASE: https://api.project.dev/api/v1
       NUXT_PUBLIC_APP_BASE_URL: https://app.project.dev
+      NUXT_PUBLIC_SITE_BASE_URL: https://project.dev
     volumes:
       - ./frontend:/usr/src/app
       - nuxt_node_modules:/usr/src/app/node_modules
@@ -375,6 +380,33 @@ server {
 }
 ```
 
+### `docker/nginx/conf.d/web.conf`
+
+```nginx
+server {
+  listen 80;
+  listen 443 ssl http2;
+  server_name project.dev;
+
+  ssl_certificate     /etc/nginx/certs/project.dev.crt;
+  ssl_certificate_key /etc/nginx/certs/project.dev.key;
+
+  add_header X-Frame-Options "DENY";
+  add_header X-Content-Type-Options "nosniff";
+  add_header Referrer-Policy "strict-origin-when-cross-origin";
+
+  location / {
+    proxy_pass http://nuxt_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}
+```
+
 ---
 
 7) Variables de entorno (.env ejemplo)
@@ -393,6 +425,10 @@ MINIO_ROOT_PASSWORD=miniosecret
 # Laravel
 APP_KEY=base64:GENERAR_EN_RUNTIME
 APP_URL=https://api.project.dev
+FRONTEND_URL=https://app.project.dev
+SESSION_DOMAIN=.project.dev
+SANCTUM_STATEFUL_DOMAINS=app.project.dev
+CORS_ALLOWED_ORIGINS=https://app.project.dev,https://project.dev
 SESSION_DRIVER=cookie
 QUEUE_CONNECTION=redis
 CACHE_DRIVER=redis
@@ -400,6 +436,7 @@ CACHE_DRIVER=redis
 # Nuxt
 NUXT_PUBLIC_API_BASE=https://api.project.dev/api/v1
 NUXT_PUBLIC_APP_BASE_URL=https://app.project.dev
+NUXT_PUBLIC_SITE_BASE_URL=https://project.dev
 ```
 
 > Genera `APP_KEY` dentro del contenedor `api`: `docker compose exec api php artisan key:generate --show` y guárdalo solo en tu `.env` local.
@@ -455,7 +492,7 @@ queue-restart:
 5. Variables sensibles nunca se commitean; usar `.env.example` con placeholders.
 6. En desarrollo se montan volúmenes para hot reload (Laravel + Nuxt). En producción se usan imágenes inmutables.
 7. Logs a stdout y healthchecks definidos en compose/orquestador.
-8. Dominios locales y certificados (`app.project.dev`, `api.project.dev`) según este addendum.
+8. Dominios locales y certificados (`project.dev`, `app.project.dev`, `api.project.dev`) según este addendum.
 9. Mantener TLS en dev y prod para validar cookies `Secure` y políticas CSP.
 10. Documentar cambios infra relevantes en la PR (Security Impact + checklist OWASP).
 

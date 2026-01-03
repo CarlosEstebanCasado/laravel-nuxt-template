@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'
@@ -35,5 +37,4 @@ const error = computed(() => ({
     </template>
   </UDashboardPanel>
 </template>
-
 

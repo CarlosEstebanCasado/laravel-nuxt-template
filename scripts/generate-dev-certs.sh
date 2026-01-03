@@ -2,7 +2,7 @@
 set -euo pipefail
 
 CERT_DIR="docker/nginx/certs"
-DOMAINS=("app.project.dev" "api.project.dev")
+DOMAINS=("app.project.dev" "api.project.dev" "project.dev")
 
 mkdir -p "$CERT_DIR"
 

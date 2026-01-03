@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const colorMode = useColorMode()
 const { t, locale: activeLocale } = useI18n()
+const localePath = useLocalePath()
 
 const color = computed(() => colorMode.value === 'dark' ? '#020618' : 'white')
 
@@ -26,11 +27,23 @@ useSeoMeta({
 })
 
 const auth = useAuth()
+const config = useRuntimeConfig()
 
 if (import.meta.client) {
-  auth.fetchUser().catch(() => {
-    /* swallow errors so the app can render */
-  })
+  const shouldFetchUser = () => {
+    try {
+      const appHost = new URL(config.public.appBaseUrl).host
+      return window.location.host === appHost
+    } catch {
+      return true
+    }
+  }
+
+  if (shouldFetchUser()) {
+    auth.fetchUser().catch(() => {
+      /* swallow errors so the app can render */
+    })
+  }
 }
 
 const { data: navigation } = useAsyncData('navigation', () => queryCollectionNavigation('docs'), {
@@ -43,19 +56,19 @@ const { data: files } = useLazyAsyncData('search', () => queryCollectionSearchSe
 const links = computed(() => [{
   label: t('navigation.docs'),
   icon: 'i-lucide-book',
-  to: '/docs/getting-started'
+  to: localePath('/docs/getting-started')
 }, {
   label: t('navigation.pricing'),
   icon: 'i-lucide-credit-card',
-  to: '/pricing'
+  to: localePath('/pricing')
 }, {
   label: t('navigation.blog'),
   icon: 'i-lucide-pencil',
-  to: '/blog'
+  to: localePath('/blog')
 }, {
   label: t('navigation.changelog'),
   icon: 'i-lucide-history',
-  to: '/changelog'
+  to: localePath('/changelog')
 }])
 
 provide('navigation', navigation)

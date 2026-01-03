@@ -1,6 +1,7 @@
 import { config } from '@vue/test-utils'
 import {
   computed,
+  defineI18nRoute,
   definePageMeta,
   onMounted,
   reactive,
@@ -9,15 +10,18 @@ import {
   useHead,
   useAuth,
   useI18n,
+  useLocalePath,
   useRouter,
   useRoute,
   useSeoMeta,
+  useSwitchLocalePath,
   useToast
 } from '#imports'
 import { useSecurityAuditFormat } from '~/composables/useSecurityAuditFormat'
 
 Object.assign(globalThis, {
   computed,
+  defineI18nRoute,
   definePageMeta,
   onMounted,
   reactive,
@@ -26,9 +30,11 @@ Object.assign(globalThis, {
   useHead,
   useAuth,
   useI18n,
+  useLocalePath,
   useRouter,
   useRoute,
   useSeoMeta,
+  useSwitchLocalePath,
   useToast,
   useSecurityAuditFormat
 })

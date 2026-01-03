@@ -3,6 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { breakpointsTailwind } from '@vueuse/core'
 import type { Mail } from '~/types'
 
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'

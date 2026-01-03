@@ -1,27 +1,54 @@
 <script setup lang="ts">
 const route = useRoute()
-const { t } = useI18n()
+const router = useRouter()
+const { t, locale } = useI18n()
+const localePath = useLocalePath()
+const switchLocalePath = useSwitchLocalePath()
+
+type LocaleCode = 'es' | 'en' | 'ca'
+const localeCodes: LocaleCode[] = ['es', 'en', 'ca']
+const localeLabels: Record<LocaleCode, string> = {
+  es: 'Español',
+  en: 'English',
+  ca: 'Català'
+}
+
+const localeOptions = computed(() => {
+  return localeCodes.map((code) => {
+    return { label: localeLabels[code], value: code }
+  })
+})
+
+const activeLocale = computed<LocaleCode>({
+  get: () => locale.value as LocaleCode,
+  set: (value) => {
+    const target = switchLocalePath(value)
+    if (target) {
+      void router.push(target)
+    }
+  }
+})
 
 const items = computed(() => [{
   label: t('navigation.docs'),
-  to: '/docs',
-  active: route.path.startsWith('/docs')
+  to: localePath('/docs'),
+  active: route.path.startsWith(localePath('/docs'))
 }, {
   label: t('navigation.pricing'),
-  to: '/pricing'
+  to: localePath('/pricing')
 }, {
   label: t('navigation.blog'),
-  to: '/blog'
+  to: localePath('/blog')
 }, {
   label: t('navigation.changelog'),
-  to: '/changelog'
+  to: localePath('/changelog')
 }])
 </script>
 
 <template>
   <UHeader>
     <template #left>
-      <NuxtLink to="/">
+      <NuxtLink :to="localePath('/')">
         <AppLogo class="w-auto h-6 shrink-0" />
       </NuxtLink>
       <TemplateMenu />
@@ -33,6 +60,16 @@ const items = computed(() => [{
     />
 
     <template #right>
+      <USelect
+        v-model="activeLocale"
+        :items="localeOptions"
+        value-key="value"
+        label-key="label"
+        color="neutral"
+        size="xs"
+        class="hidden md:inline-flex min-w-28"
+        :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
+      />
       <UColorModeButton />
 
       <UButton
@@ -83,6 +120,18 @@ const items = computed(() => [{
         color="neutral"
         to="/signup"
         block
+      />
+
+      <USeparator class="my-6" />
+      <USelect
+        v-model="activeLocale"
+        :items="localeOptions"
+        value-key="value"
+        label-key="label"
+        color="neutral"
+        size="sm"
+        class="w-full"
+        :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
       />
     </template>
   </UHeader>

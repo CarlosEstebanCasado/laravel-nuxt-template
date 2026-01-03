@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
+const localePath = useLocalePath()
 
 const { data: page } = await useAsyncData('blog', () => queryCollection('blog').first())
 const { data: posts } = await useAsyncData(route.path, () => queryCollection('posts').all())
@@ -26,12 +27,12 @@ defineOgImageComponent('Saas')
 
     <UPageBody>
       <UBlogPosts>
-        <UBlogPost
-          v-for="(post, index) in posts"
-          :key="index"
-          :to="post.path"
-          :title="post.title"
-          :description="post.description"
+      <UBlogPost
+        v-for="(post, index) in posts"
+        :key="index"
+        :to="localePath(post.path)"
+        :title="post.title"
+        :description="post.description"
           :image="post.image"
           :date="new Date(post.date).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })"
           :authors="post.authors"

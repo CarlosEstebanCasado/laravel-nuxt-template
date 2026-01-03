@@ -4,15 +4,47 @@ definePageMeta({
 })
 
 const route = useRoute()
+const { locale } = useI18n()
 
-const { data: page } = await useAsyncData(route.path, () => queryCollection('docs').path(route.path).first())
+const contentPath = computed(() => {
+  const prefix = `/${locale.value}`
+  if (route.path === prefix) {
+    return '/'
+  }
+  if (route.path.startsWith(`${prefix}/`)) {
+    const stripped = route.path.slice(prefix.length)
+    return stripped === '' ? '/' : stripped
+  }
+  return route.path
+})
+
+const pageKey = computed(() => `docs:${contentPath.value}`)
+const { data: page } = await useAsyncData(
+  pageKey,
+  () => queryCollection('docs').path(contentPath.value).first()
+)
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }
 
-const { data: surround } = await useAsyncData(`${route.path}-surround`, () => {
-  return queryCollectionItemSurroundings('docs', route.path, {
+const surroundKey = computed(() => `docs:${contentPath.value}-surround`)
+const { data: surround } = await useAsyncData(surroundKey, () => {
+  return queryCollectionItemSurroundings('docs', contentPath.value, {
     fields: ['description']
+  })
+})
+const localePath = useLocalePath()
+const localizedSurround = computed(() => {
+  return (surround.value ?? []).map((item) => {
+    if (!item) return item
+    const next = { ...item }
+    if (next._path) {
+      next._path = localePath(next._path)
+    }
+    if (next.path) {
+      next.path = localePath(next.path)
+    }
+    return next
   })
 })
 
@@ -44,7 +76,7 @@ defineOgImageComponent('Saas')
 
       <USeparator v-if="surround?.length" />
 
-      <UContentSurround :surround="surround" />
+      <UContentSurround :surround="localizedSurround" />
     </UPageBody>
 
     <template

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Member } from '~/types'
 
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'

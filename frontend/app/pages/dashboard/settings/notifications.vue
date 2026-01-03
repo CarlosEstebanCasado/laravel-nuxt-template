@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineI18nRoute(false)
+
 definePageMeta({
   layout: 'dashboard',
   middleware: 'auth'
