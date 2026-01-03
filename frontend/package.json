@@ -20,7 +20,7 @@
     "@standard-schema/spec": "^1.0.0",
     "@tanstack/table-core": "^8.17.6",
     "@unovis/ts": "^1.6.1",
-    "@unovis/vue": "^1.6.1",
+    "@unovis/vue": "^1.6.2",
     "@vueuse/nuxt": "^13.9.0",
     "better-sqlite3": "^12.5.0",
     "date-fns": "^4.1.0",
