@@ -56,7 +56,28 @@
     "newsletter_placeholder": "Introduce tu email",
     "subscribe_success_title": "¡Suscripción completada!",
     "subscribe_success_description": "Te has suscrito a nuestro boletín.",
+    "social": {
+      "discord": "Nuxt en Discord",
+      "x": "Nuxt en X",
+      "github": "Nuxt UI en GitHub"
+    },
     "copyright": "Creado con Nuxt UI • © {year}"
+  },
+  "errors": {
+    "page_not_found_title": "Página no encontrada",
+    "page_not_found_description": "Lo sentimos, pero esta página no se ha encontrado.",
+    "page_not_found_short": "Página no encontrada",
+    "page_not_found_with_path": "Página no encontrada: {path}",
+    "back_home": "Volver al inicio",
+    "back_dashboard": "Volver al panel"
+  },
+  "pricing": {
+    "billing": {
+      "monthly": "Mensual",
+      "yearly": "Anual",
+      "per_month": "/mes",
+      "per_year": "/año"
+    }
   },
   "templates": {
     "title": "Plantillas",

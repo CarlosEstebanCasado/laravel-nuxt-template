@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const { data: page } = await useAsyncData('pricing', () => queryCollection('pricing').first())
 
 const title = page.value?.seo?.title || page.value?.title
@@ -15,16 +16,16 @@ defineOgImageComponent('Saas')
 
 const isYearly = ref('0')
 
-const items = ref([
+const items = computed(() => ([
   {
-    label: 'Monthly',
+    label: t('pricing.billing.monthly'),
     value: '0'
   },
   {
-    label: 'Yearly',
+    label: t('pricing.billing.yearly'),
     value: '1'
   }
-])
+]))
 </script>
 
 <template>
@@ -56,7 +57,7 @@ const items = ref([
           :key="index"
           v-bind="plan"
           :price="isYearly === '1' ? plan.price.year : plan.price.month"
-          :billing-cycle="isYearly === '1' ? '/year' : '/month'"
+          :billing-cycle="isYearly === '1' ? t('pricing.billing.per_year') : t('pricing.billing.per_month')"
         />
       </UPricingPlans>
     </UContainer>

@@ -56,7 +56,28 @@
     "newsletter_placeholder": "Introdueix el teu correu",
     "subscribe_success_title": "Subscripció completada!",
     "subscribe_success_description": "T'has subscrit al butlletí.",
+    "social": {
+      "discord": "Nuxt a Discord",
+      "x": "Nuxt a X",
+      "github": "Nuxt UI a GitHub"
+    },
     "copyright": "Creat amb Nuxt UI • © {year}"
+  },
+  "errors": {
+    "page_not_found_title": "Pàgina no trobada",
+    "page_not_found_description": "Ho sentim, però aquesta pàgina no s'ha trobat.",
+    "page_not_found_short": "Pàgina no trobada",
+    "page_not_found_with_path": "Pàgina no trobada: {path}",
+    "back_home": "Torna a l'inici",
+    "back_dashboard": "Torna al tauler"
+  },
+  "pricing": {
+    "billing": {
+      "monthly": "Mensual",
+      "yearly": "Anual",
+      "per_month": "/mes",
+      "per_year": "/any"
+    }
   },
   "templates": {
     "title": "Plantilles",
