@@ -3,13 +3,19 @@ declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Controllers\Api;
 
+use App\Src\IdentityAccess\Auth\User\Application\Request\GetTwoFactorRecoveryCodesUseCaseRequest;
+use App\Src\IdentityAccess\Auth\User\Application\UseCase\GetTwoFactorRecoveryCodesUseCase;
 use App\Src\Shared\UI\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Laravel\Fortify\Fortify;
 
 class ShowTwoFactorRecoveryCodesController extends Controller
 {
+    public function __construct(
+        private readonly GetTwoFactorRecoveryCodesUseCase $getTwoFactorRecoveryCodesUseCase
+    ) {
+    }
+
     public function __invoke(Request $request): JsonResponse
     {
         $user = $this->requireUser($request);
@@ -18,14 +24,12 @@ class ShowTwoFactorRecoveryCodesController extends Controller
             'password' => ['required', 'string', 'current_password:web'],
         ]);
 
-        if (! $user->two_factor_secret || ! $user->two_factor_recovery_codes) {
-            return response()->json([]);
-        }
+        $response = $this->getTwoFactorRecoveryCodesUseCase->execute(
+            new GetTwoFactorRecoveryCodesUseCaseRequest(
+                userId: $this->requireUserId($user),
+            )
+        );
 
-        $codes = json_decode(Fortify::currentEncrypter()->decrypt(
-            $user->two_factor_recovery_codes
-        ), true);
-
-        return response()->json($codes);
+        return response()->json($response);
     }
 }

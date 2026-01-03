@@ -504,7 +504,7 @@ export function useAuth() {
   const fetchTwoFactorRecoveryCodes = async (password: string) => {
     await ensureCsrfCookie()
 
-    return withCredentials<string[]>(
+    const response = await withCredentials<{ codes: string[] }>(
       joinURL(apiPrefix, '/two-factor/recovery-codes'),
       {
         method: 'POST',
@@ -512,12 +512,14 @@ export function useAuth() {
       },
       { csrf: true }
     )
+
+    return response.codes
   }
 
   const regenerateTwoFactorRecoveryCodes = async (password: string) => {
     await ensureCsrfCookie()
 
-    return withCredentials<string[]>(
+    const response = await withCredentials<{ codes: string[] }>(
       joinURL(apiPrefix, '/two-factor/recovery-codes/regenerate'),
       {
         method: 'POST',
@@ -525,6 +527,8 @@ export function useAuth() {
       },
       { csrf: true }
     )
+
+    return response.codes
   }
 
   const fetchUser = async (force = false) => {

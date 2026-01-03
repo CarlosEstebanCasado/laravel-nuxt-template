@@ -40,7 +40,7 @@ const extractErrorMessage = (error: unknown) => {
   if (typeof data?.message === 'string') {
     return data.message
   }
-  return (error as any)?.message || t('settings.security.errors.two_factor')
+  return t('settings.security.errors.two_factor')
 }
 
 const loadSetup = async () => {
@@ -76,7 +76,6 @@ const handleEnable = async () => {
   try {
     await auth.enableTwoFactor()
     await loadSetup()
-    openRecoveryPasswordModal('show')
     toast.add({
       title: t('settings.security.toasts.two_factor_enabled'),
       description: t('settings.security.toasts.two_factor_enabled_description'),
@@ -102,6 +101,7 @@ const handleConfirm = async () => {
   try {
     await auth.confirmTwoFactorEnrollment(confirmationCode.value)
     confirmationCode.value = ''
+    openRecoveryPasswordModal('show')
     toast.add({
       title: t('settings.security.toasts.two_factor_confirmed'),
       description: t('settings.security.toasts.two_factor_confirmed_description'),

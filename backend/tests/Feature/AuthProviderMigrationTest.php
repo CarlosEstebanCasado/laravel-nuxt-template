@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -18,6 +19,8 @@ class AuthProviderMigrationTest extends TestCase
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('users');
+
+        RefreshDatabaseState::$migrated = false;
 
         parent::tearDown();
     }
@@ -101,4 +104,3 @@ class AuthProviderMigrationTest extends TestCase
         $this->assertNotNull($password->password_set_at);
     }
 }
-
