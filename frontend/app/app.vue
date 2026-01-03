@@ -65,7 +65,7 @@ if (import.meta.client) {
     }
     isRouteLoading.value = false
   })
-  router.onError(() => {
+  const stopError = router.onError(() => {
     if (loadingTimer !== null) {
       window.clearTimeout(loadingTimer)
       loadingTimer = null
@@ -80,6 +80,7 @@ if (import.meta.client) {
   onBeforeUnmount(() => {
     stopBefore()
     stopAfter()
+    stopError()
   })
 
   document.cookie = 'i18n_redirected=; Max-Age=0; path=/'
