@@ -71,6 +71,7 @@ if (import.meta.client) {
   if (config.public.i18nCookieDomain) {
     document.cookie = `i18n_redirected=; Max-Age=0; path=/; domain=${config.public.i18nCookieDomain}`
   }
+  localeCookie.value = null
   const currentHost = window.location.host
   const appHost = (() => {
     try {
