@@ -1,5 +1,5 @@
 import { joinURL } from 'ufo'
-import type { AuthResponse, AuthUser } from '~/types/auth'
+import type { AuthResponse, AuthUser, TwoFactorChallengeResponse } from '~/types/auth'
 import type { PreferencesResponse, UserPreferencesPayload } from '~/types/preferences'
 
 type SupportedLocale = 'es' | 'en' | 'ca'
@@ -249,14 +249,18 @@ export function useAuth() {
     return preferences.value
   }
 
+  const isAuthResponse = (value: AuthResponse | TwoFactorChallengeResponse): value is AuthResponse => {
+    return 'data' in value
+  }
+
   const login = async (payload: {
     email: string
     password: string
     remember?: boolean
-  }) => {
+  }): Promise<AuthUser | { twoFactorRequired: true }> => {
     await ensureCsrfCookie()
 
-    const response = await withCredentials<AuthResponse>(
+    const response = await withCredentials<AuthResponse | TwoFactorChallengeResponse>(
       joinURL(authPrefix, '/login'),
       {
         method: 'POST',
@@ -264,6 +268,30 @@ export function useAuth() {
           ...payload,
           remember: payload.remember ?? false,
         },
+      },
+      { csrf: true }
+    )
+
+    if (!isAuthResponse(response)) {
+      return { twoFactorRequired: true }
+    }
+
+    const authUser = handleAuthSuccess(response)
+    await fetchPreferences(true).catch((error) => {
+      console.error(error)
+      return null
+    })
+    return authUser
+  }
+
+  const completeTwoFactorLogin = async (payload: { code?: string, recovery_code?: string }) => {
+    await ensureCsrfCookie()
+
+    const response = await withCredentials<AuthResponse>(
+      joinURL(authPrefix, '/two-factor-challenge'),
+      {
+        method: 'POST',
+        body: payload,
       },
       { csrf: true }
     )
@@ -420,6 +448,85 @@ export function useAuth() {
     )
   }
 
+  const enableTwoFactor = async () => {
+    await ensureCsrfCookie()
+
+    await withCredentials(
+      joinURL(authPrefix, '/user/two-factor-authentication'),
+      { method: 'POST' },
+      { csrf: true }
+    )
+
+    await fetchUser(true)
+  }
+
+  const confirmTwoFactorEnrollment = async (code: string) => {
+    await ensureCsrfCookie()
+
+    await withCredentials(
+      joinURL(authPrefix, '/user/confirmed-two-factor-authentication'),
+      {
+        method: 'POST',
+        body: { code },
+      },
+      { csrf: true }
+    )
+
+    await fetchUser(true)
+  }
+
+  const disableTwoFactor = async () => {
+    await ensureCsrfCookie()
+
+    await withCredentials(
+      joinURL(authPrefix, '/user/two-factor-authentication'),
+      { method: 'DELETE' },
+      { csrf: true }
+    )
+
+    await fetchUser(true)
+  }
+
+  const fetchTwoFactorQrCode = async () => {
+    return withCredentials<{ svg: string, url: string }>(
+      joinURL(authPrefix, '/user/two-factor-qr-code'),
+      { method: 'GET' }
+    )
+  }
+
+  const fetchTwoFactorSecret = async () => {
+    return withCredentials<{ secretKey: string }>(
+      joinURL(authPrefix, '/user/two-factor-secret-key'),
+      { method: 'GET' }
+    )
+  }
+
+  const fetchTwoFactorRecoveryCodes = async (password: string) => {
+    await ensureCsrfCookie()
+
+    return withCredentials<string[]>(
+      joinURL(apiPrefix, '/two-factor/recovery-codes'),
+      {
+        method: 'POST',
+        body: { password },
+      },
+      { csrf: true }
+    )
+  }
+
+  const regenerateTwoFactorRecoveryCodes = async (password: string) => {
+    await ensureCsrfCookie()
+
+    return withCredentials<string[]>(
+      joinURL(apiPrefix, '/two-factor/recovery-codes/regenerate'),
+      {
+        method: 'POST',
+        body: { password },
+      },
+      { csrf: true }
+    )
+  }
+
   const fetchUser = async (force = false) => {
     if (hasFetched.value && !force) {
       return user.value
@@ -543,6 +650,7 @@ export function useAuth() {
     preferenceOptions,
     isAuthenticated,
     login,
+    completeTwoFactorLogin,
     register,
     updateProfile,
     updatePassword,
@@ -555,6 +663,13 @@ export function useAuth() {
     logout,
     requestPasswordReset,
     resetPassword,
+    enableTwoFactor,
+    confirmTwoFactorEnrollment,
+    disableTwoFactor,
+    fetchTwoFactorQrCode,
+    fetchTwoFactorSecret,
+    fetchTwoFactorRecoveryCodes,
+    regenerateTwoFactorRecoveryCodes,
     fetchUser,
     fetchPreferences,
     updatePreferences,

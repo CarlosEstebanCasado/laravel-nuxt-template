@@ -31,6 +31,7 @@
     "load_more": "Carrega'n més",
     "delete_account": "Elimina el compte",
     "delete_permanently": "Elimina definitivament",
+    "confirm": "Confirma",
     "update": "Actualitza",
     "sign_out": "Tanca la sessió",
     "resend": "Torna a enviar",
@@ -147,6 +148,20 @@
       "toast_success_description": "Sessió iniciada correctament.",
       "toast_error_title": "No s'ha pogut iniciar sessió",
       "error_generic": "No hem pogut iniciar sessió, torna-ho a provar."
+    },
+    "two_factor": {
+      "title": "Verificació en dos passos",
+      "description": "Introdueix el codi de l'app d'autenticació o un codi de recuperació.",
+      "method_app": "Codi d'autenticació",
+      "method_recovery": "Codi de recuperació",
+      "code_placeholder": "Introdueix el codi de 6 dígits",
+      "recovery_placeholder": "Introdueix un codi de recuperació",
+      "submit": "Verificar",
+      "back_to_login": "Torna a iniciar sessió",
+      "toast_success_title": "Accés verificat",
+      "toast_success_description": "Sessió iniciada correctament.",
+      "toast_error_title": "No s'ha pogut verificar",
+      "error_generic": "No hem pogut verificar el codi, torna-ho a provar."
     },
     "signup": {
       "seo_title": "Crea un compte",
@@ -334,6 +349,29 @@
         "confirm_placeholder": "Confirma la nova contrasenya",
         "button": "Actualitza"
       },
+      "two_factor_section": {
+        "title": "Verificació en dos passos",
+        "description": "Afegeix una segona capa de seguretat al teu compte.",
+        "status_disabled": "La verificació en dos passos està desactivada.",
+        "status_pending": "Confirma el codi per acabar la configuració.",
+        "status_enabled": "La verificació en dos passos està activa.",
+        "enable_button": "Activar",
+        "disable_button": "Desactivar",
+        "qr_title": "Escaneja aquest codi QR",
+        "secret_label": "Codi manual",
+        "confirm_title": "Confirma el codi",
+        "confirm_placeholder": "Codi de 6 dígits",
+        "confirm_button": "Confirmar",
+        "recovery_title": "Codis de recuperació",
+        "recovery_description": "Guarda aquests codis en un lloc segur.",
+        "show_codes": "Mostrar",
+        "hide_codes": "Amagar",
+        "regenerate_button": "Regenerar",
+        "password_modal_title": "Confirma la contrasenya",
+        "password_modal_description": "Necessitem la teva contrasenya per mostrar els codis de recuperació.",
+        "password_placeholder": "La teva contrasenya actual",
+        "password_required": "Introdueix la contrasenya per continuar."
+      },
       "sessions": {
         "title": "Sessions",
         "description": "On tens la sessió iniciada actualment.",
@@ -401,6 +439,14 @@
         "load_more_failed": "No s'ha pogut carregar més activitat",
         "password_updated": "Contrasenya actualitzada",
         "password_description": "La contrasenya s'ha canviat correctament.",
+        "two_factor_enabled": "Verificació activada",
+        "two_factor_enabled_description": "Escaneja el codi QR i confirma per acabar.",
+        "two_factor_confirmed": "Verificació confirmada",
+        "two_factor_confirmed_description": "La verificació en dos passos està activa.",
+        "two_factor_disabled": "Verificació desactivada",
+        "two_factor_disabled_description": "La verificació en dos passos s'ha desactivat.",
+        "two_factor_recovery_generated": "Codis regenerats",
+        "two_factor_recovery_generated_description": "Guarda els nous codis de recuperació.",
         "delete_confirmation_required": "Cal confirmar",
         "delete_confirmation_description": "Escriu DELETE per confirmar l'eliminació.",
         "delete_password_required": "Cal la contrasenya",
@@ -413,6 +459,7 @@
         "sessions": "No s'han pogut carregar les sessions.",
         "activity": "No s'ha pogut carregar l'activitat.",
         "password": "No hem pogut actualitzar la contrasenya, torna-ho a provar.",
+        "two_factor": "No hem pogut actualitzar la verificació en dos passos.",
         "delete": "No hem pogut eliminar el compte, torna-ho a provar."
       }
     }

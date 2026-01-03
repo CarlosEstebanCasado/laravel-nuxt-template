@@ -79,6 +79,11 @@ export default defineNuxtConfig({
       prerender: false,
       headers: { 'x-robots-tag': 'noindex, nofollow' }
     },
+    '/auth/two-factor': {
+      ssr: false,
+      prerender: false,
+      headers: { 'x-robots-tag': 'noindex, nofollow' }
+    },
     '/reset-password/**': {
       ssr: false,
       prerender: false,

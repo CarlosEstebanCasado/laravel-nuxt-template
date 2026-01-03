@@ -60,3 +60,10 @@ Recomendado en el fork:
 
 - Actualizar nombre/descrición del repo
 - Ajustar copy/branding en frontend (landing, footer, docs)
+
+## 7) 2FA (Fortify)
+
+- Revisar `FORTIFY_PREFIX` y `FORTIFY_DOMAIN` si cambias dominios.
+- Verificar el flujo:
+  - Login con challenge (redirección a `/auth/two-factor`)
+  - Activación/desactivación desde `/dashboard/settings/security`

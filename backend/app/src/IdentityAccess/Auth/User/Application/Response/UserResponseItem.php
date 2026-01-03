@@ -12,6 +12,8 @@ final class UserResponseItem
         public ?string $email_verified_at,
         public string $auth_provider,
         public ?string $password_set_at,
+        public bool $two_factor_enabled,
+        public bool $two_factor_confirmed,
         public ?string $created_at,
         public ?string $updated_at,
         public ?UserPreferencesResponseItem $preferences = null,

@@ -20,5 +20,10 @@ npm run preview   # previsualizar la build
 - Variables públicas (`NUXT_PUBLIC_*`) definidas en el `.env` raíz del monorepo o clonadas desde `frontend/.env.example`.
 - `nuxt.config.ts` ya expone `runtimeConfig`, `devServer.host` y la lista de hosts permitidos en Vite para funcionar detrás de Docker/nginx.
 
+## 2FA
+El flujo de 2FA está integrado con Fortify:
+- Si el login devuelve un challenge, se redirige a `app.project.dev/auth/two-factor`.
+- En el dashboard (`/dashboard/settings/security`) hay una sección para activar, confirmar y regenerar códigos de recuperación.
+
 ## Próximos pasos
 Consulta `docs/dashboard-migration.md` para ver el plan de reintroducción de autenticación, rutas privadas y demás funcionalidades del proyecto.

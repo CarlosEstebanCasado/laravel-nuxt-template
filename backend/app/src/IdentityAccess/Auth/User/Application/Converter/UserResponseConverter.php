@@ -28,6 +28,8 @@ final class UserResponseConverter
                 email_verified_at: $response->email_verified_at,
                 auth_provider: $response->auth_provider,
                 password_set_at: $response->password_set_at,
+                two_factor_enabled: $response->two_factor_enabled,
+                two_factor_confirmed: $response->two_factor_confirmed,
                 created_at: $response->created_at,
                 updated_at: $response->updated_at,
                 preferences: new UserPreferencesResponseItem(

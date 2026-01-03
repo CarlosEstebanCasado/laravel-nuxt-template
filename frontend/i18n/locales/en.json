@@ -31,6 +31,7 @@
     "load_more": "Load more",
     "delete_account": "Delete account",
     "delete_permanently": "Delete permanently",
+    "confirm": "Confirm",
     "update": "Update",
     "sign_out": "Sign out",
     "resend": "Resend",
@@ -147,6 +148,20 @@
       "toast_success_description": "You are now signed in.",
       "toast_error_title": "Unable to sign in",
       "error_generic": "Unable to sign in, please try again."
+    },
+    "two_factor": {
+      "title": "Two-factor verification",
+      "description": "Enter the code from your authenticator app or use a recovery code.",
+      "method_app": "Authentication code",
+      "method_recovery": "Recovery code",
+      "code_placeholder": "Enter the 6-digit code",
+      "recovery_placeholder": "Enter a recovery code",
+      "submit": "Verify",
+      "back_to_login": "Back to login",
+      "toast_success_title": "Access verified",
+      "toast_success_description": "You are now signed in.",
+      "toast_error_title": "Verification failed",
+      "error_generic": "Unable to verify the code, please try again."
     },
     "signup": {
       "seo_title": "Sign up",
@@ -334,6 +349,29 @@
         "confirm_placeholder": "Confirm new password",
         "button": "Update"
       },
+      "two_factor_section": {
+        "title": "Two-factor authentication",
+        "description": "Add a second layer of security to your account.",
+        "status_disabled": "Two-factor authentication is off.",
+        "status_pending": "Confirm the code to finish setup.",
+        "status_enabled": "Two-factor authentication is active.",
+        "enable_button": "Enable",
+        "disable_button": "Disable",
+        "qr_title": "Scan this QR code",
+        "secret_label": "Manual code",
+        "confirm_title": "Confirm the code",
+        "confirm_placeholder": "6-digit code",
+        "confirm_button": "Confirm",
+        "recovery_title": "Recovery codes",
+        "recovery_description": "Store these codes in a safe place.",
+        "show_codes": "Show",
+        "hide_codes": "Hide",
+        "regenerate_button": "Regenerate",
+        "password_modal_title": "Confirm your password",
+        "password_modal_description": "We need your password to show recovery codes.",
+        "password_placeholder": "Your current password",
+        "password_required": "Enter your password to continue."
+      },
       "sessions": {
         "title": "Sessions",
         "description": "Where your account is currently signed in.",
@@ -401,6 +439,14 @@
         "load_more_failed": "Unable to load more activity",
         "password_updated": "Password updated",
         "password_description": "Your password has been changed successfully.",
+        "two_factor_enabled": "Two-factor enabled",
+        "two_factor_enabled_description": "Scan the QR code and confirm to finish setup.",
+        "two_factor_confirmed": "Two-factor confirmed",
+        "two_factor_confirmed_description": "Two-factor authentication is active.",
+        "two_factor_disabled": "Two-factor disabled",
+        "two_factor_disabled_description": "Two-factor authentication has been disabled.",
+        "two_factor_recovery_generated": "Recovery codes regenerated",
+        "two_factor_recovery_generated_description": "Save the new recovery codes.",
         "delete_confirmation_required": "Confirmation required",
         "delete_confirmation_description": "Type DELETE to confirm account deletion.",
         "delete_password_required": "Password required",
@@ -413,6 +459,7 @@
         "sessions": "Unable to load sessions.",
         "activity": "Unable to load activity.",
         "password": "Unable to update your password, please try again.",
+        "two_factor": "Unable to update two-factor authentication.",
         "delete": "Unable to delete your account, please try again."
       }
     }

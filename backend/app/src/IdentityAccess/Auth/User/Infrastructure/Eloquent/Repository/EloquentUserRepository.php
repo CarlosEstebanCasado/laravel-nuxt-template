@@ -7,6 +7,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\Entity\User as DomainUser;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\TwoFactorStatus;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
@@ -126,6 +127,10 @@ final class EloquentUserRepository implements UserRepository
             ? new DateTimeValue(new \DateTimeImmutable($model->updated_at->toDateTimeString()))
             : null;
 
+        $twoFactorConfirmedAt = $model->two_factor_confirmed_at
+            ? new DateTimeValue(new \DateTimeImmutable($model->two_factor_confirmed_at->toDateTimeString()))
+            : null;
+
         return new DomainUser(
             id: new UserId($this->resolveModelId($model)),
             name: new UserName((string) $model->name),
@@ -133,6 +138,7 @@ final class EloquentUserRepository implements UserRepository
             emailVerifiedAt: $emailVerifiedAt,
             authProvider: new AuthProvider((string) ($model->auth_provider ?? 'password')),
             passwordSetAt: $passwordSetAt,
+            twoFactorStatus: TwoFactorStatus::fromState($model->two_factor_secret, $twoFactorConfirmedAt),
             createdAt: $createdAt,
             updatedAt: $updatedAt,
         );
