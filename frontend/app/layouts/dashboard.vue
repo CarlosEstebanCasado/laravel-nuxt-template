@@ -67,6 +67,7 @@ const links = computed<NavigationMenuItem[][]>(() => [[{
   label: t('sidebar.marketing_site'),
   icon: 'i-lucide-globe',
   to: siteBaseUrl,
+  target: '_blank',
   onSelect: makeClose
 }, {
   label: t('sidebar.support'),
