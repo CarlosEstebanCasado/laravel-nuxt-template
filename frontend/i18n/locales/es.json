@@ -137,6 +137,7 @@
       "seo_title": "Iniciar sesión",
       "seo_description": "Accede a tu cuenta para continuar",
       "title": "Hola de nuevo",
+      "submit": "Continuar",
       "cta_text": "¿No tienes cuenta?",
       "cta_action": "Crear cuenta",
       "forgot": "¿Has olvidado la contraseña?",
@@ -465,6 +466,7 @@
     "ca": "Catalán"
   },
   "messages": {
+    "loading": "Cargando...",
     "generic_error": "Algo salió mal. Inténtalo de nuevo.",
     "sessions_empty": "No encontramos sesiones activas para tu cuenta.",
     "validation": {

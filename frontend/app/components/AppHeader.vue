@@ -4,6 +4,11 @@ const router = useRouter()
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const switchLocalePath = useSwitchLocalePath()
+const config = useRuntimeConfig()
+const localeCookie = useCookie<string | null>('i18n_redirected', {
+  domain: config.public.i18nCookieDomain,
+  path: '/'
+})
 
 type LocaleCode = 'es' | 'en' | 'ca'
 const localeCodes: LocaleCode[] = ['es', 'en', 'ca']
@@ -22,6 +27,7 @@ const localeOptions = computed(() => {
 const activeLocale = computed<LocaleCode>({
   get: () => locale.value as LocaleCode,
   set: (value) => {
+    localeCookie.value = value
     const target = switchLocalePath(value)
     if (target) {
       void router.push(target)
@@ -29,10 +35,12 @@ const activeLocale = computed<LocaleCode>({
   }
 })
 
+const docsBasePath = computed(() => `/${locale.value}/docs`)
+
 const items = computed(() => [{
   label: t('navigation.docs'),
-  to: localePath('/docs'),
-  active: route.path.startsWith(localePath('/docs'))
+  to: localePath('/docs/getting-started'),
+  active: route.path.startsWith(docsBasePath.value)
 }, {
   label: t('navigation.pricing'),
   to: localePath('/pricing')

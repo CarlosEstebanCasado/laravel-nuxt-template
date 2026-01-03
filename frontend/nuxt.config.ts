@@ -6,6 +6,7 @@ const sharpOptionalPackages = [
   '@img/sharp-linuxmusl-x64',
   '@img/sharp-libvips-linuxmusl-x64'
 ]
+const i18nCookieDomain = process.env.NUXT_PUBLIC_I18N_COOKIE_DOMAIN || '.project.dev'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -36,7 +37,8 @@ export default defineNuxtConfig({
       apiPrefix: process.env.NUXT_PUBLIC_API_PREFIX || '/api/v1',
       authPrefix: process.env.NUXT_PUBLIC_AUTH_PREFIX || '/auth',
       appBaseUrl: process.env.NUXT_PUBLIC_APP_BASE_URL || 'https://app.project.dev',
-      siteBaseUrl: process.env.NUXT_PUBLIC_SITE_BASE_URL || 'https://project.dev'
+      siteBaseUrl: process.env.NUXT_PUBLIC_SITE_BASE_URL || 'https://project.dev',
+      i18nCookieDomain: process.env.NUXT_PUBLIC_I18N_COOKIE_DOMAIN || '.project.dev'
     }
   },
 
@@ -141,6 +143,7 @@ export default defineNuxtConfig({
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
+      cookieDomain: i18nCookieDomain,
       redirectOn: 'root',
       alwaysRedirect: false
     },

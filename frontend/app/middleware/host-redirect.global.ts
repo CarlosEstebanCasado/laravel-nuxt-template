@@ -18,7 +18,10 @@ export default defineNuxtRouteMiddleware((to) => {
 
   const localeCodes = ['es', 'en', 'ca']
   const localePattern = new RegExp(`^/(${localeCodes.join('|')})(/|$)`)
-  const localeCookie = useCookie<string | null>('i18n_redirected')
+  const localeCookie = useCookie<string | null>('i18n_redirected', {
+    domain: config.public.i18nCookieDomain,
+    path: '/'
+  })
   const preferredLocale = localeCodes.includes(localeCookie.value || '')
     ? (localeCookie.value as string)
     : localeCodes[0]
@@ -59,11 +62,20 @@ export default defineNuxtRouteMiddleware((to) => {
   const isPublicPath = (path: string) => !isPrivatePath(path)
 
   const { path, search, hash } = splitFullPath()
+  const localeMatch = path.match(localePattern)
+  const localeFromPath = localeMatch ? localeMatch[1] : null
+
+  if (currentHost === siteHost && localeFromPath && localeFromPath !== localeCookie.value) {
+    localeCookie.value = localeFromPath
+  }
 
   if (currentHost === siteHost && isPrivatePath(path)) {
     const targetPath = stripLocalePrefix(path)
-    const target = `${appBaseUrl}${targetPath}${search}${hash}`
-    return navigateTo(target, { redirectCode: 302, external: true })
+    const targetUrl = new URL(`${targetPath}${search}${hash}`, appBaseUrl)
+    if (localeFromPath || localeCookie.value) {
+      targetUrl.searchParams.set('locale', (localeFromPath || localeCookie.value) as string)
+    }
+    return navigateTo(targetUrl.toString(), { redirectCode: 302, external: true })
   }
 
   if (currentHost === appHost && isPublicPath(path)) {

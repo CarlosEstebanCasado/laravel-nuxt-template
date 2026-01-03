@@ -2,6 +2,15 @@
 const colorMode = useColorMode()
 const { t, locale: activeLocale } = useI18n()
 const localePath = useLocalePath()
+const nuxtApp = useNuxtApp()
+const config = useRuntimeConfig()
+const router = useRouter()
+const localeCookie = useCookie<string | null>('i18n_redirected', {
+  domain: config.public.i18nCookieDomain,
+  path: '/'
+})
+const supportedLocales = ['es', 'en', 'ca'] as const
+const isRouteLoading = ref(false)
 
 const color = computed(() => colorMode.value === 'dark' ? '#020618' : 'white')
 
@@ -26,24 +35,127 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-const auth = useAuth()
-const config = useRuntimeConfig()
 
 if (import.meta.client) {
-  const shouldFetchUser = () => {
+  let loadingTimer: number | null = null
+  let loadingFailsafe: number | null = null
+  const stopBefore = router.beforeEach(() => {
+    if (loadingTimer !== null) {
+      window.clearTimeout(loadingTimer)
+    }
+    if (loadingFailsafe !== null) {
+      window.clearTimeout(loadingFailsafe)
+    }
+    loadingTimer = window.setTimeout(() => {
+      isRouteLoading.value = true
+    }, 200)
+    loadingFailsafe = window.setTimeout(() => {
+      isRouteLoading.value = false
+    }, 8000)
+    return true
+  })
+  const stopAfter = router.afterEach(() => {
+    if (loadingTimer !== null) {
+      window.clearTimeout(loadingTimer)
+      loadingTimer = null
+    }
+    if (loadingFailsafe !== null) {
+      window.clearTimeout(loadingFailsafe)
+      loadingFailsafe = null
+    }
+    isRouteLoading.value = false
+  })
+  const stopError = router.onError(() => {
+    if (loadingTimer !== null) {
+      window.clearTimeout(loadingTimer)
+      loadingTimer = null
+    }
+    if (loadingFailsafe !== null) {
+      window.clearTimeout(loadingFailsafe)
+      loadingFailsafe = null
+    }
+    isRouteLoading.value = false
+  })
+
+  onBeforeUnmount(() => {
+    stopBefore()
+    stopAfter()
+    stopError()
+  })
+
+  const currentHost = window.location.host
+  const appHost = (() => {
     try {
-      const appHost = new URL(config.public.appBaseUrl).host
-      return window.location.host === appHost
+      return new URL(config.public.appBaseUrl).host
     } catch {
-      return true
+      return null
+    }
+  })()
+  const isAppHost = appHost ? currentHost === appHost : false
+
+  document.cookie = 'i18n_redirected=; Max-Age=0; path=/'
+  if (config.public.i18nCookieDomain) {
+    document.cookie = `i18n_redirected=; Max-Age=0; path=/; domain=${config.public.i18nCookieDomain}`
+  }
+  localeCookie.value = null
+
+  if (!isAppHost && supportedLocales.includes(activeLocale.value as (typeof supportedLocales)[number])) {
+    localeCookie.value = activeLocale.value
+  }
+  const currentUrl = new URL(window.location.href)
+  const localeParam = currentUrl.searchParams.get('locale')
+  const validParamLocale = supportedLocales.includes(localeParam as (typeof supportedLocales)[number])
+    ? (localeParam as (typeof supportedLocales)[number])
+    : null
+
+  if (isAppHost && validParamLocale) {
+    localeCookie.value = validParamLocale
+    if (nuxtApp.$i18n?.setLocale) {
+      void nuxtApp.$i18n.setLocale(validParamLocale)
+    } else if (nuxtApp.$i18n?.locale) {
+      nuxtApp.$i18n.locale.value = validParamLocale
+    } else {
+      activeLocale.value = validParamLocale
+    }
+
+    currentUrl.searchParams.delete('locale')
+    const nextPath = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`
+    if (nextPath !== window.location.pathname + window.location.search + window.location.hash) {
+      window.history.replaceState(window.history.state, '', nextPath)
     }
   }
 
-  if (shouldFetchUser()) {
-    auth.fetchUser().catch(() => {
-      /* swallow errors so the app can render */
-    })
+  const cookieLocale = supportedLocales.includes(localeCookie.value as (typeof supportedLocales)[number])
+    ? (localeCookie.value as (typeof supportedLocales)[number])
+    : null
+
+  if (isAppHost) {
+    if (cookieLocale && cookieLocale !== activeLocale.value) {
+      if (nuxtApp.$i18n?.setLocale) {
+        void nuxtApp.$i18n.setLocale(cookieLocale)
+      } else if (nuxtApp.$i18n?.locale) {
+        nuxtApp.$i18n.locale.value = cookieLocale
+      } else {
+        activeLocale.value = cookieLocale
+      }
+    } else if (!cookieLocale) {
+      localeCookie.value = activeLocale.value
+    }
   }
+
+  watch(
+    () => activeLocale.value,
+    (value) => {
+      if (!value) {
+        return
+      }
+
+      if (localeCookie.value !== value) {
+        localeCookie.value = value
+      }
+    }
+  )
+
 }
 
 const { data: navigation } = useAsyncData('navigation', () => queryCollectionNavigation('docs'), {
@@ -81,6 +193,21 @@ provide('navigation', navigation)
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+
+    <div
+      v-if="isRouteLoading"
+      class="fixed inset-0 z-[9999] flex items-center justify-center bg-white/70 backdrop-blur-sm dark:bg-slate-950/70"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <div class="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+        <UIcon
+          name="i-lucide-loader-2"
+          class="h-6 w-6 animate-spin"
+        />
+        <span class="text-sm font-medium">{{ t('messages.loading') }}</span>
+      </div>
+    </div>
 
     <ClientOnly>
       <LazyUContentSearch

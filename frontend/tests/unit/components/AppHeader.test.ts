@@ -11,7 +11,7 @@ describe('AppHeader', () => {
 
     expect(items).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ to: '/docs' }),
+        expect.objectContaining({ to: '/docs/getting-started' }),
         expect.objectContaining({ to: '/pricing' }),
         expect.objectContaining({ to: '/blog' }),
         expect.objectContaining({ to: '/changelog' })
