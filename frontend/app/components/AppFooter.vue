@@ -101,7 +101,7 @@ function onSubmit() {
         to="https://go.nuxt.com/discord"
         target="_blank"
         icon="i-simple-icons-discord"
-        aria-label="Nuxt on Discord"
+        :aria-label="t('footer.social.discord')"
         color="neutral"
         variant="ghost"
       />
@@ -109,7 +109,7 @@ function onSubmit() {
         to="https://go.nuxt.com/x"
         target="_blank"
         icon="i-simple-icons-x"
-        aria-label="Nuxt on X"
+        :aria-label="t('footer.social.x')"
         color="neutral"
         variant="ghost"
       />
@@ -117,7 +117,7 @@ function onSubmit() {
         to="https://github.com/nuxt-ui-templates/saas"
         target="_blank"
         icon="i-simple-icons-github"
-        aria-label="Nuxt UI on GitHub"
+        :aria-label="t('footer.social.github')"
         color="neutral"
         variant="ghost"
       />

@@ -112,6 +112,7 @@ export default defineNuxtConfig({
 
   vite: {
     build: {
+      chunkSizeWarningLimit: 3500,
       rollupOptions: {
         onwarn(warning, warn) {
           if (

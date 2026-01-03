@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
+const { locale } = useI18n()
 const localePath = useLocalePath()
 
 const { data: page } = await useAsyncData('blog', () => queryCollection('blog').first())
@@ -16,6 +17,14 @@ useSeoMeta({
 })
 
 defineOgImageComponent('Saas')
+
+const formatDate = (value: string) => {
+  return new Date(value).toLocaleDateString(locale.value, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
 </script>
 
 <template>
@@ -34,7 +43,7 @@ defineOgImageComponent('Saas')
         :title="post.title"
         :description="post.description"
           :image="post.image"
-          :date="new Date(post.date).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })"
+          :date="formatDate(post.date)"
           :authors="post.authors"
           :badge="post.badge"
           :orientation="index === 0 ? 'horizontal' : 'vertical'"

@@ -4,7 +4,7 @@ definePageMeta({
 })
 
 const route = useRoute()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const contentPath = computed(() => {
   const prefix = `/${locale.value}`
@@ -24,7 +24,7 @@ const { data: page } = await useAsyncData(
   () => queryCollection('docs').path(contentPath.value).first()
 )
 if (!page.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: t('errors.page_not_found_short'), fatal: true })
 }
 
 const surroundKey = computed(() => `docs:${contentPath.value}-surround`)

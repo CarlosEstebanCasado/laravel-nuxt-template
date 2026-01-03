@@ -234,12 +234,12 @@ app/
 
 1. Duplica este repo como plantilla (`Use this template`).
 2. Copia `.env.example` → `.env` en la raíz y configura credenciales (Postgres, MinIO). Configura `.env` en backend/frontend (`backend/.env`, `frontend/.env`).
-3. Sigue `docs/docker/addendum.md` para preparar hosts locales (`app.project.dev`, `api.project.dev`).
+3. Sigue `docs/docker/addendum.md` para preparar hosts locales (`project.dev`, `app.project.dev`, `api.project.dev`).
 4. `make hosts` para añadir los dominios al archivo `/etc/hosts` (Windows/macOS/Linux).
 5. `make certs` para generar certificados TLS de desarrollo (`make trust-ca` instala mkcert/certutil y confía la CA en Chrome/Firefox/Brave).
 6. `make up` para levantar servicios locales.
 7. `make seed` para crear usuario + household demo (credenciales mostradas en consola).
-8. Accede a `https://app.project.dev` y `https://api.project.dev/api/v1/health`.
+8. Accede a `https://project.dev`, `https://app.project.dev` y `https://api.project.dev/api/v1/health`.
 9. Usa `https://app.project.dev/auth/register` para crear una cuenta, confirma el correo desde Mailhog (`http://localhost:8025`) y entra al dashboard (`/dashboard`).
 10. Actualiza branding, módulos y documentación OpenAPI según tu caso de uso.
 

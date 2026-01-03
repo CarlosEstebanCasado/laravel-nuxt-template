@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const contentPath = computed(() => {
   const prefix = `/${locale.value}`
@@ -20,7 +20,7 @@ const { data: post } = await useAsyncData(
   () => queryCollection('posts').path(contentPath.value).first()
 )
 if (!post.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Post not found', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: t('errors.page_not_found_short'), fatal: true })
 }
 
 const surroundKey = computed(() => `posts:${contentPath.value}-surround`)
@@ -54,6 +54,14 @@ useSeoMeta({
   ogDescription: description
 })
 
+const formatDate = (value: string) => {
+  return new Date(value).toLocaleDateString(locale.value, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
 if (post.value.image?.src) {
   defineOgImage({
     url: post.value.image.src
@@ -77,7 +85,7 @@ if (post.value.image?.src) {
           variant="subtle"
         />
         <span class="text-muted">&middot;</span>
-        <time class="text-muted">{{ new Date(post.date).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' }) }}</time>
+        <time class="text-muted">{{ formatDate(post.date) }}</time>
       </template>
 
       <div class="flex flex-wrap items-center gap-3 mt-4">

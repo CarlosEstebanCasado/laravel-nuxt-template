@@ -56,7 +56,28 @@
     "newsletter_placeholder": "Enter your email",
     "subscribe_success_title": "Subscribed!",
     "subscribe_success_description": "You've been subscribed to our newsletter.",
+    "social": {
+      "discord": "Nuxt on Discord",
+      "x": "Nuxt on X",
+      "github": "Nuxt UI on GitHub"
+    },
     "copyright": "Built with Nuxt UI • © {year}"
+  },
+  "errors": {
+    "page_not_found_title": "Page not found",
+    "page_not_found_description": "We are sorry but this page could not be found.",
+    "page_not_found_short": "Page not found",
+    "page_not_found_with_path": "Page not found: {path}",
+    "back_home": "Back to home",
+    "back_dashboard": "Back to dashboard"
+  },
+  "pricing": {
+    "billing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "per_month": "/month",
+      "per_year": "/year"
+    }
   },
   "templates": {
     "title": "Templates",
@@ -437,6 +458,11 @@
     "zinc": "Zinc",
     "neutral": "Neutral",
     "stone": "Stone"
+  },
+  "locales": {
+    "es": "Spanish",
+    "en": "English",
+    "ca": "Catalan"
   },
   "messages": {
     "generic_error": "Something went wrong. Please try again.",

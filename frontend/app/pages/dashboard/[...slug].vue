@@ -7,11 +7,12 @@ definePageMeta({
 })
 
 const route = useRoute()
+const { t } = useI18n()
 
 const error = computed(() => ({
   statusCode: 404,
-  statusMessage: 'Page not found',
-  message: `Page not found: ${route.path}`
+  statusMessage: t('errors.page_not_found_short'),
+  message: t('errors.page_not_found_with_path', { path: route.path })
 }))
 
 // In the dashboard SPA area, unknown routes can otherwise render blank.
@@ -29,7 +30,7 @@ const error = computed(() => ({
               size="lg"
               color="primary"
               variant="solid"
-              label="Back to dashboard"
+              :label="t('errors.back_dashboard')"
             />
           </div>
         </template>
@@ -37,4 +38,3 @@ const error = computed(() => ({
     </template>
   </UDashboardPanel>
 </template>
-

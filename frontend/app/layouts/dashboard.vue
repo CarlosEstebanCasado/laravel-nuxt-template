@@ -9,6 +9,8 @@ useSeoMeta({
 const route = useRoute()
 const toast = useToast()
 const { t } = useI18n()
+const config = useRuntimeConfig()
+const siteBaseUrl = config.public.siteBaseUrl || '/'
 
 const open = ref(false)
 const dashboardBase = '/dashboard'
@@ -64,7 +66,8 @@ const links = computed<NavigationMenuItem[][]>(() => [[{
 }], [{
   label: t('sidebar.marketing_site'),
   icon: 'i-lucide-globe',
-  to: '/',
+  to: siteBaseUrl,
+  target: '_blank',
   onSelect: makeClose
 }, {
   label: t('sidebar.support'),

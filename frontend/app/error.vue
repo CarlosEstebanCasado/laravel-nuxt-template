@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { NuxtError } from '#app'
 
+const { locale, t } = useI18n()
+
 defineProps({
   error: {
     type: Object as PropType<NuxtError>,
@@ -8,15 +10,15 @@ defineProps({
   }
 })
 
-useHead({
+useHead(() => ({
   htmlAttrs: {
-    lang: 'en'
+    lang: locale.value
   }
-})
+}))
 
 useSeoMeta({
-  title: 'Page not found',
-  description: 'We are sorry but this page could not be found.'
+  title: t('errors.page_not_found_title'),
+  description: t('errors.page_not_found_description')
 })
 </script>
 
@@ -31,7 +33,7 @@ useSeoMeta({
               size="lg"
               color="primary"
               variant="solid"
-              label="Back to home"
+              :label="t('errors.back_home')"
             />
           </template>
         </UError>
