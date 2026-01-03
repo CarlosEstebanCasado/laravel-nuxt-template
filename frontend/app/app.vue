@@ -83,11 +83,6 @@ if (import.meta.client) {
     stopError()
   })
 
-  document.cookie = 'i18n_redirected=; Max-Age=0; path=/'
-  if (config.public.i18nCookieDomain) {
-    document.cookie = `i18n_redirected=; Max-Age=0; path=/; domain=${config.public.i18nCookieDomain}`
-  }
-  localeCookie.value = null
   const currentHost = window.location.host
   const appHost = (() => {
     try {
@@ -97,6 +92,16 @@ if (import.meta.client) {
     }
   })()
   const isAppHost = appHost ? currentHost === appHost : false
+
+  document.cookie = 'i18n_redirected=; Max-Age=0; path=/'
+  if (config.public.i18nCookieDomain) {
+    document.cookie = `i18n_redirected=; Max-Age=0; path=/; domain=${config.public.i18nCookieDomain}`
+  }
+  localeCookie.value = null
+
+  if (!isAppHost && supportedLocales.includes(activeLocale.value as (typeof supportedLocales)[number])) {
+    localeCookie.value = activeLocale.value
+  }
   const currentUrl = new URL(window.location.href)
   const localeParam = currentUrl.searchParams.get('locale')
   const validParamLocale = supportedLocales.includes(localeParam as (typeof supportedLocales)[number])
