@@ -38,13 +38,20 @@ useSeoMeta({
 
 if (import.meta.client) {
   let loadingTimer: number | null = null
+  let loadingFailsafe: number | null = null
   const stopBefore = router.beforeEach(() => {
     if (loadingTimer !== null) {
       window.clearTimeout(loadingTimer)
     }
+    if (loadingFailsafe !== null) {
+      window.clearTimeout(loadingFailsafe)
+    }
     loadingTimer = window.setTimeout(() => {
       isRouteLoading.value = true
     }, 200)
+    loadingFailsafe = window.setTimeout(() => {
+      isRouteLoading.value = false
+    }, 8000)
     return true
   })
   const stopAfter = router.afterEach(() => {
@@ -52,12 +59,20 @@ if (import.meta.client) {
       window.clearTimeout(loadingTimer)
       loadingTimer = null
     }
+    if (loadingFailsafe !== null) {
+      window.clearTimeout(loadingFailsafe)
+      loadingFailsafe = null
+    }
     isRouteLoading.value = false
   })
   router.onError(() => {
     if (loadingTimer !== null) {
       window.clearTimeout(loadingTimer)
       loadingTimer = null
+    }
+    if (loadingFailsafe !== null) {
+      window.clearTimeout(loadingFailsafe)
+      loadingFailsafe = null
     }
     isRouteLoading.value = false
   })
