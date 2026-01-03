@@ -142,6 +142,7 @@ async function onSubmit(event?: FormSubmitEvent<Record<string, unknown>>) {
     :providers="providers"
     :loading="isSubmitting"
     :title="t('auth.login.title')"
+    :submit="{ label: t('auth.login.submit') }"
     icon="i-lucide-lock"
     @submit="onSubmit"
   >

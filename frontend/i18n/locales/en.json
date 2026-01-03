@@ -137,6 +137,7 @@
       "seo_title": "Login",
       "seo_description": "Login to your account to continue",
       "title": "Welcome back",
+      "submit": "Continue",
       "cta_text": "Don't have an account?",
       "cta_action": "Sign up",
       "forgot": "Forgot password?",
