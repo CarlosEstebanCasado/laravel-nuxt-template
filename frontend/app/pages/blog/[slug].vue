@@ -62,14 +62,16 @@ const formatDate = (value: string) => {
   })
 }
 
-if (post.value.image?.src) {
-  defineOgImage({
-    url: post.value.image.src
-  })
-} else {
-  defineOgImageComponent('Saas', {
-    headline: 'Blog'
-  })
+if (import.meta.server) {
+  if (post.value.image?.src) {
+    defineOgImage({
+      url: post.value.image.src
+    })
+  } else {
+    defineOgImageComponent('Saas', {
+      headline: 'Blog'
+    })
+  }
 }
 </script>
 

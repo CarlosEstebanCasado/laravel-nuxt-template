@@ -29,10 +29,12 @@ const activeLocale = computed<LocaleCode>({
   }
 })
 
+const docsBasePath = computed(() => `/${locale.value}/docs`)
+
 const items = computed(() => [{
   label: t('navigation.docs'),
-  to: localePath('/docs'),
-  active: route.path.startsWith(localePath('/docs'))
+  to: localePath('/docs/getting-started'),
+  active: route.path.startsWith(docsBasePath.value)
 }, {
   label: t('navigation.pricing'),
   to: localePath('/pricing')

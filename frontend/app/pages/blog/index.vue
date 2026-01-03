@@ -16,7 +16,9 @@ useSeoMeta({
   ogDescription: description
 })
 
-defineOgImageComponent('Saas')
+if (import.meta.server) {
+  defineOgImageComponent('Saas')
+}
 
 const formatDate = (value: string) => {
   return new Date(value).toLocaleDateString(locale.value, {

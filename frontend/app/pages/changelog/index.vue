@@ -14,7 +14,9 @@ useSeoMeta({
   ogDescription: description
 })
 
-defineOgImageComponent('Saas')
+if (import.meta.server) {
+  defineOgImageComponent('Saas')
+}
 </script>
 
 <template>
