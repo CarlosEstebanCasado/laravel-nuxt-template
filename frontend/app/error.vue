@@ -10,11 +10,11 @@ defineProps({
   }
 })
 
-useHead({
+useHead(() => ({
   htmlAttrs: {
-    lang: locale
+    lang: locale.value
   }
-})
+}))
 
 useSeoMeta({
   title: t('errors.page_not_found_title'),
