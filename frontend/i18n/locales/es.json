@@ -438,6 +438,11 @@
     "neutral": "Neutro",
     "stone": "Piedra"
   },
+  "locales": {
+    "es": "Español",
+    "en": "Inglés",
+    "ca": "Catalán"
+  },
   "messages": {
     "generic_error": "Algo salió mal. Inténtalo de nuevo.",
     "sessions_empty": "No encontramos sesiones activas para tu cuenta.",

@@ -7,15 +7,9 @@ const switchLocalePath = useSwitchLocalePath()
 
 type LocaleCode = 'es' | 'en' | 'ca'
 const localeCodes: LocaleCode[] = ['es', 'en', 'ca']
-const localeLabels: Record<LocaleCode, string> = {
-  es: 'Español',
-  en: 'English',
-  ca: 'Català'
-}
-
 const localeOptions = computed(() => {
   return localeCodes.map((code) => {
-    return { label: localeLabels[code], value: code }
+    return { label: t(`locales.${code}`), value: code }
   })
 })
 

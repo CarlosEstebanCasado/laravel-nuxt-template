@@ -438,6 +438,11 @@
     "neutral": "Neutre",
     "stone": "Pedra"
   },
+  "locales": {
+    "es": "Castellà",
+    "en": "Anglès",
+    "ca": "Català"
+  },
   "messages": {
     "generic_error": "Alguna cosa no ha anat bé. Torna-ho a provar.",
     "sessions_empty": "No hem trobat sessions actives per al teu compte.",

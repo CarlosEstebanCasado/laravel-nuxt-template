@@ -438,6 +438,11 @@
     "neutral": "Neutral",
     "stone": "Stone"
   },
+  "locales": {
+    "es": "Spanish",
+    "en": "English",
+    "ca": "Catalan"
+  },
   "messages": {
     "generic_error": "Something went wrong. Please try again.",
     "sessions_empty": "We couldn't find any active sessions for your account.",
