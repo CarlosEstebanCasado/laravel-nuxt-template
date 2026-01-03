@@ -466,6 +466,7 @@
     "ca": "Catalán"
   },
   "messages": {
+    "loading": "Cargando...",
     "generic_error": "Algo salió mal. Inténtalo de nuevo.",
     "sessions_empty": "No encontramos sesiones activas para tu cuenta.",
     "validation": {

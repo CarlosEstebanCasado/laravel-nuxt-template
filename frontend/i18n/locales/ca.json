@@ -466,6 +466,7 @@
     "ca": "Català"
   },
   "messages": {
+    "loading": "Carregant...",
     "generic_error": "Alguna cosa no ha anat bé. Torna-ho a provar.",
     "sessions_empty": "No hem trobat sessions actives per al teu compte.",
     "validation": {

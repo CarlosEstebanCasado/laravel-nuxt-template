@@ -466,6 +466,7 @@
     "ca": "Catalan"
   },
   "messages": {
+    "loading": "Loading...",
     "generic_error": "Something went wrong. Please try again.",
     "sessions_empty": "We couldn't find any active sessions for your account.",
     "validation": {
