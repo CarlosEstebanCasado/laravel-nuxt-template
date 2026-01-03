@@ -68,6 +68,9 @@ if (import.meta.client) {
   })
 
   document.cookie = 'i18n_redirected=; Max-Age=0; path=/'
+  if (config.public.i18nCookieDomain) {
+    document.cookie = `i18n_redirected=; Max-Age=0; path=/; domain=${config.public.i18nCookieDomain}`
+  }
   const currentHost = window.location.host
   const appHost = (() => {
     try {
