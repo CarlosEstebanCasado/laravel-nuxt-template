@@ -9,11 +9,12 @@ namespace App\Src\IdentityAccess\Auth\User\Application\Response;
 final class GetUserPreferencesUseCaseResponse
 {
     /**
-     * @param array{locale:string,theme:string,primary_color:string,neutral_color:string} $data
+     * @param array{locale:string,theme:string,primary_color:string,neutral_color:string,timezone:string} $data
      * @param array<int, PreferenceOption> $available_locales
      * @param array<int, PreferenceOption> $available_themes
      * @param array<int, PreferenceOption> $available_primary_colors
      * @param array<int, PreferenceOption> $available_neutral_colors
+     * @param array<int, PreferenceOption> $available_timezones
      */
     public function __construct(
         public array $data,
@@ -21,6 +22,7 @@ final class GetUserPreferencesUseCaseResponse
         public array $available_themes,
         public array $available_primary_colors,
         public array $available_neutral_colors,
+        public array $available_timezones,
     ) {
     }
 }

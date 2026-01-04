@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { format, isToday } from 'date-fns'
 import type { Mail } from '~/types'
 
 const props = defineProps<{
@@ -7,6 +6,7 @@ const props = defineProps<{
 }>()
 
 const mailsRefs = ref<Element[]>([])
+const { formatWithTimeZone, formatDateKey } = useDateTimeFormat()
 
 const selectedMail = defineModel<Mail | null>()
 
@@ -40,6 +40,8 @@ defineShortcuts({
     }
   }
 })
+
+const isSameDay = (value: string) => formatDateKey(value) === formatDateKey(new Date())
 </script>
 
 <template>
@@ -66,7 +68,13 @@ defineShortcuts({
             <UChip v-if="mail.unread" />
           </div>
 
-          <span>{{ isToday(new Date(mail.date)) ? format(new Date(mail.date), 'HH:mm') : format(new Date(mail.date), 'dd MMM') }}</span>
+          <span>
+            {{
+              isSameDay(mail.date)
+                ? formatWithTimeZone(mail.date, { hour: '2-digit', minute: '2-digit', hour12: false })
+                : formatWithTimeZone(mail.date, { day: '2-digit', month: 'short' })
+            }}
+          </span>
         </div>
         <p class="truncate" :class="[mail.unread && 'font-semibold']">
           {{ mail.subject }}

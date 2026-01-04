@@ -21,11 +21,13 @@ const form = reactive<{
   theme: ThemePreference
   primary_color: string
   neutral_color: string
+  timezone: string
 }>({
   locale: 'es',
   theme: 'system',
   primary_color: 'blue',
-  neutral_color: 'slate'
+  neutral_color: 'slate',
+  timezone: 'UTC'
 })
 
 const isLoading = ref(true)
@@ -53,6 +55,8 @@ const neutralColorOptions = computed(() =>
   }))
 )
 
+const timezoneOptions = computed(() => auth.preferenceOptions.value.timezones)
+
 const syncPreferences = () => {
   if (!auth.preferences.value) {
     return
@@ -62,6 +66,7 @@ const syncPreferences = () => {
   form.theme = auth.preferences.value.theme
   form.primary_color = auth.preferences.value.primary_color
   form.neutral_color = auth.preferences.value.neutral_color
+  form.timezone = auth.preferences.value.timezone
 }
 
 onMounted(async () => {
@@ -92,7 +97,8 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
       locale: event.data.locale,
       theme: event.data.theme,
       primary_color: event.data.primary_color,
-      neutral_color: event.data.neutral_color
+      neutral_color: event.data.neutral_color,
+      timezone: event.data.timezone
     })
     toast.add({
       title: t('preferences.success'),
@@ -145,6 +151,26 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
           label-key="label"
           value-key="value"
           :disabled="isLoading"
+        />
+      </UFormField>
+
+      <USeparator />
+
+      <UFormField
+        name="timezone"
+        :label="t('preferences.timezone_label')"
+        :description="t('preferences.timezone_hint')"
+        class="flex max-sm:flex-col justify-between items-start gap-4"
+      >
+        <USelectMenu
+          v-model="form.timezone"
+          :items="timezoneOptions"
+          label-key="label"
+          value-key="value"
+          :disabled="isLoading"
+          searchable
+          :search-placeholder="t('preferences.timezone_search_placeholder')"
+          class="min-w-48"
         />
       </UFormField>
 

@@ -62,8 +62,16 @@ const dateLocale = computed(() => {
   return enUS
 })
 
+const timeZone = computed(
+  () => auth.preferences.value?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? 'UTC'
+)
+
 const formatDateTime = (date: Date) =>
-  new Intl.DateTimeFormat(locale.value, { dateStyle: 'medium', timeStyle: 'short' }).format(date)
+  new Intl.DateTimeFormat(locale.value, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: timeZone.value
+  }).format(date)
 
 const formatLastActivity = (unixSeconds: number) => formatDateTime(new Date(unixSeconds * 1000))
 const formatLastActivityRelative = (unixSeconds: number) =>

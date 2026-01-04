@@ -10,6 +10,7 @@ const props = defineProps<{
 
 const UBadge = resolveComponent('UBadge')
 const { t } = useI18n()
+const { formatWithTimeZone } = useDateTimeFormat()
 
 const sampleEmails = [
   'james.anderson@example.com',
@@ -58,7 +59,7 @@ const columns = computed<TableColumn<Sale>[]>(() => [
     accessorKey: 'date',
     header: t('dashboard.sales.date'),
     cell: ({ row }) => {
-      return new Date(row.getValue('date')).toLocaleString('en-US', {
+      return formatWithTimeZone(String(row.getValue('date')), {
         day: 'numeric',
         month: 'short',
         hour: '2-digit',

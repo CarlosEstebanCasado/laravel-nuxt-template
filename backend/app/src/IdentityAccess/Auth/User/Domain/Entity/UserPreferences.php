@@ -7,6 +7,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 
 final class UserPreferences
@@ -17,6 +18,7 @@ final class UserPreferences
         private readonly Theme $theme,
         private readonly PrimaryColor $primaryColor,
         private readonly NeutralColor $neutralColor,
+        private readonly Timezone $timezone,
     ) {
     }
 
@@ -25,9 +27,10 @@ final class UserPreferences
         Locale $locale,
         Theme $theme,
         PrimaryColor $primaryColor,
-        NeutralColor $neutralColor
+        NeutralColor $neutralColor,
+        Timezone $timezone
     ): self {
-        return new self($userId, $locale, $theme, $primaryColor, $neutralColor);
+        return new self($userId, $locale, $theme, $primaryColor, $neutralColor, $timezone);
     }
 
     public static function default(UserId $userId): self
@@ -44,13 +47,15 @@ final class UserPreferences
 
         $defaultPrimary = self::configString('preferences.default_primary_color', 'blue');
         $defaultNeutral = self::configString('preferences.default_neutral_color', 'slate');
+        $defaultTimezone = self::configString('preferences.default_timezone', 'UTC');
 
         return new self(
             $userId,
             new Locale($defaultLocale),
             new Theme($defaultTheme),
             new PrimaryColor($defaultPrimary),
-            new NeutralColor($defaultNeutral)
+            new NeutralColor($defaultNeutral),
+            new Timezone($defaultTimezone)
         );
     }
 
@@ -77,6 +82,11 @@ final class UserPreferences
     public function neutralColor(): NeutralColor
     {
         return $this->neutralColor;
+    }
+
+    public function timezone(): Timezone
+    {
+        return $this->timezone;
     }
 
     private static function configString(string $key, string $fallback): string

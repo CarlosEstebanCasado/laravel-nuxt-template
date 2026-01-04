@@ -12,3 +12,4 @@ alwaysApply: true
 - **Composables para logica**: extraer logica compartida (formateos, mapeos, transformaciones) a composables en `frontend/app/composables`.
 - **Tipos estrictos**: no usar `any` en props/emitters/handlers; mantener tipos alineados con `frontend/app/types`.
 - **API segura**: manejo de errores con feedback claro y traducido; no bloquear flujos correctos si fallan llamadas secundarias.
+- **Zona horaria correcta**: cualquier fecha/hora mostrada en UI debe formatearse con la zona horaria configurada por el usuario.

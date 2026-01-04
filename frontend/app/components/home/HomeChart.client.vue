@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, format } from 'date-fns'
+import { eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval } from 'date-fns'
 import { VisXYContainer, VisLine, VisAxis, VisArea, VisCrosshair, VisTooltip } from '@unovis/vue'
 import type { Period, Range } from '~/types'
 
 const cardRef = useTemplateRef<HTMLElement | null>('cardRef')
 const { t } = useI18n()
+const { formatWithTimeZone } = useDateTimeFormat()
 
 const props = defineProps<{
   period: Period
@@ -42,9 +43,9 @@ const formatNumber = new Intl.NumberFormat('en', { style: 'currency', currency: 
 
 const formatDate = (date: Date): string => {
   return ({
-    daily: format(date, 'd MMM'),
-    weekly: format(date, 'd MMM'),
-    monthly: format(date, 'MMM yyy')
+    daily: formatWithTimeZone(date, { day: 'numeric', month: 'short' }),
+    weekly: formatWithTimeZone(date, { day: 'numeric', month: 'short' }),
+    monthly: formatWithTimeZone(date, { month: 'short', year: 'numeric' })
   })[props.period]
 }
 

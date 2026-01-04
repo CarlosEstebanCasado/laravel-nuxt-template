@@ -11,6 +11,7 @@ final class UpdateUserPreferencesUseCaseRequest
         public readonly ?string $theme,
         public readonly ?string $primaryColor,
         public readonly ?string $neutralColor,
+        public readonly ?string $timezone,
     ) {
     }
 }

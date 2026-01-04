@@ -37,6 +37,7 @@ final class UserResponseConverter
                     theme: $preferences->theme()->toString(),
                     primary_color: $preferences->primaryColor()->toString(),
                     neutral_color: $preferences->neutralColor()->toString(),
+                    timezone: $preferences->timezone()->toString(),
                 ),
             );
         }

@@ -10,6 +10,7 @@ final class UserPreferencesResponseItem
         public string $theme,
         public string $primary_color,
         public string $neutral_color,
+        public string $timezone,
     ) {
     }
 }

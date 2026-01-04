@@ -8,6 +8,7 @@ use App\Src\IdentityAccess\Auth\User\Application\Response\GetUserPreferencesUseC
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\UserPreferences;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use DateTimeZone;
 
 final class GetUserPreferencesUseCase
 {
@@ -34,11 +35,13 @@ final class GetUserPreferencesUseCase
                 'theme' => $preferences->theme()->toString(),
                 'primary_color' => $preferences->primaryColor()->toString(),
                 'neutral_color' => $preferences->neutralColor()->toString(),
+                'timezone' => $preferences->timezone()->toString(),
             ],
             available_locales: $this->availableLocales(),
             available_themes: $this->availableThemes(),
             available_primary_colors: $this->availablePrimaryColors(),
             available_neutral_colors: $this->availableNeutralColors(),
+            available_timezones: $this->availableTimezones(),
         );
     }
 
@@ -124,6 +127,24 @@ final class GetUserPreferencesUseCase
             $options[] = [
                 'value' => $value,
                 'label' => $label,
+            ];
+        }
+
+        return $options;
+    }
+
+    /**
+     * @return array<int, array{value:string,label:string}>
+     */
+    private function availableTimezones(): array
+    {
+        $timezones = DateTimeZone::listIdentifiers();
+        $options = [];
+
+        foreach ($timezones as $timezone) {
+            $options[] = [
+                'value' => $timezone,
+                'label' => $timezone,
             ];
         }
 

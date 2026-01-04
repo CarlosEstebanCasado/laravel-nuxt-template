@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { DateFormatter, getLocalTimeZone, CalendarDate, today } from '@internationalized/date'
+import { DateFormatter, CalendarDate, today } from '@internationalized/date'
 import type { Range } from '~/types'
-
-const df = new DateFormatter('en-US', {
-  dateStyle: 'medium'
-})
 
 const selected = defineModel<Range>({ required: true })
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const { timeZone } = useDateTimeFormat()
+
+const dateFormatter = computed(() => new DateFormatter(locale.value, {
+  dateStyle: 'medium',
+  timeZone: timeZone.value
+}))
+
+const formatDate = (date: Date) => dateFormatter.value.format(date)
 
 const rangeOptions = computed(() => [
   { label: t('dashboard.ranges.last_7'), days: 7 },
@@ -34,8 +38,8 @@ const calendarRange = computed({
   }),
   set: (newValue: { start: CalendarDate | null, end: CalendarDate | null }) => {
     selected.value = {
-      start: newValue.start ? newValue.start.toDate(getLocalTimeZone()) : new Date(),
-      end: newValue.end ? newValue.end.toDate(getLocalTimeZone()) : new Date()
+      start: newValue.start ? newValue.start.toDate(timeZone.value) : new Date(),
+      end: newValue.end ? newValue.end.toDate(timeZone.value) : new Date()
     }
   }
 })
@@ -43,7 +47,7 @@ const calendarRange = computed({
 const isRangeSelected = (range: { days?: number, months?: number, years?: number }) => {
   if (!selected.value.start || !selected.value.end) return false
 
-  const currentDate = today(getLocalTimeZone())
+  const currentDate = today(timeZone.value)
   let startDate = currentDate.copy()
 
   if (range.days) {
@@ -61,7 +65,7 @@ const isRangeSelected = (range: { days?: number, months?: number, years?: number
 }
 
 const selectRange = (range: { days?: number, months?: number, years?: number }) => {
-  const endDate = today(getLocalTimeZone())
+  const endDate = today(timeZone.value)
   let startDate = endDate.copy()
 
   if (range.days) {
@@ -73,8 +77,8 @@ const selectRange = (range: { days?: number, months?: number, years?: number }) 
   }
 
   selected.value = {
-    start: startDate.toDate(getLocalTimeZone()),
-    end: endDate.toDate(getLocalTimeZone())
+    start: startDate.toDate(timeZone.value),
+    end: endDate.toDate(timeZone.value)
   }
 }
 </script>
@@ -90,10 +94,10 @@ const selectRange = (range: { days?: number, months?: number, years?: number }) 
       <span class="truncate">
         <template v-if="selected.start">
           <template v-if="selected.end">
-            {{ df.format(selected.start) }} - {{ df.format(selected.end) }}
+            {{ formatDate(selected.start) }} - {{ formatDate(selected.end) }}
           </template>
           <template v-else>
-            {{ df.format(selected.start) }}
+            {{ formatDate(selected.start) }}
           </template>
         </template>
         <template v-else>
