@@ -6,8 +6,8 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Controllers\Api;
 use App\Src\IdentityAccess\Auth\User\Application\Request\DisableTwoFactorAuthenticationUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\DisableTwoFactorAuthenticationUseCase;
 use App\Src\Shared\UI\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class DisableTwoFactorAuthenticationController extends Controller
 {
@@ -16,7 +16,7 @@ class DisableTwoFactorAuthenticationController extends Controller
     ) {
     }
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): Response
     {
         $user = $this->requireUser($request);
 
@@ -30,6 +30,6 @@ class DisableTwoFactorAuthenticationController extends Controller
             )
         );
 
-        return response()->json([], 204);
+        return response()->noContent();
     }
 }
