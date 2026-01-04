@@ -72,6 +72,7 @@ class User extends Authenticatable implements MustVerifyEmail, AuditableContract
         'remember_token',
         'two_factor_secret',
         'two_factor_recovery_codes',
+        'two_factor_confirmed_at',
     ];
 
     /**
@@ -89,5 +90,50 @@ class User extends Authenticatable implements MustVerifyEmail, AuditableContract
             'two_factor_recovery_codes' => 'encrypted',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    public function transformAudit(array $data): array
+    {
+        if (($data['event'] ?? null) !== 'updated') {
+            return $data;
+        }
+
+        $dirty = $this->getDirty();
+        $hasSecretChange = array_key_exists('two_factor_secret', $dirty);
+        $hasRecoveryChange = array_key_exists('two_factor_recovery_codes', $dirty);
+        $hasConfirmedChange = array_key_exists('two_factor_confirmed_at', $dirty);
+
+        if (! $hasSecretChange && ! $hasRecoveryChange && ! $hasConfirmedChange) {
+            return $data;
+        }
+
+        $original = $this->getOriginal();
+        $newValues = is_array($data['new_values'] ?? null) ? $data['new_values'] : [];
+        $oldValues = is_array($data['old_values'] ?? null) ? $data['old_values'] : [];
+
+        $isDisabled = $hasSecretChange && ($dirty['two_factor_secret'] ?? null) === null;
+        $isConfirmed = $hasConfirmedChange && ($dirty['two_factor_confirmed_at'] ?? null) !== null;
+        $isRecoveryRegenerated = $hasRecoveryChange
+            && ($original['two_factor_recovery_codes'] ?? null) !== null
+            && ($dirty['two_factor_recovery_codes'] ?? null) !== null
+            && ! $isDisabled;
+        $isEnabled = ! $isDisabled && ! $isConfirmed && $hasSecretChange && ($dirty['two_factor_secret'] ?? null) !== null;
+
+        if ($isDisabled) {
+            $newValues['two_factor_disabled'] = true;
+        } elseif ($isConfirmed || $isEnabled) {
+            $newValues['two_factor_enabled'] = true;
+        } elseif ($isRecoveryRegenerated) {
+            $newValues['two_factor_recovery_codes_regenerated'] = true;
+        }
+
+        $data['old_values'] = $oldValues;
+        $data['new_values'] = $newValues;
+
+        return $data;
     }
 }
