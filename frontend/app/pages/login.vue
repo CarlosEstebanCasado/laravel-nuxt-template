@@ -108,7 +108,14 @@ async function onSubmit(event?: FormSubmitEvent<Record<string, unknown>>) {
   isSubmitting.value = true
 
   try {
-    const user = await auth.login(payload)
+    const result = await auth.login(payload)
+
+    if ('twoFactorRequired' in result) {
+      const redirectTo = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard'
+      const qs = redirectTo ? `?redirect=${encodeURIComponent(redirectTo)}` : ''
+      await router.push(`/auth/two-factor${qs}`)
+      return
+    }
 
     toast.add({
       title: t('auth.login.toast_success_title'),
@@ -116,7 +123,7 @@ async function onSubmit(event?: FormSubmitEvent<Record<string, unknown>>) {
     })
 
     const redirectTo = typeof route.query.redirect === 'string' ? route.query.redirect : '/dashboard'
-    if (!user?.email_verified_at) {
+    if (!result?.email_verified_at) {
       const qs = redirectTo ? `?redirect=${encodeURIComponent(redirectTo)}` : ''
       await router.push(`/auth/verify-email${qs}`)
       return

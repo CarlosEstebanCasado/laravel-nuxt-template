@@ -9,6 +9,7 @@ use App\Src\IdentityAccess\Auth\User\UI\Fortify\UpdateUserProfileInformationActi
 use App\Src\IdentityAccess\Auth\User\UI\Responses\LoginResponse as ApiLoginResponse;
 use App\Src\IdentityAccess\Auth\User\UI\Responses\LogoutResponse as ApiLogoutResponse;
 use App\Src\IdentityAccess\Auth\User\UI\Responses\RegisterResponse as ApiRegisterResponse;
+use App\Src\IdentityAccess\Auth\User\UI\Responses\TwoFactorLoginResponse as ApiTwoFactorLoginResponse;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Contracts\PasswordResetResponse as PasswordResetResponseContract;
 use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Contracts\SuccessfulPasswordResetLinkRequestResponse;
+use Laravel\Fortify\Contracts\TwoFactorLoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -35,6 +37,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(LoginResponse::class, ApiLoginResponse::class);
         $this->app->singleton(RegisterResponse::class, ApiRegisterResponse::class);
         $this->app->singleton(LogoutResponse::class, ApiLogoutResponse::class);
+        $this->app->singleton(TwoFactorLoginResponse::class, ApiTwoFactorLoginResponse::class);
         $this->app->singleton(SuccessfulPasswordResetLinkRequestResponse::class, \App\Src\IdentityAccess\Auth\User\UI\Responses\SuccessfulPasswordResetLinkRequestResponse::class);
         $this->app->singleton(FailedPasswordResetLinkRequestResponse::class, \App\Src\IdentityAccess\Auth\User\UI\Responses\FailedPasswordResetLinkRequestResponse::class);
         $this->app->singleton(PasswordResetResponseContract::class, \App\Src\IdentityAccess\Auth\User\UI\Responses\PasswordResetResponse::class);

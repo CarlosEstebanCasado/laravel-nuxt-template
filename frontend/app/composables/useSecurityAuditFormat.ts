@@ -48,11 +48,26 @@ export const useSecurityAuditFormat = () => {
     if (event === 'account_deleted') {
       return t('settings.security.activity.events.account_deleted')
     }
+    if (event === 'two_factor_enabled') {
+      return t('settings.security.activity.events.two_factor_enabled')
+    }
+    if (event === 'two_factor_disabled') {
+      return t('settings.security.activity.events.two_factor_disabled')
+    }
+    if (event === 'two_factor_recovery_codes_regenerated') {
+      return t('settings.security.activity.events.two_factor_recovery_codes_regenerated')
+    }
 
     if (event === 'updated') {
-      if ((audit.new_values as any)?.password_set_at) return t('settings.security.activity.events.password_changed')
-      if ((audit.new_values as any)?.email) return t('settings.security.activity.events.email_changed')
-      if ((audit.new_values as any)?.name) return t('settings.security.activity.events.profile_updated')
+      const newValues = (audit.new_values as any) ?? {}
+      if (newValues.two_factor_confirmed) return t('settings.security.activity.events.two_factor_confirmed')
+      if (newValues.two_factor_enabled) return t('settings.security.activity.events.two_factor_enabled')
+      if (newValues.two_factor_disabled) return t('settings.security.activity.events.two_factor_disabled')
+      if (newValues.two_factor_recovery_codes_regenerated)
+        return t('settings.security.activity.events.two_factor_recovery_codes_regenerated')
+      if (newValues.password_set_at) return t('settings.security.activity.events.password_changed')
+      if (newValues.email) return t('settings.security.activity.events.email_changed')
+      if (newValues.name) return t('settings.security.activity.events.profile_updated')
       return t('settings.security.activity.events.account_updated')
     }
     if (event === 'created') return t('settings.security.activity.events.account_created')

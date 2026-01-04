@@ -5,6 +5,7 @@ namespace App\Src\IdentityAccess\Auth\User\Domain\Entity;
 
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\TwoFactorStatus;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 use App\Src\Shared\Domain\ValueObject\DateTimeValue;
@@ -18,6 +19,7 @@ final class User
         private readonly ?DateTimeValue $emailVerifiedAt,
         private readonly AuthProvider $authProvider,
         private readonly ?DateTimeValue $passwordSetAt,
+        private readonly TwoFactorStatus $twoFactorStatus,
         private readonly ?DateTimeValue $createdAt,
         private readonly ?DateTimeValue $updatedAt,
     ) {
@@ -53,6 +55,11 @@ final class User
         return $this->passwordSetAt;
     }
 
+    public function twoFactorStatus(): TwoFactorStatus
+    {
+        return $this->twoFactorStatus;
+    }
+
     public function createdAt(): ?DateTimeValue
     {
         return $this->createdAt;
@@ -72,4 +79,3 @@ final class User
         return $this->authProvider->isPassword() || $this->passwordSetAt !== null;
     }
 }
-

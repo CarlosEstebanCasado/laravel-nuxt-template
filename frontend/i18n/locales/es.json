@@ -31,10 +31,12 @@
     "load_more": "Cargar más",
     "delete_account": "Eliminar cuenta",
     "delete_permanently": "Eliminar definitivamente",
+    "confirm": "Confirmar",
     "update": "Actualizar",
     "sign_out": "Cerrar sesión",
     "resend": "Reenviar",
-    "verify_email": "Verificar correo"
+    "verify_email": "Verificar correo",
+    "copy": "Copiar"
   },
   "footer": {
     "resources": "Recursos",
@@ -147,6 +149,20 @@
       "toast_success_description": "Sesión iniciada correctamente.",
       "toast_error_title": "No se pudo iniciar sesión",
       "error_generic": "No hemos podido iniciar sesión, inténtalo de nuevo."
+    },
+    "two_factor": {
+      "title": "Verificación en dos pasos",
+      "description": "Introduce el código de tu aplicación de autenticación o usa un código de recuperación.",
+      "method_app": "Código de autenticación",
+      "method_recovery": "Código de recuperación",
+      "code_placeholder": "Introduce el código de 6 dígitos",
+      "recovery_placeholder": "Introduce un código de recuperación",
+      "submit": "Verificar",
+      "back_to_login": "Volver a iniciar sesión",
+      "toast_success_title": "Acceso verificado",
+      "toast_success_description": "Has iniciado sesión correctamente.",
+      "toast_error_title": "No se pudo verificar",
+      "error_generic": "No hemos podido verificar el código, inténtalo de nuevo."
     },
     "signup": {
       "seo_title": "Crear cuenta",
@@ -334,6 +350,30 @@
         "confirm_placeholder": "Confirmar nueva contraseña",
         "button": "Actualizar"
       },
+      "two_factor_section": {
+        "title": "Verificación en dos pasos",
+        "description": "Protege tu cuenta con un segundo factor de autenticación.",
+        "status_disabled": "La verificación en dos pasos está desactivada.",
+        "status_pending": "Confirma el código para activar la verificación.",
+        "status_enabled": "La verificación en dos pasos está activa.",
+        "enable_button": "Activar",
+        "disable_button": "Desactivar",
+        "qr_title": "Escanea este código QR",
+        "secret_label": "Código manual",
+        "confirm_title": "Confirma el código",
+        "confirm_placeholder": "Código de 6 dígitos",
+        "confirm_button": "Confirmar",
+        "recovery_title": "Códigos de recuperación",
+        "recovery_description": "Guarda estos códigos en un lugar seguro.",
+        "show_codes": "Mostrar",
+        "hide_codes": "Ocultar",
+        "regenerate_button": "Regenerar",
+        "password_modal_title": "Confirma tu contraseña",
+        "password_modal_description": "Necesitamos tu contraseña para mostrar los códigos de recuperación.",
+        "password_modal_description_disable": "Necesitamos tu contraseña para desactivar la verificación en dos pasos.",
+        "password_placeholder": "Tu contraseña actual",
+        "password_required": "Introduce tu contraseña para continuar."
+      },
       "sessions": {
         "title": "Sesiones",
         "description": "Dónde has iniciado sesión actualmente.",
@@ -380,6 +420,10 @@
           "sessions_revoked": "Se ha cerrado {count} sesión adicional | Se han cerrado {count} sesiones adicionales",
           "session_revoked": "Se ha cerrado una sesión",
           "account_deleted": "Cuenta eliminada",
+          "two_factor_enabled": "Verificación en dos pasos activada",
+          "two_factor_confirmed": "Verificación en dos pasos confirmada",
+          "two_factor_disabled": "Verificación en dos pasos desactivada",
+          "two_factor_recovery_codes_regenerated": "Códigos de recuperación regenerados",
           "password_changed": "Contraseña cambiada",
           "email_changed": "Email cambiado",
           "profile_updated": "Perfil actualizado",
@@ -401,6 +445,15 @@
         "load_more_failed": "No se pudo cargar más actividad",
         "password_updated": "Contraseña actualizada",
         "password_description": "Tu contraseña se cambió correctamente.",
+        "two_factor_enabled": "Verificación activada",
+        "two_factor_enabled_description": "Escanea el código y confirma para finalizar.",
+        "two_factor_confirmed": "Verificación confirmada",
+        "two_factor_confirmed_description": "La verificación en dos pasos está activa.",
+        "two_factor_disabled": "Verificación desactivada",
+        "two_factor_disabled_description": "La verificación en dos pasos se ha desactivado.",
+        "two_factor_recovery_generated": "Códigos regenerados",
+        "two_factor_recovery_generated_description": "Guarda los nuevos códigos de recuperación.",
+        "recovery_code_copied": "Código de recuperación copiado",
         "delete_confirmation_required": "Confirmación requerida",
         "delete_confirmation_description": "Escribe DELETE para confirmar la eliminación.",
         "delete_password_required": "Contraseña requerida",
@@ -413,6 +466,8 @@
         "sessions": "No se pudieron cargar las sesiones.",
         "activity": "No se pudo cargar la actividad.",
         "password": "No pudimos actualizar tu contraseña, inténtalo de nuevo.",
+        "two_factor": "No pudimos actualizar la verificación en dos pasos.",
+        "copy": "No se pudo copiar el código de recuperación.",
         "delete": "No pudimos eliminar tu cuenta, inténtalo de nuevo."
       }
     }

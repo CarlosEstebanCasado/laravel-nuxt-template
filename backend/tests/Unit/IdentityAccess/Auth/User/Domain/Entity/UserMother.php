@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests\Unit\IdentityAccess\Auth\User\Domain\Entity;
 
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\User;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\TwoFactorStatus;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 use Tests\Unit\IdentityAccess\Auth\User\Domain\ValueObject\AuthProviderMother;
@@ -23,6 +24,7 @@ final class UserMother
             emailVerifiedAt: new DateTimeValue(DateTimeMother::now()),
             authProvider: AuthProviderMother::password(),
             passwordSetAt: new DateTimeValue(DateTimeMother::now()),
+            twoFactorStatus: TwoFactorStatus::fromState(null, null),
             createdAt: new DateTimeValue(DateTimeMother::now()),
             updatedAt: new DateTimeValue(DateTimeMother::now()),
         );

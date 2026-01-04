@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
@@ -18,6 +19,9 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
  * @property string $email
  * @property string $password
  * @property string|null $auth_provider
+ * @property string|null $two_factor_secret
+ * @property string|null $two_factor_recovery_codes
+ * @property \Illuminate\Support\Carbon|null $two_factor_confirmed_at
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property \Illuminate\Support\Carbon|null $password_set_at
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -26,7 +30,7 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 class User extends Authenticatable implements MustVerifyEmail, AuditableContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, AuditableTrait;
+    use HasApiTokens, HasFactory, Notifiable, AuditableTrait, TwoFactorAuthenticatable;
 
     protected static function newFactory(): UserFactory
     {
@@ -54,6 +58,8 @@ class User extends Authenticatable implements MustVerifyEmail, AuditableContract
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     /**
@@ -64,6 +70,9 @@ class User extends Authenticatable implements MustVerifyEmail, AuditableContract
     protected array $auditExclude = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'two_factor_confirmed_at',
     ];
 
     /**
@@ -77,6 +86,56 @@ class User extends Authenticatable implements MustVerifyEmail, AuditableContract
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'password_set_at' => 'datetime',
+            'two_factor_secret' => 'encrypted',
+            'two_factor_recovery_codes' => 'encrypted',
+            'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    public function transformAudit(array $data): array
+    {
+        if (($data['event'] ?? null) !== 'updated') {
+            return $data;
+        }
+
+        $dirty = $this->getDirty();
+        $hasSecretChange = array_key_exists('two_factor_secret', $dirty);
+        $hasRecoveryChange = array_key_exists('two_factor_recovery_codes', $dirty);
+        $hasConfirmedChange = array_key_exists('two_factor_confirmed_at', $dirty);
+
+        if (! $hasSecretChange && ! $hasRecoveryChange && ! $hasConfirmedChange) {
+            return $data;
+        }
+
+        $original = $this->getOriginal();
+        $newValues = is_array($data['new_values'] ?? null) ? $data['new_values'] : [];
+        $oldValues = is_array($data['old_values'] ?? null) ? $data['old_values'] : [];
+
+        $isDisabled = $hasSecretChange && ($dirty['two_factor_secret'] ?? null) === null;
+        $isConfirmed = $hasConfirmedChange && ($dirty['two_factor_confirmed_at'] ?? null) !== null;
+        $isRecoveryRegenerated = $hasRecoveryChange
+            && ($original['two_factor_recovery_codes'] ?? null) !== null
+            && ($dirty['two_factor_recovery_codes'] ?? null) !== null
+            && ! $isDisabled;
+        $isEnabled = ! $isDisabled && ! $isConfirmed && $hasSecretChange && ($dirty['two_factor_secret'] ?? null) !== null;
+
+        if ($isDisabled) {
+            $newValues['two_factor_disabled'] = true;
+        } elseif ($isConfirmed) {
+            $newValues['two_factor_confirmed'] = true;
+        } elseif ($isEnabled) {
+            $newValues['two_factor_enabled'] = true;
+        } elseif ($isRecoveryRegenerated) {
+            $newValues['two_factor_recovery_codes_regenerated'] = true;
+        }
+
+        $data['old_values'] = $oldValues;
+        $data['new_values'] = $newValues;
+
+        return $data;
     }
 }

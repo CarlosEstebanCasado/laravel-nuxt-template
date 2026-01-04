@@ -17,6 +17,8 @@ final class UserResponseItemConverter
             email_verified_at: $this->formatDate($user->emailVerifiedAt()),
             auth_provider: $user->authProvider()->toString(),
             password_set_at: $this->formatDate($user->passwordSetAt()),
+            two_factor_enabled: $user->twoFactorStatus()->enabled(),
+            two_factor_confirmed: $user->twoFactorStatus()->confirmed(),
             created_at: $this->formatDate($user->createdAt()),
             updated_at: $this->formatDate($user->updatedAt()),
         );
