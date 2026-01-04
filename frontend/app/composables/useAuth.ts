@@ -475,12 +475,15 @@ export function useAuth() {
     await fetchUser(true)
   }
 
-  const disableTwoFactor = async () => {
+  const disableTwoFactor = async (password: string) => {
     await ensureCsrfCookie()
 
     await withCredentials(
-      joinURL(authPrefix, '/user/two-factor-authentication'),
-      { method: 'DELETE' },
+      joinURL(apiPrefix, '/two-factor/disable'),
+      {
+        method: 'POST',
+        body: { password },
+      },
       { csrf: true }
     )
 
@@ -504,7 +507,7 @@ export function useAuth() {
   const fetchTwoFactorRecoveryCodes = async (password: string) => {
     await ensureCsrfCookie()
 
-    const response = await withCredentials<{ codes: string[] }>(
+    const response = await withCredentials<{ codes: unknown }>(
       joinURL(apiPrefix, '/two-factor/recovery-codes'),
       {
         method: 'POST',
@@ -513,13 +516,13 @@ export function useAuth() {
       { csrf: true }
     )
 
-    return response.codes
+    return normalizeRecoveryCodes(response.codes)
   }
 
   const regenerateTwoFactorRecoveryCodes = async (password: string) => {
     await ensureCsrfCookie()
 
-    const response = await withCredentials<{ codes: string[] }>(
+    const response = await withCredentials<{ codes: unknown }>(
       joinURL(apiPrefix, '/two-factor/recovery-codes/regenerate'),
       {
         method: 'POST',
@@ -528,7 +531,49 @@ export function useAuth() {
       { csrf: true }
     )
 
-    return response.codes
+    return normalizeRecoveryCodes(response.codes)
+  }
+
+  const fetchTwoFactorRecoveryCodesAfterConfirm = async () => {
+    const response = await withCredentials<unknown>(
+      joinURL(authPrefix, '/user/two-factor-recovery-codes'),
+      { method: 'GET' }
+    )
+
+    return normalizeRecoveryCodes(response)
+  }
+
+  const normalizeRecoveryCodes = (codes: unknown): string[] => {
+    if (Array.isArray(codes)) {
+      if (codes.length === 1 && typeof codes[0] === 'string') {
+        const trimmed = codes[0].trim()
+        if (trimmed.startsWith('[')) {
+          try {
+            const parsed = JSON.parse(trimmed)
+            if (Array.isArray(parsed)) {
+              return parsed.filter((value): value is string => typeof value === 'string')
+            }
+          } catch {
+            return codes.filter((value): value is string => typeof value === 'string')
+          }
+        }
+      }
+
+      return codes.filter((value): value is string => typeof value === 'string')
+    }
+
+    if (typeof codes === 'string') {
+      try {
+        const parsed = JSON.parse(codes)
+        if (Array.isArray(parsed)) {
+          return parsed.filter((value): value is string => typeof value === 'string')
+        }
+      } catch {
+        return []
+      }
+    }
+
+    return []
   }
 
   const fetchUser = async (force = false) => {
@@ -673,6 +718,7 @@ export function useAuth() {
     fetchTwoFactorQrCode,
     fetchTwoFactorSecret,
     fetchTwoFactorRecoveryCodes,
+    fetchTwoFactorRecoveryCodesAfterConfirm,
     regenerateTwoFactorRecoveryCodes,
     fetchUser,
     fetchPreferences,

@@ -2,6 +2,7 @@
 
 use App\Src\IdentityAccess\Audit\UI\Controllers\Api\AuditsController;
 use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\CurrentUserController;
+use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\DisableTwoFactorAuthenticationController;
 use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\RegenerateTwoFactorRecoveryCodesController;
 use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\ShowTwoFactorRecoveryCodesController;
 use App\Src\IdentityAccess\Auth\User\UI\Controllers\Api\ShowUserPreferencesController;
@@ -35,6 +36,7 @@ Route::prefix('v1')->middleware('locale')->group(function (): void {
         Route::put('/preferences', UpdateUserPreferencesController::class);
         Route::post('/two-factor/recovery-codes', ShowTwoFactorRecoveryCodesController::class);
         Route::post('/two-factor/recovery-codes/regenerate', RegenerateTwoFactorRecoveryCodesController::class);
+        Route::post('/two-factor/disable', DisableTwoFactorAuthenticationController::class);
         Route::get('/sessions', ListUserSessionsController::class);
         Route::post('/sessions/revoke-others', RevokeOtherSessionsController::class);
         Route::delete('/sessions/{id}', DeleteSessionController::class);

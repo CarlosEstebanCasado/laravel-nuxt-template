@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
+use App\Src\IdentityAccess\Auth\User\Domain\Service\TwoFactorAuthenticationService;
 use App\Src\IdentityAccess\Auth\User\Domain\Service\TwoFactorRecoveryCodesService;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository\EloquentUserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository\EloquentUserRepository;
+use App\Src\IdentityAccess\Auth\User\Infrastructure\Fortify\FortifyTwoFactorAuthenticationService;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Fortify\FortifyTwoFactorRecoveryCodesService;
 use App\Src\IdentityAccess\Audit\Domain\Repository\AuditRepository;
 use App\Src\IdentityAccess\Audit\Infrastructure\Eloquent\Repository\EloquentAuditRepository;
@@ -34,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AccountRepository::class, EloquentAccountRepository::class);
         $this->app->bind(AuditRepository::class, EloquentAuditRepository::class);
         $this->app->bind(UserPreferencesRepository::class, EloquentUserPreferencesRepository::class);
+        $this->app->bind(TwoFactorAuthenticationService::class, FortifyTwoFactorAuthenticationService::class);
         $this->app->bind(TwoFactorRecoveryCodesService::class, FortifyTwoFactorRecoveryCodesService::class);
     }
 

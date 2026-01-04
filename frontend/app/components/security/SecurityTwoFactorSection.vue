@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { DialogDescription, DialogTitle } from 'reka-ui'
+
 const auth = useAuth()
 const toast = useToast()
 const { t } = useI18n()
@@ -15,7 +17,7 @@ const recoveryPassword = ref('')
 const recoveryPasswordError = ref<string | null>(null)
 const showRecoveryPasswordModal = ref(false)
 const isRecoveryPasswordSubmitting = ref(false)
-const pendingRecoveryAction = ref<'show' | 'regenerate' | null>(null)
+const pendingRecoveryAction = ref<'show' | 'regenerate' | 'disable' | null>(null)
 const qrCodeDataUrl = computed(() => {
   if (!qrCode.value) {
     return null
@@ -53,7 +55,7 @@ const loadSetup = async () => {
   secretKey.value = secret.secretKey
 }
 
-const openRecoveryPasswordModal = (action: 'show' | 'regenerate') => {
+const openRecoveryPasswordModal = (action: 'show' | 'regenerate' | 'disable') => {
   pendingRecoveryAction.value = action
   recoveryPassword.value = ''
   recoveryPasswordError.value = null
@@ -101,7 +103,16 @@ const handleConfirm = async () => {
   try {
     await auth.confirmTwoFactorEnrollment(confirmationCode.value)
     confirmationCode.value = ''
-    openRecoveryPasswordModal('show')
+    try {
+      recoveryCodes.value = await auth.fetchTwoFactorRecoveryCodesAfterConfirm()
+      showRecoveryCodes.value = true
+    } catch (error) {
+      toast.add({
+        title: t('settings.security.toasts.action_failed'),
+        description: extractErrorMessage(error),
+        color: 'error',
+      })
+    }
     toast.add({
       title: t('settings.security.toasts.two_factor_confirmed'),
       description: t('settings.security.toasts.two_factor_confirmed_description'),
@@ -123,27 +134,7 @@ const handleDisable = async () => {
     return
   }
 
-  isDisabling.value = true
-  try {
-    await auth.disableTwoFactor()
-    qrCode.value = null
-    secretKey.value = null
-    recoveryCodes.value = []
-    showRecoveryCodes.value = false
-    toast.add({
-      title: t('settings.security.toasts.two_factor_disabled'),
-      description: t('settings.security.toasts.two_factor_disabled_description'),
-      color: 'success',
-    })
-  } catch (error) {
-    toast.add({
-      title: t('settings.security.toasts.action_failed'),
-      description: extractErrorMessage(error),
-      color: 'error',
-    })
-  } finally {
-    isDisabling.value = false
-  }
+  openRecoveryPasswordModal('disable')
 }
 
 const handleRegenerateCodes = async () => {
@@ -186,12 +177,52 @@ const handleRecoveryPasswordSubmit = async () => {
       })
     }
 
+    if (pendingRecoveryAction.value === 'disable') {
+      isDisabling.value = true
+      await auth.disableTwoFactor(password)
+      qrCode.value = null
+      secretKey.value = null
+      recoveryCodes.value = []
+      showRecoveryCodes.value = false
+      confirmationCode.value = ''
+      toast.add({
+        title: t('settings.security.toasts.two_factor_disabled'),
+        description: t('settings.security.toasts.two_factor_disabled_description'),
+        color: 'success',
+      })
+    }
+
     closeRecoveryPasswordModal()
   } catch (error) {
     recoveryPasswordError.value = extractErrorMessage(error)
   } finally {
     isRecoveryPasswordSubmitting.value = false
     isRegenerating.value = false
+    isDisabling.value = false
+  }
+}
+
+const passwordModalDescription = computed(() => {
+  if (pendingRecoveryAction.value === 'disable') {
+    return t('settings.security.two_factor_section.password_modal_description_disable')
+  }
+
+  return t('settings.security.two_factor_section.password_modal_description')
+})
+
+const copyRecoveryCode = async (code: string) => {
+  try {
+    await navigator.clipboard.writeText(code)
+    toast.add({
+      title: t('settings.security.toasts.recovery_code_copied'),
+      color: 'success',
+    })
+  } catch {
+    toast.add({
+      title: t('settings.security.toasts.action_failed'),
+      description: t('settings.security.errors.copy'),
+      color: 'error',
+    })
   }
 }
 
@@ -318,9 +349,18 @@ onMounted(async () => {
           <div
             v-for="code in recoveryCodes"
             :key="code"
-            class="rounded-md border border-slate-200 px-3 py-2 text-xs font-mono text-slate-700 dark:border-slate-800 dark:text-slate-200"
+            class="flex items-center justify-between gap-2 rounded-md border border-slate-200 px-3 py-2 text-xs font-mono text-slate-700 dark:border-slate-800 dark:text-slate-200"
           >
-            {{ code }}
+            <span class="truncate">{{ code }}</span>
+            <UButton
+              variant="ghost"
+              color="neutral"
+              size="xs"
+              icon="i-lucide-clipboard"
+              :aria-label="t('actions.copy')"
+              class="hover:bg-slate-200/80 dark:hover:bg-slate-800"
+              @click="copyRecoveryCode(code)"
+            />
           </div>
         </div>
       </div>
@@ -328,12 +368,12 @@ onMounted(async () => {
       <UModal v-model:open="showRecoveryPasswordModal">
         <template #body>
           <div class="space-y-4">
-            <div class="text-base font-semibold text-slate-900 dark:text-slate-100">
+            <DialogTitle class="text-base font-semibold text-slate-900 dark:text-slate-100">
               {{ t('settings.security.two_factor_section.password_modal_title') }}
-            </div>
-            <p class="text-sm text-slate-600 dark:text-slate-400">
-              {{ t('settings.security.two_factor_section.password_modal_description') }}
-            </p>
+            </DialogTitle>
+            <DialogDescription class="text-sm text-slate-600 dark:text-slate-400">
+              {{ passwordModalDescription }}
+            </DialogDescription>
             <UInput
               v-model="recoveryPassword"
               type="password"

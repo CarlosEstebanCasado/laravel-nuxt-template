@@ -35,7 +35,8 @@
     "update": "Update",
     "sign_out": "Sign out",
     "resend": "Resend",
-    "verify_email": "Verify email"
+    "verify_email": "Verify email",
+    "copy": "Copy"
   },
   "footer": {
     "resources": "Resources",
@@ -369,6 +370,7 @@
         "regenerate_button": "Regenerate",
         "password_modal_title": "Confirm your password",
         "password_modal_description": "We need your password to show recovery codes.",
+        "password_modal_description_disable": "We need your password to disable two-factor authentication.",
         "password_placeholder": "Your current password",
         "password_required": "Enter your password to continue."
       },
@@ -447,6 +449,7 @@
         "two_factor_disabled_description": "Two-factor authentication has been disabled.",
         "two_factor_recovery_generated": "Recovery codes regenerated",
         "two_factor_recovery_generated_description": "Save the new recovery codes.",
+        "recovery_code_copied": "Recovery code copied",
         "delete_confirmation_required": "Confirmation required",
         "delete_confirmation_description": "Type DELETE to confirm account deletion.",
         "delete_password_required": "Password required",
@@ -460,6 +463,7 @@
         "activity": "Unable to load activity.",
         "password": "Unable to update your password, please try again.",
         "two_factor": "Unable to update two-factor authentication.",
+        "copy": "Unable to copy the recovery code.",
         "delete": "Unable to delete your account, please try again."
       }
     }
