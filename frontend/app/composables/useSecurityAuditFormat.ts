@@ -13,6 +13,7 @@ export type SecurityAuditEntry = {
 }
 
 export const useSecurityAuditFormat = () => {
+  const auth = useAuth()
   const { t, locale } = useI18n()
 
   const dateLocale = computed(() => {
@@ -21,8 +22,16 @@ export const useSecurityAuditFormat = () => {
     return enUS
   })
 
+  const timeZone = computed(
+    () => auth.preferences.value?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? 'UTC'
+  )
+
   const formatDateTime = (date: Date) =>
-    new Intl.DateTimeFormat(locale.value, { dateStyle: 'medium', timeStyle: 'short' }).format(date)
+    new Intl.DateTimeFormat(locale.value, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: timeZone.value
+    }).format(date)
 
   const formatAuditTime = (iso: string) => formatDateTime(new Date(iso))
   const formatAuditRelative = (iso: string) =>

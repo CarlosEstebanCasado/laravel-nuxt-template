@@ -8,7 +8,9 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use InvalidArgumentException;
+use DateTimeZone;
 
 final class UserPreferencesUpdater
 {
@@ -17,12 +19,14 @@ final class UserPreferencesUpdater
         ?Locale $locale,
         ?Theme $theme,
         ?PrimaryColor $primaryColor,
-        ?NeutralColor $neutralColor
+        ?NeutralColor $neutralColor,
+        ?Timezone $timezone
     ): UserPreferences {
         $nextLocale = $locale ?? $preferences->locale();
         $nextTheme = $theme ?? $preferences->theme();
         $nextPrimary = $primaryColor ?? $preferences->primaryColor();
         $nextNeutral = $neutralColor ?? $preferences->neutralColor();
+        $nextTimezone = $timezone ?? $preferences->timezone();
 
         if ($locale !== null) {
             $this->assertLocaleSupported($nextLocale);
@@ -40,12 +44,17 @@ final class UserPreferencesUpdater
             $this->assertNeutralColorSupported($nextNeutral);
         }
 
+        if ($timezone !== null) {
+            $this->assertTimezoneSupported($nextTimezone);
+        }
+
         return new UserPreferences(
             $preferences->userId(),
             $nextLocale,
             $nextTheme,
             $nextPrimary,
-            $nextNeutral
+            $nextNeutral,
+            $nextTimezone
         );
     }
 
@@ -82,6 +91,15 @@ final class UserPreferencesUpdater
 
         if (! in_array($color->toString(), $colors, true)) {
             throw new InvalidArgumentException(sprintf('Unsupported neutral color <%s>', $color->toString()));
+        }
+    }
+
+    private function assertTimezoneSupported(Timezone $timezone): void
+    {
+        $timezones = DateTimeZone::listIdentifiers();
+
+        if (! in_array($timezone->toString(), $timezones, true)) {
+            throw new InvalidArgumentException(sprintf('Unsupported timezone <%s>', $timezone->toString()));
         }
     }
 }

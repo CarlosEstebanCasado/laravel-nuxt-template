@@ -72,6 +72,11 @@ config.global.stubs = {
     props: ['modelValue', 'items', 'labelKey', 'valueKey', 'disabled'],
     template: `<select data-stub="USelect"></select>`
   },
+  USelectMenu: {
+    name: 'USelectMenu',
+    props: ['modelValue', 'items', 'labelKey', 'valueKey', 'disabled', 'searchable', 'searchPlaceholder'],
+    template: `<select data-stub="USelectMenu"></select>`
+  },
   UDropdownMenu: {
     name: 'UDropdownMenu',
     props: ['items', 'content', 'ui', 'modal', 'size'],

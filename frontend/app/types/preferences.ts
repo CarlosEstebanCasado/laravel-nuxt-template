@@ -8,6 +8,7 @@ export interface UserPreferencesPayload {
   theme: 'system' | 'light' | 'dark'
   primary_color: string
   neutral_color: string
+  timezone: string
 }
 
 export interface PreferencesResponse {
@@ -16,4 +17,5 @@ export interface PreferencesResponse {
   available_themes: PreferenceOption[]
   available_primary_colors: PreferenceOption[]
   available_neutral_colors: PreferenceOption[]
+  available_timezones: PreferenceOption[]
 }

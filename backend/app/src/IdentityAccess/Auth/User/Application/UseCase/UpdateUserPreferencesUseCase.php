@@ -13,6 +13,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 
 final class UpdateUserPreferencesUseCase
@@ -36,7 +37,8 @@ final class UpdateUserPreferencesUseCase
             $request->locale !== null ? new Locale($request->locale) : null,
             $request->theme !== null ? new Theme($request->theme) : null,
             $request->primaryColor !== null ? new PrimaryColor($request->primaryColor) : null,
-            $request->neutralColor !== null ? new NeutralColor($request->neutralColor) : null
+            $request->neutralColor !== null ? new NeutralColor($request->neutralColor) : null,
+            $request->timezone !== null ? new Timezone($request->timezone) : null
         );
 
         $this->userPreferencesRepository->save($updatedPreferences);

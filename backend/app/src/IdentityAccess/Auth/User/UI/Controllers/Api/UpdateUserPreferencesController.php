@@ -11,6 +11,7 @@ use App\Src\Shared\UI\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use DateTimeZone;
 
 final class UpdateUserPreferencesController extends Controller
 {
@@ -28,6 +29,7 @@ final class UpdateUserPreferencesController extends Controller
         $supportedThemes = array_keys((array) config('preferences.themes', []));
         $supportedPrimary = array_keys((array) config('preferences.primary_colors', []));
         $supportedNeutrals = array_keys((array) config('preferences.neutral_colors', []));
+        $supportedTimezones = DateTimeZone::listIdentifiers();
 
         $validated = $request->validate([
             'locale' => [
@@ -50,6 +52,11 @@ final class UpdateUserPreferencesController extends Controller
                 'string',
                 Rule::in($supportedNeutrals),
             ],
+            'timezone' => [
+                'sometimes',
+                'string',
+                Rule::in($supportedTimezones),
+            ],
         ]);
 
         if ($validated === []) {
@@ -69,6 +76,7 @@ final class UpdateUserPreferencesController extends Controller
                 theme: $validated['theme'] ?? null,
                 primaryColor: $validated['primary_color'] ?? null,
                 neutralColor: $validated['neutral_color'] ?? null,
+                timezone: $validated['timezone'] ?? null,
             )
         );
 

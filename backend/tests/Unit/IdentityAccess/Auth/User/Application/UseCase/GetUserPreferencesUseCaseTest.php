@@ -11,6 +11,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase as BaseTestCase;
@@ -46,6 +47,7 @@ final class GetUserPreferencesUseCaseTest extends BaseTestCase
         $this->assertSame(config('preferences.default_theme'), $response->data['theme']);
         $this->assertSame(config('preferences.default_primary_color'), $response->data['primary_color']);
         $this->assertSame(config('preferences.default_neutral_color'), $response->data['neutral_color']);
+        $this->assertSame(config('preferences.default_timezone'), $response->data['timezone']);
         $this->assertNotEmpty($response->available_locales);
         $this->assertNotEmpty($response->available_themes);
     }
@@ -58,7 +60,8 @@ final class GetUserPreferencesUseCaseTest extends BaseTestCase
             new Locale('ca'),
             new Theme('dark'),
             new PrimaryColor('emerald'),
-            new NeutralColor('slate')
+            new NeutralColor('slate'),
+            new Timezone('Europe/Madrid')
         );
 
         $this->repository
@@ -75,5 +78,6 @@ final class GetUserPreferencesUseCaseTest extends BaseTestCase
         $this->assertSame('dark', $response->data['theme']);
         $this->assertSame('emerald', $response->data['primary_color']);
         $this->assertSame('slate', $response->data['neutral_color']);
+        $this->assertSame('Europe/Madrid', $response->data['timezone']);
     }
 }

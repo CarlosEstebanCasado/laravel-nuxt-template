@@ -13,6 +13,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase as BaseTestCase;
@@ -44,7 +45,8 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
             new Locale('en'),
             new Theme('dark'),
             new PrimaryColor('emerald'),
-            new NeutralColor('gray')
+            new NeutralColor('gray'),
+            new Timezone('Europe/Madrid')
         );
 
         $this->repository
@@ -60,7 +62,8 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
                 return $preferences->locale()->toString() === 'en'
                     && $preferences->theme()->toString() === 'dark'
                     && $preferences->primaryColor()->toString() === 'emerald'
-                    && $preferences->neutralColor()->toString() === 'gray';
+                    && $preferences->neutralColor()->toString() === 'gray'
+                    && $preferences->timezone()->toString() === 'Europe/Madrid';
             }));
 
         $response = $this->useCase->execute(
@@ -70,6 +73,7 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
                 theme: 'dark',
                 primaryColor: 'emerald',
                 neutralColor: 'gray',
+                timezone: 'Europe/Madrid',
             )
         );
 
@@ -77,5 +81,6 @@ final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
         $this->assertSame('dark', $response->data['theme']);
         $this->assertSame('emerald', $response->data['primary_color']);
         $this->assertSame('gray', $response->data['neutral_color']);
+        $this->assertSame('Europe/Madrid', $response->data['timezone']);
     }
 }

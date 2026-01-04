@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { format } from 'date-fns'
 import type { Mail } from '~/types'
 
 defineProps<{
@@ -23,6 +22,7 @@ const dropdownItems = [[{
 }]]
 
 const toast = useToast()
+const { formatWithTimeZone } = useDateTimeFormat()
 
 const reply = ref('')
 const loading = ref(false)
@@ -100,7 +100,7 @@ function onSubmit() {
       </div>
 
       <p class="max-sm:pl-16 text-muted text-sm sm:mt-2">
-        {{ format(new Date(mail.date), 'dd MMM HH:mm') }}
+        {{ formatWithTimeZone(mail.date, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false }) }}
       </p>
     </div>
 

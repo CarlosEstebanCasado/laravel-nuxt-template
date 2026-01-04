@@ -20,6 +20,7 @@ const usePreferenceOptionsState = () =>
     themes: { value: string, label: string }[]
     primary_colors: { value: string, label: string }[]
     neutral_colors: { value: string, label: string }[]
+    timezones: { value: string, label: string }[]
   }>(
     'auth:preferences:options',
     () => ({
@@ -27,6 +28,7 @@ const usePreferenceOptionsState = () =>
       themes: [],
       primary_colors: [],
       neutral_colors: [],
+      timezones: [],
     }),
   )
 
@@ -110,7 +112,7 @@ export function useAuth() {
 
   const resetPreferences = () => {
     preferences.value = null
-    preferenceOptions.value = { locales: [], themes: [], primary_colors: [], neutral_colors: [] }
+    preferenceOptions.value = { locales: [], themes: [], primary_colors: [], neutral_colors: [], timezones: [] }
     preferencesFetched.value = false
   }
 
@@ -121,6 +123,7 @@ export function useAuth() {
       themes: payload.available_themes,
       primary_colors: payload.available_primary_colors,
       neutral_colors: payload.available_neutral_colors,
+      timezones: payload.available_timezones,
     }
     preferencesFetched.value = true
     applyPreferenceEffects(preferences.value)

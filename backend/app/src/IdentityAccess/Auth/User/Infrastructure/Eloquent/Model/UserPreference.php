@@ -13,6 +13,7 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
  * @property string $theme
  * @property string $primary_color
  * @property string $neutral_color
+ * @property string $timezone
  */
 class UserPreference extends Model implements AuditableContract
 {
@@ -26,5 +27,6 @@ class UserPreference extends Model implements AuditableContract
         'theme',
         'primary_color',
         'neutral_color',
+        'timezone',
     ];
 }

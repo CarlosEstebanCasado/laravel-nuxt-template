@@ -40,4 +40,5 @@ return [
 
     'default_primary_color' => env('APP_DEFAULT_PRIMARY_COLOR', 'blue'),
     'default_neutral_color' => env('APP_DEFAULT_NEUTRAL_COLOR', 'slate'),
+    'default_timezone' => env('APP_DEFAULT_TIMEZONE', 'UTC'),
 ];

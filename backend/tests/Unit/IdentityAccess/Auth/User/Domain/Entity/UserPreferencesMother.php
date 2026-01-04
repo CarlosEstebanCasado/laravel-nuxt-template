@@ -8,6 +8,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Locale;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\NeutralColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use Tests\Unit\IdentityAccess\Auth\User\Domain\ValueObject\UserIdMother;
 
@@ -20,7 +21,8 @@ final class UserPreferencesMother
             new Locale('es'),
             new Theme('system'),
             new PrimaryColor('blue'),
-            new NeutralColor('slate')
+            new NeutralColor('slate'),
+            new Timezone('UTC')
         );
     }
 
@@ -31,7 +33,8 @@ final class UserPreferencesMother
             new Locale($locale),
             new Theme('system'),
             new PrimaryColor('blue'),
-            new NeutralColor('slate')
+            new NeutralColor('slate'),
+            new Timezone('UTC')
         );
     }
 
@@ -42,7 +45,8 @@ final class UserPreferencesMother
             new Locale('es'),
             new Theme($theme),
             new PrimaryColor('blue'),
-            new NeutralColor('slate')
+            new NeutralColor('slate'),
+            new Timezone('UTC')
         );
     }
 }
