@@ -16,7 +16,7 @@ final class TwoFactorStatus
     public static function fromState(?string $secret, ?DateTimeValue $confirmedAt): self
     {
         $enabled = $secret !== null && $secret !== '';
-        $confirmed = $confirmedAt !== null;
+        $confirmed = $enabled && $confirmedAt !== null;
 
         return new self($enabled, $confirmed);
     }
