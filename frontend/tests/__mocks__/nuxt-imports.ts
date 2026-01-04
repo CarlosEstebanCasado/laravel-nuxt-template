@@ -22,6 +22,7 @@ let authMock = {
   fetchTwoFactorQrCode: vi.fn(),
   fetchTwoFactorSecret: vi.fn(),
   fetchTwoFactorRecoveryCodes: vi.fn(),
+  fetchTwoFactorRecoveryCodesAfterConfirm: vi.fn(),
   regenerateTwoFactorRecoveryCodes: vi.fn(),
   requestPasswordReset: vi.fn(),
   resetPassword: vi.fn(),

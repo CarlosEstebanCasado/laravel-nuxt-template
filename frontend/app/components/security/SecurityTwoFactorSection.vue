@@ -106,6 +106,11 @@ const handleConfirm = async () => {
     try {
       recoveryCodes.value = await auth.fetchTwoFactorRecoveryCodesAfterConfirm()
       showRecoveryCodes.value = true
+      toast.add({
+        title: t('settings.security.toasts.two_factor_confirmed'),
+        description: t('settings.security.toasts.two_factor_confirmed_description'),
+        color: 'success',
+      })
     } catch (error) {
       toast.add({
         title: t('settings.security.toasts.action_failed'),
@@ -113,11 +118,6 @@ const handleConfirm = async () => {
         color: 'error',
       })
     }
-    toast.add({
-      title: t('settings.security.toasts.two_factor_confirmed'),
-      description: t('settings.security.toasts.two_factor_confirmed_description'),
-      color: 'success',
-    })
   } catch (error) {
     toast.add({
       title: t('settings.security.toasts.action_failed'),
@@ -367,7 +367,7 @@ onMounted(async () => {
 
       <UModal v-model:open="showRecoveryPasswordModal">
         <template #body>
-          <div class="space-y-4">
+          <div v-if="showRecoveryPasswordModal" class="space-y-4">
             <DialogTitle class="text-base font-semibold text-slate-900 dark:text-slate-100">
               {{ t('settings.security.two_factor_section.password_modal_title') }}
             </DialogTitle>
