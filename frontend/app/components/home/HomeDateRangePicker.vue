@@ -24,11 +24,23 @@ const rangeOptions = computed(() => [
 ])
 
 const toCalendarDate = (date: Date) => {
-  return new CalendarDate(
-    date.getFullYear(),
-    date.getMonth() + 1,
-    date.getDate()
-  )
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: timeZone.value,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(date)
+
+  const getPart = (type: string) => parts.find((part) => part.type === type)?.value
+  const year = Number(getPart('year'))
+  const month = Number(getPart('month'))
+  const day = Number(getPart('day'))
+
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+    return new CalendarDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate())
+  }
+
+  return new CalendarDate(year, month, day)
 }
 
 const calendarRange = computed({
