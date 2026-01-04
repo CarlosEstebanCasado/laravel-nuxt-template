@@ -125,7 +125,9 @@ class User extends Authenticatable implements MustVerifyEmail, AuditableContract
 
         if ($isDisabled) {
             $newValues['two_factor_disabled'] = true;
-        } elseif ($isConfirmed || $isEnabled) {
+        } elseif ($isConfirmed) {
+            $newValues['two_factor_confirmed'] = true;
+        } elseif ($isEnabled) {
             $newValues['two_factor_enabled'] = true;
         } elseif ($isRecoveryRegenerated) {
             $newValues['two_factor_recovery_codes_regenerated'] = true;

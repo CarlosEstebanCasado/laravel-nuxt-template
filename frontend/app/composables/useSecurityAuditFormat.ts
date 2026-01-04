@@ -60,6 +60,7 @@ export const useSecurityAuditFormat = () => {
 
     if (event === 'updated') {
       const newValues = (audit.new_values as any) ?? {}
+      if (newValues.two_factor_confirmed) return t('settings.security.activity.events.two_factor_confirmed')
       if (newValues.two_factor_enabled) return t('settings.security.activity.events.two_factor_enabled')
       if (newValues.two_factor_disabled) return t('settings.security.activity.events.two_factor_disabled')
       if (newValues.two_factor_recovery_codes_regenerated)

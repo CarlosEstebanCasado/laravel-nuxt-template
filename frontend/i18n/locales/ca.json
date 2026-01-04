@@ -421,6 +421,7 @@
           "session_revoked": "S'ha tancat una sessió",
           "account_deleted": "Compte eliminat",
           "two_factor_enabled": "Verificació en dos passos activada",
+          "two_factor_confirmed": "Verificació en dos passos confirmada",
           "two_factor_disabled": "Verificació en dos passos desactivada",
           "two_factor_recovery_codes_regenerated": "Codis de recuperació regenerats",
           "password_changed": "Contrasenya canviada",

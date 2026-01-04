@@ -421,6 +421,7 @@
           "session_revoked": "Closed a session",
           "account_deleted": "Account deleted",
           "two_factor_enabled": "Two-factor enabled",
+          "two_factor_confirmed": "Two-factor confirmed",
           "two_factor_disabled": "Two-factor disabled",
           "two_factor_recovery_codes_regenerated": "Recovery codes regenerated",
           "password_changed": "Password changed",
