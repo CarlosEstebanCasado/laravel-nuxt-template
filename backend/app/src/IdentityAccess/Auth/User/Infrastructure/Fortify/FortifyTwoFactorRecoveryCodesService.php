@@ -31,6 +31,10 @@ final class FortifyTwoFactorRecoveryCodesService implements TwoFactorRecoveryCod
     {
         $user = $this->requireUser($userId);
 
+        if (! $user->two_factor_secret) {
+            return new RecoveryCodeCollection([]);
+        }
+
         ($this->generateNewRecoveryCodes)($user);
         $user->refresh();
 
@@ -56,31 +60,44 @@ final class FortifyTwoFactorRecoveryCodesService implements TwoFactorRecoveryCod
 
         $codes = $this->normalizeRecoveryCodes($user->two_factor_recovery_codes);
 
-        $items = array_map(
-            static fn (string $code) => new RecoveryCode($code),
-            is_array($codes) ? $codes : []
-        );
+        $items = [];
+        foreach ($codes as $code) {
+            $items[] = new RecoveryCode($code);
+        }
 
         return new RecoveryCodeCollection($items);
     }
 
+    /**
+     * @param array<int, string> $rawCodes
+     * @return list<string>
+     */
     private function normalizeRecoveryCodes(string|array $rawCodes): array
     {
         if (is_array($rawCodes)) {
-            return $rawCodes;
+            return array_values(array_filter($rawCodes, 'is_string'));
         }
 
         $decoded = json_decode($rawCodes, true);
         if (is_array($decoded)) {
-            return $decoded;
+            return array_values(array_filter($decoded, 'is_string'));
         }
 
         try {
-            $decoded = json_decode(Fortify::currentEncrypter()->decrypt($rawCodes), true);
+            $decrypted = Fortify::currentEncrypter()->decrypt($rawCodes);
+            if (! is_string($decrypted)) {
+                return [];
+            }
+
+            $decoded = json_decode($decrypted, true);
         } catch (DecryptException) {
             return [];
         }
 
-        return is_array($decoded) ? $decoded : [];
+        if (! is_array($decoded)) {
+            return [];
+        }
+
+        return array_values(array_filter($decoded, 'is_string'));
     }
 }

@@ -9,11 +9,21 @@ use App\Src\Shared\Domain\Collection;
 final class RecoveryCodeCollection extends Collection
 {
     /**
-     * @return string[]
+     * @return list<string>
      */
     public function values(): array
     {
-        return $this->map(static fn (RecoveryCode $code) => $code->value());
+        $values = [];
+
+        foreach ($this->items() as $code) {
+            if (! $code instanceof RecoveryCode) {
+                continue;
+            }
+
+            $values[] = $code->value();
+        }
+
+        return $values;
     }
 
     protected function type(): string
