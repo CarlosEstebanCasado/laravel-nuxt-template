@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const publicBaseUrl = process.env.PLAYWRIGHT_PUBLIC_BASE_URL ?? 'http://127.0.0.1:3000'
+const publicBaseUrl = process.env.PLAYWRIGHT_PUBLIC_BASE_URL ?? 'https://project.dev'
 
 test.describe('Public pages', () => {
   test('home page renders', async ({ page }) => {

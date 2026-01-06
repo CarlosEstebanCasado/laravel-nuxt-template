@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const appBaseUrl = process.env.PLAYWRIGHT_APP_BASE_URL ?? 'https://app.project.dev'
-
 const shouldStartServer = process.env.PLAYWRIGHT_WEB_SERVER === 'true'
+const appBaseUrl = process.env.PLAYWRIGHT_APP_BASE_URL
+  ?? (shouldStartServer ? 'http://localhost:3000' : 'https://app.project.dev')
 
 export default defineConfig({
   testDir: './tests/e2e',

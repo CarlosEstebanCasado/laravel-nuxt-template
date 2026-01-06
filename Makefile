@@ -172,8 +172,15 @@ e2e-ui-local:
 	cd frontend && \
 	NM_PERM_FILE=$$(mktemp) && \
 	TR_PERM_FILE=$$(mktemp) && \
-	( [ -e node_modules ] && stat -c "%u:%g %a" node_modules > "$$NM_PERM_FILE" || true ) && \
-	( [ -e test-results ] && stat -c "%u:%g %a" test-results > "$$TR_PERM_FILE" || true ) && \
+	get_owner_group() { \
+		if stat -c "%u:%g" "$$1" >/dev/null 2>&1; then \
+			stat -c "%u:%g" "$$1"; \
+		elif stat -f "%u:%g" "$$1" >/dev/null 2>&1; then \
+			stat -f "%u:%g" "$$1"; \
+		fi; \
+	}; \
+	( [ -e node_modules ] && get_owner_group node_modules > "$$NM_PERM_FILE" || true ) && \
+	( [ -e test-results ] && get_owner_group test-results > "$$TR_PERM_FILE" || true ) && \
 	sudo chown -R $${USER}:$${USER} node_modules package-lock.json || true && \
 	sudo chown -R $${USER}:$${USER} test-results || true && \
 	sudo chmod -R u+rwX node_modules || true && \
@@ -185,14 +192,12 @@ e2e-ui-local:
 	npm run test:e2e:ui; \
 	STATUS=$$?; \
 	if [ -s "$$NM_PERM_FILE" ] && [ -e node_modules ]; then \
-		read -r OWNER MODE < "$$NM_PERM_FILE"; \
+		read -r OWNER < "$$NM_PERM_FILE"; \
 		sudo chown -R "$$OWNER" node_modules || true; \
-		sudo chmod -R "$$MODE" node_modules || true; \
 	fi; \
 	if [ -s "$$TR_PERM_FILE" ] && [ -e test-results ]; then \
-		read -r OWNER MODE < "$$TR_PERM_FILE"; \
+		read -r OWNER < "$$TR_PERM_FILE"; \
 		sudo chown -R "$$OWNER" test-results || true; \
-		sudo chmod -R "$$MODE" test-results || true; \
 	fi; \
 	rm -f "$$NM_PERM_FILE" "$$TR_PERM_FILE"; \
 	exit $$STATUS
