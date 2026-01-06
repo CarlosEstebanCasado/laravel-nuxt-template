@@ -45,5 +45,19 @@ class DatabaseSeeder extends Seeder
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
         ])->save();
+
+        $deleteUser = User::query()->updateOrCreate(
+            ['email' => 'deleteuser@example.com'],
+            [
+                'name' => 'Delete User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $deleteUser->forceFill([
+            'email_verified_at' => now(),
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
     }
 }

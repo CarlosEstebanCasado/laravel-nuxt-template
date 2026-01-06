@@ -168,6 +168,7 @@ e2e-ui:
 .PHONY: e2e-ui-local
 e2e-ui-local:
 	$(MAKE) up
+	docker compose exec api php artisan db:seed --force
 	cd frontend && \
 	NM_PERM_FILE=$$(mktemp) && \
 	TR_PERM_FILE=$$(mktemp) && \

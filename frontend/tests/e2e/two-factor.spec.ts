@@ -35,7 +35,6 @@ test.describe('Two-factor authentication', () => {
       }
     }
 
-    const enableButton = page.getByRole('button', { name: /Activar|Enable/i })
     const disableButton = page.getByRole('button', { name: /Desactivar|Disable/i })
 
     if (await disableButton.isVisible()) {
