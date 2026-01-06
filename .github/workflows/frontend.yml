@@ -116,6 +116,7 @@ jobs:
         working-directory: backend
         env:
           APP_ENV: testing
+          APP_URL: http://127.0.0.1:8000
           DB_CONNECTION: pgsql
           DB_HOST: 127.0.0.1
           DB_PORT: "5432"
@@ -125,6 +126,8 @@ jobs:
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: "6379"
           SESSION_DRIVER: array
+          SESSION_DOMAIN: 127.0.0.1
+          SANCTUM_STATEFUL_DOMAINS: 127.0.0.1,localhost:3000
 
       - name: Start backend server
         working-directory: backend
@@ -141,6 +144,8 @@ jobs:
           SESSION_DRIVER: array
           APP_URL: http://127.0.0.1:8000
           FRONTEND_URL: http://127.0.0.1:3000
+          SESSION_DOMAIN: 127.0.0.1
+          SANCTUM_STATEFUL_DOMAINS: 127.0.0.1,localhost:3000
         shell: bash
         run: |
           php artisan serve --host=0.0.0.0 --port=8000 &
