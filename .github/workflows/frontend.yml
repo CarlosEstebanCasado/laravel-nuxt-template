@@ -125,7 +125,8 @@ jobs:
           DB_PASSWORD: ""
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: "6379"
-          SESSION_DRIVER: array
+          SESSION_DRIVER: cookie
+          SESSION_SECURE_COOKIE: "false"
           SESSION_DOMAIN: 127.0.0.1
           SANCTUM_STATEFUL_DOMAINS: 127.0.0.1,localhost:3000
 
@@ -141,7 +142,8 @@ jobs:
           DB_PASSWORD: ""
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: "6379"
-          SESSION_DRIVER: array
+          SESSION_DRIVER: cookie
+          SESSION_SECURE_COOKIE: "false"
           APP_URL: http://127.0.0.1:8000
           FRONTEND_URL: http://127.0.0.1:3000
           SESSION_DOMAIN: 127.0.0.1
@@ -159,6 +161,7 @@ jobs:
           NUXT_PUBLIC_API_PREFIX: /api/v1
           NUXT_PUBLIC_AUTH_PREFIX: /auth
           NUXT_PUBLIC_APP_BASE_URL: http://127.0.0.1:3000
+          NUXT_PUBLIC_SITE_BASE_URL: http://127.0.0.1:3000
 
       - name: Wait for servers
         shell: bash

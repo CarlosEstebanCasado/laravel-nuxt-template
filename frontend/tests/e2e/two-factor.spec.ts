@@ -6,6 +6,7 @@ const password = process.env.E2E_2FA_PASSWORD ?? process.env.E2E_USER_PASSWORD ?
 const email = process.env.E2E_2FA_EMAIL ?? 'twofactor@example.com'
 
 const gotoDashboardRoute = async (page: Page, path: string) => {
+  let loaded = false
   for (let attempt = 0; attempt < 3; attempt += 1) {
     await page.goto(path)
     await page.waitForTimeout(500)
@@ -13,7 +14,11 @@ const gotoDashboardRoute = async (page: Page, path: string) => {
       await page.reload()
       continue
     }
+    loaded = true
     break
+  }
+  if (!loaded) {
+    throw new Error('No se pudo cargar la ruta del dashboard tras varios intentos.')
   }
 }
 
