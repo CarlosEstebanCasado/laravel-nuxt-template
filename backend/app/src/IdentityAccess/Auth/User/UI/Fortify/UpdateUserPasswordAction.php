@@ -6,6 +6,7 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Fortify;
 use App\Src\IdentityAccess\Auth\User\Application\Request\UpdateUserPasswordUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\UpdateUserPasswordUseCase;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Shared\Domain\Service\Translator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\UpdatesUserPasswords;
@@ -15,7 +16,8 @@ class UpdateUserPasswordAction implements UpdatesUserPasswords
     use PasswordValidationRules;
 
     public function __construct(
-        private readonly UpdateUserPasswordUseCase $updateUserPasswordUseCase
+        private readonly UpdateUserPasswordUseCase $updateUserPasswordUseCase,
+        private readonly Translator $translator
     ) {
     }
 
@@ -30,7 +32,7 @@ class UpdateUserPasswordAction implements UpdatesUserPasswords
             'current_password' => ['required', 'string', 'current_password:web'],
             'password' => $this->passwordRules(),
         ], [
-            'current_password.current_password' => __('The provided password does not match your current password.'),
+            'current_password.current_password' => $this->translator->translate('messages.auth.password_mismatch'),
         ])->validateWithBag('updatePassword');
 
         $this->updateUserPasswordUseCase->execute(new UpdateUserPasswordUseCaseRequest(

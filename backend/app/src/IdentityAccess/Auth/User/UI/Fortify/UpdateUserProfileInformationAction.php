@@ -6,6 +6,7 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Fortify;
 use App\Src\IdentityAccess\Auth\User\Application\Request\UpdateUserProfileUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\UpdateUserProfileUseCase;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Shared\Domain\Service\Translator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
@@ -13,7 +14,8 @@ use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 class UpdateUserProfileInformationAction implements UpdatesUserProfileInformation
 {
     public function __construct(
-        private readonly UpdateUserProfileUseCase $updateUserProfileUseCase
+        private readonly UpdateUserProfileUseCase $updateUserProfileUseCase,
+        private readonly Translator $translator
     ) {
     }
 
@@ -43,8 +45,8 @@ class UpdateUserProfileInformationAction implements UpdatesUserProfileInformatio
         }
 
         Validator::make($input, $rules, [
-            'current_password.required' => __('Please confirm your password to change email.'),
-            'current_password.current_password' => __('The provided password does not match your current password.'),
+            'current_password.required' => $this->translator->translate('messages.auth.password_confirm_email'),
+            'current_password.current_password' => $this->translator->translate('messages.auth.password_mismatch'),
         ])->validateWithBag('updateProfileInformation');
 
         $result = $this->updateUserProfileUseCase->execute(

@@ -5,6 +5,7 @@ namespace App\Src\IdentityAccess\Session\UI\Controllers\Api;
 
 use App\Src\IdentityAccess\Session\Application\Request\ListUserSessionsUseCaseRequest;
 use App\Src\IdentityAccess\Session\Application\UseCase\ListUserSessionsUseCase;
+use App\Src\Shared\Domain\Service\Translator;
 use App\Src\Shared\UI\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +13,8 @@ use Illuminate\Http\Request;
 class ListUserSessionsController extends Controller
 {
     public function __construct(
-        private readonly ListUserSessionsUseCase $listUserSessionsUseCase
+        private readonly ListUserSessionsUseCase $listUserSessionsUseCase,
+        private readonly Translator $translator
     ) {
     }
 
@@ -20,7 +22,7 @@ class ListUserSessionsController extends Controller
     {
         if (! $request->hasSession()) {
             return response()->json([
-                'message' => 'Session store is not available for this request.',
+                'message' => $this->translator->translate('messages.session.store_unavailable'),
             ], 422);
         }
 

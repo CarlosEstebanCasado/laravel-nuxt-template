@@ -5,6 +5,7 @@ namespace App\Src\IdentityAccess\Security\Reauth\UI\Middleware;
 
 use Closure;
 use App\Src\Shared\Domain\Service\ConfigProvider;
+use App\Src\Shared\Domain\Service\Translator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -13,7 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 class ThrottleAuthEndpoints
 {
     public function __construct(
-        private readonly ConfigProvider $configProvider
+        private readonly ConfigProvider $configProvider,
+        private readonly Translator $translator
     ) {
     }
     /**
@@ -42,7 +44,7 @@ class ThrottleAuthEndpoints
 
                 if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
                     return response()->json([
-                        'message' => __('Too many requests. Please try again later.'),
+                        'message' => $this->translator->translate('messages.security.too_many_requests'),
                         'retry_after' => RateLimiter::availableIn($key),
                     ], 429);
                 }
@@ -59,7 +61,7 @@ class ThrottleAuthEndpoints
 
                 if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
                     return response()->json([
-                        'message' => __('Too many requests. Please try again later.'),
+                        'message' => $this->translator->translate('messages.security.too_many_requests'),
                         'retry_after' => RateLimiter::availableIn($key),
                     ], 429);
                 }
@@ -76,7 +78,7 @@ class ThrottleAuthEndpoints
 
                 if (RateLimiter::tooManyAttempts($key, $maxAttempts)) {
                     return response()->json([
-                        'message' => __('Too many requests. Please try again later.'),
+                        'message' => $this->translator->translate('messages.security.too_many_requests'),
                         'retry_after' => RateLimiter::availableIn($key),
                     ], 429);
                 }

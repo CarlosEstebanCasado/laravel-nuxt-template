@@ -5,12 +5,13 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Responses;
 
 use Illuminate\Http\JsonResponse;
 use Laravel\Fortify\Contracts\FailedPasswordResetLinkRequestResponse as FailedPasswordResetLinkRequestResponseContract;
-use Laravel\Fortify\Fortify;
+use App\Src\Shared\Domain\Service\Translator;
 
 class FailedPasswordResetLinkRequestResponse implements FailedPasswordResetLinkRequestResponseContract
 {
     public function __construct(
-        protected string $status
+        protected string $status,
+        protected Translator $translator
     ) {
     }
 
@@ -18,7 +19,7 @@ class FailedPasswordResetLinkRequestResponse implements FailedPasswordResetLinkR
     {
         // Avoid account enumeration: do not reveal whether the email exists.
         return response()->json([
-            'message' => __('If an account exists for that email, you will receive a password reset link.'),
+            'message' => $this->translator->translate('messages.auth.password_reset_link_sent'),
         ]);
     }
 }

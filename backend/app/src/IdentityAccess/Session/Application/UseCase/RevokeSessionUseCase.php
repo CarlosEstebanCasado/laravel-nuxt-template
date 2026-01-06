@@ -22,7 +22,7 @@ final class RevokeSessionUseCase
     public function execute(RevokeSessionUseCaseRequest $request): bool
     {
         if ($request->sessionId === $request->currentSessionId) {
-            throw new CannotRevokeCurrentSession('You cannot revoke the current session.');
+            throw new CannotRevokeCurrentSession();
         }
 
         $deleted = $this->sessionRepository->deleteForUser($request->sessionId, $request->userId);
@@ -44,6 +44,5 @@ final class RevokeSessionUseCase
         return true;
     }
 }
-
 
 

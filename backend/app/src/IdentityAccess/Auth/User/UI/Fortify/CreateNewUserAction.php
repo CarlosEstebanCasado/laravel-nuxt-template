@@ -6,6 +6,7 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Fortify;
 use App\Src\IdentityAccess\Auth\User\Application\Request\CreateUserUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\CreateUserUseCase;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Shared\Domain\Service\Translator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -15,7 +16,8 @@ class CreateNewUserAction implements CreatesNewUsers
     use PasswordValidationRules;
 
     public function __construct(
-        private readonly CreateUserUseCase $createUserUseCase
+        private readonly CreateUserUseCase $createUserUseCase,
+        private readonly Translator $translator
     ) {
     }
 
@@ -37,7 +39,7 @@ class CreateNewUserAction implements CreatesNewUsers
             ],
             'password' => $this->passwordRules(),
         ], [
-            'email.unique' => __('An account with this email already exists. Please sign in or reset your password.'),
+            'email.unique' => $this->translator->translate('messages.auth.email_exists'),
         ])->validate();
 
         $userId = $this->createUserUseCase->execute(new CreateUserUseCaseRequest(

@@ -5,6 +5,7 @@ namespace App\Src\IdentityAccess\Security\Reauth\UI\Controllers\Api;
 
 use App\Src\IdentityAccess\Security\Reauth\Application\Request\DeleteAccountUseCaseRequest;
 use App\Src\IdentityAccess\Security\Reauth\Application\UseCase\DeleteAccountUseCase;
+use App\Src\Shared\Domain\Service\Translator;
 use App\Src\Shared\UI\Controllers\Controller;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +16,8 @@ use Illuminate\Validation\Rule;
 class DeleteAccountController extends Controller
 {
     public function __construct(
-        private readonly DeleteAccountUseCase $deleteAccountUseCase
+        private readonly DeleteAccountUseCase $deleteAccountUseCase,
+        private readonly Translator $translator
     ) {
     }
 
@@ -37,9 +39,9 @@ class DeleteAccountController extends Controller
                 'current_password:web',
             ],
         ], [
-            'confirmation.in' => __('Please type DELETE to confirm account deletion.'),
-            'password.required' => __('Please confirm your password to continue.'),
-            'password.current_password' => __('The provided password does not match your current password.'),
+            'confirmation.in' => $this->translator->translate('messages.account.delete_confirmation'),
+            'password.required' => $this->translator->translate('messages.auth.password_confirm'),
+            'password.current_password' => $this->translator->translate('messages.auth.password_mismatch'),
         ]);
 
         $response = $this->deleteAccountUseCase->execute(

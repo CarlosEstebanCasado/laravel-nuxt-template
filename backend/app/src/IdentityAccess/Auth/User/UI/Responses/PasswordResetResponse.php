@@ -5,18 +5,20 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Responses;
 
 use Illuminate\Http\JsonResponse;
 use Laravel\Fortify\Contracts\PasswordResetResponse as PasswordResetResponseContract;
+use App\Src\Shared\Domain\Service\Translator;
 
 class PasswordResetResponse implements PasswordResetResponseContract
 {
     public function __construct(
-        protected string $status
+        protected string $status,
+        protected Translator $translator
     ) {
     }
 
     public function toResponse($request): JsonResponse
     {
         return response()->json([
-            'message' => trans($this->status),
+            'message' => $this->translator->translate($this->status),
         ]);
     }
 }
