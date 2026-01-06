@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
@@ -17,8 +18,7 @@ final class OAuthCallbackUseCase
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly RandomStringGenerator $randomStringGenerator
-    ) {
-    }
+    ) {}
 
     public function execute(OAuthCallbackUseCaseRequest $request): UserId
     {
@@ -36,7 +36,7 @@ final class OAuthCallbackUseCase
             email: $email,
             name: new UserName($displayName),
             provider: new AuthProvider($request->provider),
-            emailVerifiedAt: new DateTimeValue(new \DateTimeImmutable()),
+            emailVerifiedAt: new DateTimeValue(new \DateTimeImmutable),
             plainPassword: $randomPassword,
         );
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model;
@@ -27,10 +28,10 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
-class User extends Authenticatable implements MustVerifyEmail, AuditableContract
+class User extends Authenticatable implements AuditableContract, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, AuditableTrait, TwoFactorAuthenticatable;
+    use AuditableTrait, HasApiTokens, HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     protected static function newFactory(): UserFactory
     {
@@ -93,7 +94,7 @@ class User extends Authenticatable implements MustVerifyEmail, AuditableContract
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function transformAudit(array $data): array

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\Domain;
@@ -15,7 +16,7 @@ use RuntimeException;
 abstract class Collection implements Countable, IteratorAggregate
 {
     /**
-     * @param array<int, object> $items
+     * @param  array<int, object>  $items
      */
     public function __construct(protected array $items)
     {

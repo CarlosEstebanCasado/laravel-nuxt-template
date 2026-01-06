@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\UI\Controllers\Api;
@@ -13,8 +14,7 @@ class AuditsController extends Controller
 {
     public function __construct(
         private readonly ListUserAuditsUseCase $listUserAuditsUseCase
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
@@ -11,8 +12,7 @@ final class DisableTwoFactorAuthenticationUseCase
 {
     public function __construct(
         private readonly TwoFactorAuthenticationService $twoFactorAuthenticationService
-    ) {
-    }
+    ) {}
 
     public function execute(DisableTwoFactorAuthenticationUseCaseRequest $request): void
     {

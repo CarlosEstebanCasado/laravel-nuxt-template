@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\Infrastructure;
 
-use App\Src\Shared\Domain\Service\AuditEventRecorder;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Shared\Domain\Service\AuditEventRecorder;
 use OwenIt\Auditing\Models\Audit;
 
 final class OwenItAuditEventRecorder implements AuditEventRecorder

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Infrastructure\Fortify;
@@ -13,8 +14,7 @@ final class FortifyTwoFactorAuthenticationService implements TwoFactorAuthentica
 {
     public function __construct(
         private readonly DisableTwoFactorAuthentication $disableTwoFactorAuthentication
-    ) {
-    }
+    ) {}
 
     public function disableForUser(UserId $userId): void
     {

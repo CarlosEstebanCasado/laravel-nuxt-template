@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Auth\User\Application\UseCase;
@@ -19,7 +20,9 @@ use Tests\Unit\Shared\Mother\WordMother;
 final class RegenerateTwoFactorRecoveryCodesUseCaseTest extends TestCase
 {
     private MockObject $twoFactorRecoveryCodesService;
+
     private TwoFactorRecoveryCodesConverter $twoFactorRecoveryCodesConverter;
+
     private RegenerateTwoFactorRecoveryCodesUseCase $useCase;
 
     protected function setUp(): void
@@ -28,7 +31,7 @@ final class RegenerateTwoFactorRecoveryCodesUseCaseTest extends TestCase
 
         $this->twoFactorRecoveryCodesService = $this->createMock(TwoFactorRecoveryCodesService::class);
         $this->twoFactorRecoveryCodesConverter = new TwoFactorRecoveryCodesConverter(
-            new TwoFactorRecoveryCodeConverter()
+            new TwoFactorRecoveryCodeConverter
         );
         $this->useCase = new RegenerateTwoFactorRecoveryCodesUseCase(
             twoFactorRecoveryCodesService: $this->twoFactorRecoveryCodesService,
@@ -43,7 +46,7 @@ final class RegenerateTwoFactorRecoveryCodesUseCaseTest extends TestCase
             new RecoveryCode(WordMother::random()),
             new RecoveryCode(WordMother::random()),
         ]);
-        $expected = (new TwoFactorRecoveryCodesConverter(new TwoFactorRecoveryCodeConverter()))
+        $expected = (new TwoFactorRecoveryCodesConverter(new TwoFactorRecoveryCodeConverter))
             ->toResponse($collection);
 
         $this->twoFactorRecoveryCodesService

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Auth\User\Application\UseCase;
@@ -16,6 +17,7 @@ use Tests\Unit\Shared\Mother\WordMother;
 final class UpdateUserPasswordUseCaseTest extends TestCase
 {
     private MockObject $users;
+
     private UpdateUserPasswordUseCase $useCase;
 
     protected function setUp(): void

@@ -63,8 +63,14 @@ qa:
 	else \
 		docker compose exec api composer lint || echo "Define composer script 'lint' o instala phpstan"; \
 	fi
+	@if [ -f backend/vendor/bin/pint ]; then \
+		docker compose exec api vendor/bin/pint --test; \
+	else \
+		echo "Laravel Pint no está instalado."; \
+	fi
 	@if [ -f frontend/package.json ]; then \
 		docker compose exec nuxt npm run lint || echo "Define npm script 'lint'"; \
+		docker compose exec nuxt npx vue-tsc --noEmit; \
 	fi
 
 phpstan:
@@ -119,6 +125,8 @@ ci-backend:
 		cd /var/www/html && \
 		composer install --no-interaction --prefer-dist && \
 		composer audit --no-interaction && \
+		vendor/bin/phpstan analyse && \
+		vendor/bin/pint --test && \
 		php artisan optimize:clear && \
 		APP_KEY="$$(php -r '\''echo "base64:".base64_encode(random_bytes(32));'\'' )" && \
 		TEST_DB="$${DB_DATABASE_TEST:-$${DB_DATABASE}_test}" && \

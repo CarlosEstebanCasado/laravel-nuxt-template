@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\Application\Converter;
 
-use App\Src\IdentityAccess\Audit\Application\Response\AuditResponseItem;
 use App\Src\IdentityAccess\Audit\Application\Response\GetAuditListUseCaseResponse;
 use App\Src\IdentityAccess\Audit\Domain\Entity\Audit;
 use App\Src\IdentityAccess\Audit\Domain\Response\AuditCollectionResponse;
@@ -12,12 +12,11 @@ final class AuditListConverter
 {
     public function __construct(
         private readonly AuditResponseItemConverter $auditResponseItemConverter
-    ) {
-    }
+    ) {}
 
     public function toResponse(AuditCollectionResponse $collectionResponse): GetAuditListUseCaseResponse
     {
-        $response = new GetAuditListUseCaseResponse();
+        $response = new GetAuditListUseCaseResponse;
 
         /** @var Audit $audit */
         foreach ($collectionResponse->items() as $audit) {

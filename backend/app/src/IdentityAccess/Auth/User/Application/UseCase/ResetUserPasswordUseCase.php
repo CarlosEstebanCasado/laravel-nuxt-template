@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
@@ -11,8 +12,7 @@ final class ResetUserPasswordUseCase
 {
     public function __construct(
         private readonly UserRepository $userRepository
-    ) {
-    }
+    ) {}
 
     public function execute(ResetUserPasswordUseCaseRequest $request): void
     {
@@ -24,6 +24,3 @@ final class ResetUserPasswordUseCase
         );
     }
 }
-
-
-

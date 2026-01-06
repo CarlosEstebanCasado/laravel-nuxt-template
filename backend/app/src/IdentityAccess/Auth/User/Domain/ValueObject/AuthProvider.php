@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Domain\ValueObject;
@@ -23,7 +24,3 @@ final class AuthProvider
         return $this->value;
     }
 }
-
-
-
-

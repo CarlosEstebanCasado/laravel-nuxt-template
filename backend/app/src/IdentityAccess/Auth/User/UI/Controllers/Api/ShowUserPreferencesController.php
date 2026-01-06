@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Controllers\Api;
@@ -13,8 +14,7 @@ final class ShowUserPreferencesController extends Controller
 {
     public function __construct(
         private readonly GetUserPreferencesUseCase $getUserPreferencesUseCase
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {

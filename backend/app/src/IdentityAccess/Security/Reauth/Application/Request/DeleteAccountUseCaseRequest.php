@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Security\Reauth\Application\Request;
@@ -11,10 +12,5 @@ final class DeleteAccountUseCaseRequest
         public readonly ?string $url,
         public readonly ?string $ipAddress,
         public readonly ?string $userAgent,
-    ) {
-    }
+    ) {}
 }
-
-
-
-

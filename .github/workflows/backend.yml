@@ -78,6 +78,9 @@ jobs:
       - name: Static analysis (PHPStan)
         run: vendor/bin/phpstan analyse
 
+      - name: Code style (Pint)
+        run: vendor/bin/pint --test
+
       - name: Prepare .env for CI
         run: |
           if [ ! -f .env ]; then
@@ -89,4 +92,3 @@ jobs:
 
       - name: Run tests (PHPUnit)
         run: php artisan test
-

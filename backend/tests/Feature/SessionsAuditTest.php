@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Contracts\Session\Session as SessionContract;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use OwenIt\Auditing\Models\Audit;
 use Tests\TestCase;
@@ -15,6 +15,7 @@ class SessionsAuditTest extends TestCase
     use RefreshDatabase;
 
     private string $csrfToken = 'test_csrf_token';
+
     private string $validSessionId = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 
     /** @var array<string, string> */

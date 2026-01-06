@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Security\Reauth\Application\UseCase;
@@ -13,8 +14,7 @@ final class DeleteAccountUseCase
     public function __construct(
         private readonly AccountRepository $accountRepository,
         private readonly AuditEventRecorder $auditEventRecorder
-    ) {
-    }
+    ) {}
 
     public function execute(DeleteAccountUseCaseRequest $request): DeleteAccountUseCaseResponse
     {
@@ -30,7 +30,6 @@ final class DeleteAccountUseCase
 
         $this->accountRepository->deleteAccount($request->userId);
 
-        return new DeleteAccountUseCaseResponse();
+        return new DeleteAccountUseCaseResponse;
     }
 }
-

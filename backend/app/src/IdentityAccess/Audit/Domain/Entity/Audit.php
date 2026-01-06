@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\Domain\Entity;
@@ -22,8 +23,7 @@ final class Audit
         private readonly ?IpAddress $ipAddress,
         private readonly ?UserAgent $userAgent,
         private readonly ?AuditTags $tags,
-    ) {
-    }
+    ) {}
 
     public function id(): AuditId
     {

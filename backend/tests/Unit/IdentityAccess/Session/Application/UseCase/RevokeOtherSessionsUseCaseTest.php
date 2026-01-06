@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Session\Application\UseCase;
@@ -18,7 +19,9 @@ use Tests\Unit\Shared\Mother\WordMother;
 final class RevokeOtherSessionsUseCaseTest extends TestCase
 {
     private MockObject $sessions;
+
     private MockObject $audit;
+
     private RevokeOtherSessionsUseCase $useCase;
 
     protected function setUp(): void

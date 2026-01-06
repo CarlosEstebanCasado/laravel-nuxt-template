@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Infrastructure;
@@ -67,4 +68,3 @@ final class DatabaseSessionRepository implements SessionRepository
             ->delete();
     }
 }
-

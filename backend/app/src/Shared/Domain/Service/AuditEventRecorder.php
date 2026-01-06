@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\Domain\Service;
@@ -20,7 +21,3 @@ interface AuditEventRecorder
         ?string $tags = 'security',
     ): void;
 }
-
-
-
-

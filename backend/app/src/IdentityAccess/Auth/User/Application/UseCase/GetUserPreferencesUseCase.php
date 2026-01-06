@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
@@ -8,21 +9,22 @@ use App\Src\IdentityAccess\Auth\User\Application\Response\GetUserPreferencesUseC
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\UserPreferences;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Shared\Domain\Service\ConfigProvider;
 use DateTimeZone;
 
 final class GetUserPreferencesUseCase
 {
     public function __construct(
-        private readonly UserPreferencesRepository $userPreferencesRepository
-    ) {
-    }
+        private readonly UserPreferencesRepository $userPreferencesRepository,
+        private readonly ConfigProvider $configProvider
+    ) {}
 
     public function execute(GetUserPreferencesUseCaseRequest $request): GetUserPreferencesUseCaseResponse
     {
         $userId = new UserId($request->userId);
 
         $preferences = $this->userPreferencesRepository->find($userId)
-            ?? UserPreferences::default($userId);
+            ?? UserPreferences::default($userId, $this->configProvider);
 
         return $this->buildResponse($preferences);
     }
@@ -50,7 +52,7 @@ final class GetUserPreferencesUseCase
      */
     private function availableLocales(): array
     {
-        $locales = (array) config('app.supported_locales', []);
+        $locales = (array) $this->configProvider->get('app.supported_locales', []);
         $options = [];
 
         foreach ($locales as $code => $label) {
@@ -72,7 +74,7 @@ final class GetUserPreferencesUseCase
      */
     private function availableThemes(): array
     {
-        $themes = (array) config('preferences.themes', []);
+        $themes = (array) $this->configProvider->get('preferences.themes', []);
         $options = [];
 
         foreach ($themes as $value => $label) {
@@ -94,7 +96,7 @@ final class GetUserPreferencesUseCase
      */
     private function availablePrimaryColors(): array
     {
-        $colors = (array) config('preferences.primary_colors', []);
+        $colors = (array) $this->configProvider->get('preferences.primary_colors', []);
         $options = [];
 
         foreach ($colors as $value => $label) {
@@ -116,7 +118,7 @@ final class GetUserPreferencesUseCase
      */
     private function availableNeutralColors(): array
     {
-        $colors = (array) config('preferences.neutral_colors', []);
+        $colors = (array) $this->configProvider->get('preferences.neutral_colors', []);
         $options = [];
 
         foreach ($colors as $value => $label) {

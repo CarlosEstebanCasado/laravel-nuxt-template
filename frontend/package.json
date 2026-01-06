@@ -7,6 +7,7 @@
     "dev": "node scripts/nuxt-dev-wrapper.mjs",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest"
   },

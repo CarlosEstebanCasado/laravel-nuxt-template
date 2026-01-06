@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\Domain\Response;
@@ -10,8 +11,7 @@ final class PaginationResponse
         private readonly int $lastPage,
         private readonly int $perPage,
         private readonly int $total,
-    ) {
-    }
+    ) {}
 
     public function currentPage(): int
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Security\Reauth\Application\UseCase;
@@ -19,7 +20,9 @@ use Tests\Unit\Shared\Mother\WordMother;
 final class DeleteAccountUseCaseTest extends TestCase
 {
     private MockObject $accounts;
+
     private MockObject $audit;
+
     private DeleteAccountUseCase $useCase;
 
     protected function setUp(): void

@@ -94,34 +94,32 @@ Si vas a usar esto como template, sigue el checklist en `docs/forking.md` para r
 -----------------------------------
 
 ```
-app/
-├─ Domain/
-│  └─ <BoundedContext>/
-│     ├─ Entities/
-│     ├─ ValueObjects/
-│     ├─ Services/
-│     └─ Repositories/   # interfaces
-├─ Application/
-│  └─ <BoundedContext>/
-│     ├─ DTOs/
-│     ├─ UseCases/
-│     └─ Queries/
-├─ Infrastructure/
-│  ├─ Http/
-│  │  ├─ Controllers/
-│  │  └─ Middleware/
-│  ├─ Persistence/
-│  │  ├─ Eloquent/
-│  │  │  ├─ Models/
-│  │  │  └─ Repositories/
-│  │  └─ Migrations/
-│  ├─ Tenancy/
-│  ├─ Rules/
-│  ├─ Providers/
-│  └─ Services/
-└─ Support/
-   ├─ Database/           # Scopes/Traits (HouseholdScoped)
-   └─ Helpers/
+backend/app/src/
+└─ <BoundedContext>/
+   └─ <Module>/
+      ├─ Domain/
+      │  ├─ Entity/
+      │  ├─ ValueObject/
+      │  ├─ Service/
+      │  ├─ Repository/
+      │  └─ Exception/
+      ├─ Application/
+      │  ├─ UseCase/
+      │  ├─ Request/
+      │  ├─ Response/
+      │  └─ Converter/
+      ├─ Infrastructure/
+      │  ├─ Eloquent/
+      │  │  ├─ Model/
+      │  │  └─ Repository/
+      │  ├─ Mapper/
+      │  └─ Provider/
+      └─ UI/
+         ├─ Controllers/
+         │  └─ Api/
+         ├─ Request/
+         ├─ Middleware/
+         └─ Routes/
 ```
 
 **Rutas**: `routes/api.php` (públicas y auth) + grupo privado `auth:sanctum` + middleware `EnsureHouseholdContext`.
@@ -201,7 +199,7 @@ app/
 
 - `make ci`: ejecuta backend + frontend (audit + lint/typecheck + build + tests).
 - `make ci-parallel`: lo mismo, pero en paralelo.
-- `make ci-backend`: solo backend (Postgres/Redis del docker-compose) usando una **DB de tests** (`<DB_DATABASE>_test`) para no borrar tu DB de desarrollo.
+- `make ci-backend`: solo backend (Postgres/Redis del docker-compose) usando una **DB de tests** (`<DB_DATABASE>_test`) para no borrar tu DB de desarrollo. Incluye PHPStan + Pint.
 - `make ci-frontend`: solo frontend.
 - `make test`: alias de `make ci` (por compatibilidad con el README).
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Controllers\Api;
@@ -13,8 +14,7 @@ class DisableTwoFactorAuthenticationController extends Controller
 {
     public function __construct(
         private readonly DisableTwoFactorAuthenticationUseCase $disableTwoFactorAuthenticationUseCase
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): Response
     {

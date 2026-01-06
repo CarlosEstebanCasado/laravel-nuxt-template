@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
@@ -16,8 +17,7 @@ final class GetCurrentUserUseCase
         private readonly UserRepository $userRepository,
         private readonly UserPreferencesRepository $userPreferencesRepository,
         private readonly UserResponseConverter $userResponseConverter,
-    ) {
-    }
+    ) {}
 
     public function execute(GetCurrentUserUseCaseRequest $request): GetCurrentUserUseCaseResponse
     {

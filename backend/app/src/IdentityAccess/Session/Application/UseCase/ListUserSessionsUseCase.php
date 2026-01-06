@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Application\UseCase;
@@ -13,8 +14,7 @@ final class ListUserSessionsUseCase
     public function __construct(
         private readonly SessionRepository $sessionRepository,
         private readonly SessionListConverter $sessionListConverter
-    ) {
-    }
+    ) {}
 
     public function execute(ListUserSessionsUseCaseRequest $request): GetSessionListUseCaseResponse
     {
@@ -23,5 +23,3 @@ final class ListUserSessionsUseCase
         return $this->sessionListConverter->toResponse($collection, $request->currentSessionId);
     }
 }
-
-

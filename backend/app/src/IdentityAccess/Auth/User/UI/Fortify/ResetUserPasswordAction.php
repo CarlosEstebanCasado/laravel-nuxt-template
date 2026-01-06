@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Fortify;
@@ -15,8 +16,7 @@ class ResetUserPasswordAction implements ResetsUserPasswords
 
     public function __construct(
         private readonly ResetUserPasswordUseCase $resetUserPasswordUseCase
-    ) {
-    }
+    ) {}
 
     /**
      * Validate and reset the user's forgotten password.

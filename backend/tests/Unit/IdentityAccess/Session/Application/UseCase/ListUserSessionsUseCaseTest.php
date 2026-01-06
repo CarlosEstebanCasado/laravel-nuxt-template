@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Session\Application\UseCase;
@@ -18,7 +19,9 @@ use Tests\Unit\Shared\Mother\WordMother;
 final class ListUserSessionsUseCaseTest extends TestCase
 {
     private MockObject $sessions;
+
     private SessionListConverter $converter;
+
     private ListUserSessionsUseCase $useCase;
 
     protected function setUp(): void
@@ -27,8 +30,8 @@ final class ListUserSessionsUseCaseTest extends TestCase
 
         $this->sessions = $this->createMock(SessionRepository::class);
         $this->converter = new SessionListConverter(
-            new SessionResponseItemConverter(),
-            new SessionInfoCurrentMarker()
+            new SessionResponseItemConverter,
+            new SessionInfoCurrentMarker
         );
         $this->useCase = new ListUserSessionsUseCase(
             sessionRepository: $this->sessions,
@@ -44,8 +47,8 @@ final class ListUserSessionsUseCaseTest extends TestCase
         );
         $collection = SessionCollectionResponseMother::random();
         $expectedConverter = new SessionListConverter(
-            new SessionResponseItemConverter(),
-            new SessionInfoCurrentMarker()
+            new SessionResponseItemConverter,
+            new SessionInfoCurrentMarker
         );
         $expected = $expectedConverter->toResponse($collection, $request->currentSessionId);
 

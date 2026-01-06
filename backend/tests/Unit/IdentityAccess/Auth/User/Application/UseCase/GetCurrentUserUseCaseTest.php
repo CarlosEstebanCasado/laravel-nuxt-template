@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Auth\User\Application\UseCase;
@@ -18,8 +19,11 @@ use Tests\Unit\Shared\Mother\IntegerMother;
 final class GetCurrentUserUseCaseTest extends TestCase
 {
     private MockObject $users;
+
     private MockObject $preferences;
+
     private UserResponseConverter $converter;
+
     private GetCurrentUserUseCase $useCase;
 
     protected function setUp(): void
@@ -28,7 +32,7 @@ final class GetCurrentUserUseCaseTest extends TestCase
 
         $this->users = $this->createMock(UserRepository::class);
         $this->preferences = $this->createMock(UserPreferencesRepository::class);
-        $this->converter = new UserResponseConverter(new UserResponseItemConverter());
+        $this->converter = new UserResponseConverter(new UserResponseItemConverter);
         $this->useCase = new GetCurrentUserUseCase(
             userRepository: $this->users,
             userPreferencesRepository: $this->preferences,
@@ -40,7 +44,7 @@ final class GetCurrentUserUseCaseTest extends TestCase
     {
         $request = new GetCurrentUserUseCaseRequest(userId: IntegerMother::random());
         $user = UserMother::withPasswordProvider();
-        $expected = (new UserResponseConverter(new UserResponseItemConverter()))->toResponse($user, null);
+        $expected = (new UserResponseConverter(new UserResponseItemConverter))->toResponse($user, null);
 
         $this->users
             ->expects($this->once())

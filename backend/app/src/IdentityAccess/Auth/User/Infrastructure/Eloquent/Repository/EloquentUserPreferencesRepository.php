@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository;
@@ -12,10 +13,15 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\UserPreference;
+use App\Src\Shared\Domain\Service\ConfigProvider;
 use InvalidArgumentException;
 
 final class EloquentUserPreferencesRepository implements UserPreferencesRepository
 {
+    public function __construct(
+        private readonly ConfigProvider $configProvider
+    ) {}
+
     public function find(UserId $userId): ?UserPreferences
     {
         /** @var UserPreference|null $model */
@@ -57,11 +63,11 @@ final class EloquentUserPreferencesRepository implements UserPreferencesReposito
         $isNumericId = is_int($userIdValue)
             || (is_string($userIdValue) && ctype_digit($userIdValue));
 
-        $fallbackLocale = config('app.locale', 'es');
-        $fallbackTheme = config('preferences.default_theme', 'system');
-        $fallbackPrimary = config('preferences.default_primary_color', 'blue');
-        $fallbackNeutral = config('preferences.default_neutral_color', 'slate');
-        $fallbackTimezone = config('preferences.default_timezone', 'UTC');
+        $fallbackLocale = $this->configProvider->get('app.locale', 'es');
+        $fallbackTheme = $this->configProvider->get('preferences.default_theme', 'system');
+        $fallbackPrimary = $this->configProvider->get('preferences.default_primary_color', 'blue');
+        $fallbackNeutral = $this->configProvider->get('preferences.default_neutral_color', 'slate');
+        $fallbackTimezone = $this->configProvider->get('preferences.default_timezone', 'UTC');
 
         $locale = is_string($localeValue) ? $localeValue : (is_string($fallbackLocale) ? $fallbackLocale : 'es');
         $theme = is_string($themeValue) ? $themeValue : (is_string($fallbackTheme) ? $fallbackTheme : 'system');

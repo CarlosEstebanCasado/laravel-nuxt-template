@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\Application\Response;
@@ -16,7 +17,5 @@ final class AuditResponseItem
         public ?string $ip_address = null,
         public ?string $user_agent = null,
         public ?string $tags = null,
-    ) {
-    }
+    ) {}
 }
-

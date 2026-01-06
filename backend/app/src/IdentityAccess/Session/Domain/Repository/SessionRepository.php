@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Domain\Repository;
@@ -13,6 +14,3 @@ interface SessionRepository
 
     public function deleteOthersForUser(int $userId, string $currentSessionId): int;
 }
-
-
-

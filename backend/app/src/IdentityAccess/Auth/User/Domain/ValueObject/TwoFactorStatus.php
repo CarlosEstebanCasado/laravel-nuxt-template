@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Domain\ValueObject;
@@ -10,8 +11,7 @@ final class TwoFactorStatus
     public function __construct(
         private bool $enabled,
         private bool $confirmed
-    ) {
-    }
+    ) {}
 
     public static function fromState(?string $secret, ?DateTimeValue $confirmedAt): self
     {

@@ -1,11 +1,11 @@
 <?php
 
-use App\Src\IdentityAccess\Security\Reauth\UI\Middleware\ThrottleAuthEndpoints;
-use App\Src\Shared\UI\Middleware\EnsureHorizonAccess;
-use App\Src\Shared\UI\Middleware\SetLocaleFromRequest;
 use App\Providers\AppServiceProvider;
 use App\Providers\FortifyServiceProvider;
 use App\Providers\HorizonServiceProvider;
+use App\Src\IdentityAccess\Security\Reauth\UI\Middleware\ThrottleAuthEndpoints;
+use App\Src\Shared\UI\Middleware\EnsureHorizonAccess;
+use App\Src\Shared\UI\Middleware\SetLocaleFromRequest;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;

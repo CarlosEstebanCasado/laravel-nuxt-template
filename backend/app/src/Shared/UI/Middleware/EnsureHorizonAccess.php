@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\UI\Middleware;
 
+use App\Src\Shared\Domain\Service\ConfigProvider;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -12,9 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureHorizonAccess
 {
     public function __construct(
-        private readonly AuthFactory $authFactory
-    ) {
-    }
+        private readonly AuthFactory $authFactory,
+        private readonly ConfigProvider $configProvider
+    ) {}
 
     public function handle(Request $request, Closure $next): Response
     {
@@ -38,7 +40,7 @@ class EnsureHorizonAccess
         }
 
         // In non-local environments, require explicit allow-listing.
-        $allowedEmails = (array) config('horizon.allowed_emails', []);
+        $allowedEmails = (array) $this->configProvider->get('horizon.allowed_emails', []);
 
         if (empty($allowedEmails) || ! in_array($user->email, $allowedEmails, true)) {
             abort(403, 'Access denied.');

@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class UpdatePasswordKeepsSessionTest extends TestCase
@@ -38,4 +38,3 @@ class UpdatePasswordKeepsSessionTest extends TestCase
             ->assertOk();
     }
 }
-
