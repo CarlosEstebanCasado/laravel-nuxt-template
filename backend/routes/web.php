@@ -20,3 +20,23 @@ Route::prefix('auth/oauth')->group(function (): void {
     Route::get('{provider}/callback', OAuthCallbackController::class)
         ->name('oauth.callback');
 });
+
+if (app()->environment('local')) {
+    Route::view('/docs/openapi', 'openapi.index')->name('openapi.docs');
+    Route::get('/docs/openapi.yaml', function () {
+        $paths = [
+            base_path('../docs/openapi.yaml'),
+            base_path('docs/openapi.yaml'),
+        ];
+
+        foreach ($paths as $path) {
+            if (is_file($path)) {
+                return response()->file($path, [
+                    'Content-Type' => 'application/yaml',
+                ]);
+            }
+        }
+
+        abort(404);
+    })->name('openapi.spec');
+}
