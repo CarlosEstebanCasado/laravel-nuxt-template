@@ -75,6 +75,7 @@ qa:
 		docker compose exec nuxt npm run lint || echo "Define npm script 'lint'"; \
 		docker compose exec nuxt npx vue-tsc --noEmit; \
 	fi
+	$(MAKE) e2e
 
 phpstan:
 	docker compose exec api vendor/bin/phpstan analyse
