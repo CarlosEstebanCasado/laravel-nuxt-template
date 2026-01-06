@@ -14,7 +14,7 @@ SaaS Template — Laravel 12 API + Nuxt 4 (SSR público + SPA privado)
 - **Frontend híbrido** con Nuxt 4: SSR público (SEO) + SPA privada (`/dashboard/**`).
 - **Auth fullstack** lista para producción (Laravel Fortify + Sanctum + Nuxt) con login, registro, verificación de email y logout via cookies `SameSite=None`.
 - **Tooling DevOps**: Docker Compose, Horizon, Sentry, Prometheus, GitHub Actions base.
-- **Calidad integrada**: PHPStan máx nivel, Laravel Pint, ESLint, Vitest, Playwright.
+- **Calidad integrada**: PHPStan máx nivel, Laravel Pint, ESLint, Vitest, Playwright (E2E).
 
 ---
 
@@ -179,8 +179,13 @@ backend/app/src/
 **Testing**:
 
 - Domain puro (unit), Feature HTTP + Policies, Integration para repos. Eloquent.
-- End-to-end con Playwright (scaffold), Testing Library + Vitest para componentes Vue.
+- End-to-end con Playwright (E2E), Testing Library + Vitest para componentes Vue.
 - Factories y seeds mínimos (`make seed`).
+
+**Playwright (E2E)**:
+- Variables útiles: `E2E_USER_EMAIL`, `E2E_USER_PASSWORD`, `PLAYWRIGHT_APP_BASE_URL`, `PLAYWRIGHT_PUBLIC_BASE_URL`.
+- Ejecución: `make e2e` (headless en Docker) o `cd frontend && npm run test:e2e` (requiere stack levantado).
+- UI local: `make e2e-ui-local` (usa Node en host, ejecuta Playwright UI y requiere permisos locales de escritura en `frontend/`).
 
 ---
 
@@ -202,6 +207,7 @@ backend/app/src/
 - `make ci-backend`: solo backend (Postgres/Redis del docker-compose) usando una **DB de tests** (`<DB_DATABASE>_test`) para no borrar tu DB de desarrollo. Incluye PHPStan + Pint.
 - `make ci-frontend`: solo frontend.
 - `make test`: alias de `make ci` (por compatibilidad con el README).
+- E2E local: `cd frontend && npm run test:e2e` (requiere stack levantado).
 
 ---
 

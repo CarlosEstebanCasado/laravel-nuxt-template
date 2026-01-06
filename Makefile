@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed refresh-db config-clear-backend qa phpstan test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db
+.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed refresh-db config-clear-backend qa phpstan test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db e2e e2e-ui
 
 help:
 	@echo "Available targets:"
@@ -24,6 +24,9 @@ help:
 	@echo "  make hosts    - Añadir dominios locales al archivo hosts"
 	@echo "  make logs     - Ver logs del gateway nginx"
 	@echo "  make test-db  - Crear DB de tests (<DB_DATABASE>_test) en Postgres si no existe"
+	@echo "  make e2e      - Ejecutar tests E2E de Playwright"
+	@echo "  make e2e-ui   - Ejecutar tests E2E de Playwright en modo UI"
+	@echo "  make e2e-ui-local - Ejecutar Playwright UI fuera de Docker (requiere npm install en frontend)"
 
 up:
 	docker compose up -d
@@ -155,3 +158,40 @@ ci-frontend:
 		npm test && \
 		npm run build \
 	'
+
+e2e:
+	docker compose exec api php artisan db:seed --force
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && npm run test:e2e'
+e2e-ui:
+	docker compose exec api php artisan db:seed --force
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && npm run test:e2e:ui'
+.PHONY: e2e-ui-local
+e2e-ui-local:
+	$(MAKE) up
+	cd frontend && \
+	NM_PERM_FILE=$$(mktemp) && \
+	TR_PERM_FILE=$$(mktemp) && \
+	( [ -e node_modules ] && stat -c "%u:%g %a" node_modules > "$$NM_PERM_FILE" || true ) && \
+	( [ -e test-results ] && stat -c "%u:%g %a" test-results > "$$TR_PERM_FILE" || true ) && \
+	sudo chown -R $${USER}:$${USER} node_modules package-lock.json || true && \
+	sudo chown -R $${USER}:$${USER} test-results || true && \
+	sudo chmod -R u+rwX node_modules || true && \
+	sudo chmod -R u+rwX test-results || true && \
+	npm install --ignore-scripts && \
+	npx playwright install && \
+	PLAYWRIGHT_APP_BASE_URL=https://app.project.dev \
+	PLAYWRIGHT_PUBLIC_BASE_URL=https://project.dev \
+	npm run test:e2e:ui; \
+	STATUS=$$?; \
+	if [ -s "$$NM_PERM_FILE" ] && [ -e node_modules ]; then \
+		read -r OWNER MODE < "$$NM_PERM_FILE"; \
+		sudo chown -R "$$OWNER" node_modules || true; \
+		sudo chmod -R "$$MODE" node_modules || true; \
+	fi; \
+	if [ -s "$$TR_PERM_FILE" ] && [ -e test-results ]; then \
+		read -r OWNER MODE < "$$TR_PERM_FILE"; \
+		sudo chown -R "$$OWNER" test-results || true; \
+		sudo chmod -R "$$MODE" test-results || true; \
+	fi; \
+	rm -f "$$NM_PERM_FILE" "$$TR_PERM_FILE"; \
+	exit $$STATUS

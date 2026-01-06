@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,9 +18,32 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $defaultUser = User::query()->updateOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $defaultUser->forceFill([
+            'email_verified_at' => now(),
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
+
+        $twoFactorUser = User::query()->updateOrCreate(
+            ['email' => 'twofactor@example.com'],
+            [
+                'name' => 'Two Factor User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $twoFactorUser->forceFill([
+            'email_verified_at' => now(),
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
     }
 }
