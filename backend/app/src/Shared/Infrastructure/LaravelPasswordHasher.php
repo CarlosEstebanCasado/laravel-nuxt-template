@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\Infrastructure;
@@ -13,7 +14,3 @@ final class LaravelPasswordHasher implements PasswordHasher
         return Hash::make($plainPassword);
     }
 }
-
-
-
-

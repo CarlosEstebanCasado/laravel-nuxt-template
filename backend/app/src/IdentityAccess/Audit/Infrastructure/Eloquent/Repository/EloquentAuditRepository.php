@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\Infrastructure\Eloquent\Repository;
@@ -11,10 +12,10 @@ use App\Src\IdentityAccess\Audit\Domain\ValueObject\AuditEvent;
 use App\Src\IdentityAccess\Audit\Domain\ValueObject\AuditId;
 use App\Src\IdentityAccess\Audit\Domain\ValueObject\AuditTags;
 use App\Src\IdentityAccess\Audit\Domain\ValueObject\AuditValues;
+use App\Src\Shared\Domain\Response\PaginationResponse;
 use App\Src\Shared\Domain\ValueObject\DateTimeValue;
 use App\Src\Shared\Domain\ValueObject\IpAddress;
 use App\Src\Shared\Domain\ValueObject\UserAgent;
-use App\Src\Shared\Domain\Response\PaginationResponse;
 use Illuminate\Support\Carbon;
 use InvalidArgumentException;
 use OwenIt\Auditing\Models\Audit;
@@ -42,7 +43,7 @@ final class EloquentAuditRepository implements AuditRepository
                 $createdAt = $audit->getAttribute('created_at');
                 $createdAtValue = $createdAt instanceof Carbon
                     ? new \DateTimeImmutable($createdAt->toDateTimeString())
-                    : new \DateTimeImmutable();
+                    : new \DateTimeImmutable;
 
                 $oldValues = $audit->getAttribute('old_values');
                 $newValues = $audit->getAttribute('new_values');
@@ -87,7 +88,7 @@ final class EloquentAuditRepository implements AuditRepository
     }
 
     /**
-     * @param array<mixed, mixed> $values
+     * @param  array<mixed, mixed>  $values
      * @return array<string, mixed>
      */
     private function normalizeAuditValues(array $values): array

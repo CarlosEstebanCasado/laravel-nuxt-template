@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\Response;
@@ -17,6 +18,5 @@ final class UserResponseItem
         public ?string $created_at,
         public ?string $updated_at,
         public ?UserPreferencesResponseItem $preferences = null,
-    ) {
-    }
+    ) {}
 }

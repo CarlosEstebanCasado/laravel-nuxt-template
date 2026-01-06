@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Domain\Service;
@@ -10,15 +11,14 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\Shared\Domain\Service\ConfigProvider;
-use InvalidArgumentException;
 use DateTimeZone;
+use InvalidArgumentException;
 
 final class UserPreferencesUpdater
 {
     public function __construct(
         private readonly ConfigProvider $configProvider
-    ) {
-    }
+    ) {}
 
     public function update(
         UserPreferences $preferences,

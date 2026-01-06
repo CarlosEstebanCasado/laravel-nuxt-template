@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Fortify;
@@ -18,8 +19,7 @@ class UpdateUserPasswordAction implements UpdatesUserPasswords
     public function __construct(
         private readonly UpdateUserPasswordUseCase $updateUserPasswordUseCase,
         private readonly Translator $translator
-    ) {
-    }
+    ) {}
 
     /**
      * Validate and update the user's password.

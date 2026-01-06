@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
@@ -14,8 +15,7 @@ final class GetTwoFactorRecoveryCodesUseCase
     public function __construct(
         private readonly TwoFactorRecoveryCodesService $twoFactorRecoveryCodesService,
         private readonly TwoFactorRecoveryCodesConverter $twoFactorRecoveryCodesConverter
-    ) {
-    }
+    ) {}
 
     public function execute(GetTwoFactorRecoveryCodesUseCaseRequest $request): TwoFactorRecoveryCodesUseCaseResponse
     {

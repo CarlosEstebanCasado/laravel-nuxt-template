@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -123,4 +123,3 @@ class ReauthSensitiveActionsTest extends TestCase
         Notification::assertSentTo($user, VerifyEmail::class);
     }
 }
-

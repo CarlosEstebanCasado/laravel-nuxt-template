@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\UI\Controllers\Api;
@@ -15,8 +16,7 @@ class RevokeOtherSessionsController extends Controller
     public function __construct(
         private readonly RevokeOtherSessionsUseCase $revokeOtherSessionsUseCase,
         private readonly Translator $translator
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Application\UseCase;
@@ -13,8 +14,7 @@ final class RevokeSessionUseCase
     public function __construct(
         private readonly SessionRepository $sessionRepository,
         private readonly AuditEventRecorder $auditEventRecorder
-    ) {
-    }
+    ) {}
 
     /**
      * @return bool true when revoked, false when not found
@@ -22,7 +22,7 @@ final class RevokeSessionUseCase
     public function execute(RevokeSessionUseCaseRequest $request): bool
     {
         if ($request->sessionId === $request->currentSessionId) {
-            throw new CannotRevokeCurrentSession();
+            throw new CannotRevokeCurrentSession;
         }
 
         $deleted = $this->sessionRepository->deleteForUser($request->sessionId, $request->userId);
@@ -44,5 +44,3 @@ final class RevokeSessionUseCase
         return true;
     }
 }
-
-

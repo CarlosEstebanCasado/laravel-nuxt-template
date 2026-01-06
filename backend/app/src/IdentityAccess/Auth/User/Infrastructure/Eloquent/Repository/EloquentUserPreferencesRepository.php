@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository;
@@ -19,8 +20,7 @@ final class EloquentUserPreferencesRepository implements UserPreferencesReposito
 {
     public function __construct(
         private readonly ConfigProvider $configProvider
-    ) {
-    }
+    ) {}
 
     public function find(UserId $userId): ?UserPreferences
     {

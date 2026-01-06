@@ -1,19 +1,19 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Responses;
 
+use App\Src\Shared\Domain\Service\Translator;
 use Illuminate\Http\JsonResponse;
 use Laravel\Fortify\Contracts\FailedPasswordResetLinkRequestResponse as FailedPasswordResetLinkRequestResponseContract;
-use App\Src\Shared\Domain\Service\Translator;
 
 class FailedPasswordResetLinkRequestResponse implements FailedPasswordResetLinkRequestResponseContract
 {
     public function __construct(
         protected string $status,
         protected Translator $translator
-    ) {
-    }
+    ) {}
 
     public function toResponse($request): JsonResponse
     {

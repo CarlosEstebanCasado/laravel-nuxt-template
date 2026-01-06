@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Domain\Repository;
 
 use App\Src\IdentityAccess\Auth\User\Domain\Entity\User;
-use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\AuthProvider;
+use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\EmailAddress;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserName;
 use App\Src\Shared\Domain\ValueObject\DateTimeValue;
@@ -43,5 +44,3 @@ interface UserRepository
      */
     public function updatePassword(UserId $id, string $plainPassword, ?DateTimeValue $passwordSetAt): void;
 }
-
-

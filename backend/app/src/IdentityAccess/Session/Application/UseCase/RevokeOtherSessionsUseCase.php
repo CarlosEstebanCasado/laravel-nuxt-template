@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Application\UseCase;
@@ -12,8 +13,7 @@ final class RevokeOtherSessionsUseCase
     public function __construct(
         private readonly SessionRepository $sessionRepository,
         private readonly AuditEventRecorder $auditEventRecorder
-    ) {
-    }
+    ) {}
 
     public function execute(RevokeOtherSessionsUseCaseRequest $request): int
     {
@@ -32,6 +32,3 @@ final class RevokeOtherSessionsUseCase
         return $revoked;
     }
 }
-
-
-

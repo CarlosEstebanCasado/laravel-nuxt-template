@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Security\Reauth\Infrastructure\Eloquent\Repository;
 
-use App\Src\IdentityAccess\Security\Reauth\Domain\Repository\AccountRepository;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\IdentityAccess\Security\Reauth\Domain\Repository\AccountRepository;
 
 final class EloquentAccountRepository implements AccountRepository
 {
@@ -19,6 +20,3 @@ final class EloquentAccountRepository implements AccountRepository
         $user->delete();
     }
 }
-
-
-

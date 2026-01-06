@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Auth\User\Application\UseCase;
@@ -20,7 +21,9 @@ use Tests\TestCase as BaseTestCase;
 final class GetUserPreferencesUseCaseTest extends BaseTestCase
 {
     private MockObject $repository;
+
     private ConfigProvider&MockObject $configProvider;
+
     private GetUserPreferencesUseCase $useCase;
 
     protected function setUp(): void

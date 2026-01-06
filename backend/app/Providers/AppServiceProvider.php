@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Src\IdentityAccess\Audit\Domain\Repository\AuditRepository;
+use App\Src\IdentityAccess\Audit\Infrastructure\Eloquent\Repository\EloquentAuditRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\Service\TwoFactorAuthenticationService;
@@ -10,8 +12,6 @@ use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository\Eloquent
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Repository\EloquentUserRepository;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Fortify\FortifyTwoFactorAuthenticationService;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Fortify\FortifyTwoFactorRecoveryCodesService;
-use App\Src\IdentityAccess\Audit\Domain\Repository\AuditRepository;
-use App\Src\IdentityAccess\Audit\Infrastructure\Eloquent\Repository\EloquentAuditRepository;
 use App\Src\IdentityAccess\Security\Reauth\Domain\Repository\AccountRepository;
 use App\Src\IdentityAccess\Security\Reauth\Infrastructure\Eloquent\Repository\EloquentAccountRepository;
 use App\Src\IdentityAccess\Session\Domain\Repository\SessionRepository;
@@ -21,9 +21,9 @@ use App\Src\Shared\Domain\Service\ConfigProvider;
 use App\Src\Shared\Domain\Service\RandomStringGenerator;
 use App\Src\Shared\Domain\Service\Translator;
 use App\Src\Shared\Infrastructure\LaravelConfigProvider;
-use App\Src\Shared\Infrastructure\OwenItAuditEventRecorder;
 use App\Src\Shared\Infrastructure\LaravelRandomStringGenerator;
 use App\Src\Shared\Infrastructure\LaravelTranslator;
+use App\Src\Shared\Infrastructure\OwenItAuditEventRecorder;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

@@ -94,34 +94,32 @@ Si vas a usar esto como template, sigue el checklist en `docs/forking.md` para r
 -----------------------------------
 
 ```
-app/
-├─ Domain/
-│  └─ <BoundedContext>/
-│     ├─ Entities/
-│     ├─ ValueObjects/
-│     ├─ Services/
-│     └─ Repositories/   # interfaces
-├─ Application/
-│  └─ <BoundedContext>/
-│     ├─ DTOs/
-│     ├─ UseCases/
-│     └─ Queries/
-├─ Infrastructure/
-│  ├─ Http/
-│  │  ├─ Controllers/
-│  │  └─ Middleware/
-│  ├─ Persistence/
-│  │  ├─ Eloquent/
-│  │  │  ├─ Models/
-│  │  │  └─ Repositories/
-│  │  └─ Migrations/
-│  ├─ Tenancy/
-│  ├─ Rules/
-│  ├─ Providers/
-│  └─ Services/
-└─ Support/
-   ├─ Database/           # Scopes/Traits (HouseholdScoped)
-   └─ Helpers/
+backend/app/src/
+└─ <BoundedContext>/
+   └─ <Module>/
+      ├─ Domain/
+      │  ├─ Entity/
+      │  ├─ ValueObject/
+      │  ├─ Service/
+      │  ├─ Repository/
+      │  └─ Exception/
+      ├─ Application/
+      │  ├─ UseCase/
+      │  ├─ Request/
+      │  ├─ Response/
+      │  └─ Converter/
+      ├─ Infrastructure/
+      │  ├─ Eloquent/
+      │  │  ├─ Model/
+      │  │  └─ Repository/
+      │  ├─ Mapper/
+      │  └─ Provider/
+      └─ UI/
+         ├─ Controllers/
+         │  └─ Api/
+         ├─ Request/
+         ├─ Middleware/
+         └─ Routes/
 ```
 
 **Rutas**: `routes/api.php` (públicas y auth) + grupo privado `auth:sanctum` + middleware `EnsureHouseholdContext`.

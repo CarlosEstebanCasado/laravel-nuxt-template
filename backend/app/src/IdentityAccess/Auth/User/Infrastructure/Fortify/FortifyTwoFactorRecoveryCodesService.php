@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Infrastructure\Fortify;
@@ -8,8 +9,8 @@ use App\Src\IdentityAccess\Auth\User\Domain\Service\TwoFactorRecoveryCodesServic
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\RecoveryCode;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Fortify\Actions\GenerateNewRecoveryCodes;
 use Laravel\Fortify\Fortify;
 
@@ -17,8 +18,7 @@ final class FortifyTwoFactorRecoveryCodesService implements TwoFactorRecoveryCod
 {
     public function __construct(
         private readonly GenerateNewRecoveryCodes $generateNewRecoveryCodes
-    ) {
-    }
+    ) {}
 
     public function getForUser(UserId $userId): RecoveryCodeCollection
     {
@@ -69,7 +69,7 @@ final class FortifyTwoFactorRecoveryCodesService implements TwoFactorRecoveryCod
     }
 
     /**
-     * @param array<int, string> $rawCodes
+     * @param  array<int, string>  $rawCodes
      * @return list<string>
      */
     private function normalizeRecoveryCodes(string|array $rawCodes): array

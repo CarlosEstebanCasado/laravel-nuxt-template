@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\Application\Response;
@@ -13,4 +14,3 @@ final class GetAuditListUseCaseResponse
      */
     public ?array $meta = null;
 }
-

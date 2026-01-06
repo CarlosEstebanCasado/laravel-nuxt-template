@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\Domain\Response;
@@ -11,8 +12,7 @@ final class AuditCollectionResponse
     public function __construct(
         private readonly AuditCollection $items,
         private readonly ?PaginationResponse $pagination = null,
-    ) {
-    }
+    ) {}
 
     public function items(): AuditCollection
     {
@@ -24,4 +24,3 @@ final class AuditCollectionResponse
         return $this->pagination;
     }
 }
-

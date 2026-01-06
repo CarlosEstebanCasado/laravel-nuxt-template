@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\UI\Middleware;
 
-use Closure;
 use App\Src\Shared\Domain\Service\ConfigProvider;
+use Closure;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\Request;
@@ -15,8 +16,7 @@ class EnsureHorizonAccess
     public function __construct(
         private readonly AuthFactory $authFactory,
         private readonly ConfigProvider $configProvider
-    ) {
-    }
+    ) {}
 
     public function handle(Request $request, Closure $next): Response
     {

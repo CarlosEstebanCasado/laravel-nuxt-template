@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Audit\Application\UseCase;
@@ -17,7 +18,9 @@ use Tests\Unit\Shared\Mother\WordMother;
 final class ListUserAuditsUseCaseTest extends TestCase
 {
     private MockObject $auditRepository;
+
     private AuditListConverter $responseConverter;
+
     private ListUserAuditsUseCase $useCase;
 
     protected function setUp(): void
@@ -25,7 +28,7 @@ final class ListUserAuditsUseCaseTest extends TestCase
         parent::setUp();
 
         $this->auditRepository = $this->createMock(AuditRepository::class);
-        $this->responseConverter = new AuditListConverter(new AuditResponseItemConverter());
+        $this->responseConverter = new AuditListConverter(new AuditResponseItemConverter);
         $this->useCase = new ListUserAuditsUseCase(
             auditRepository: $this->auditRepository,
             auditListConverter: $this->responseConverter
@@ -41,7 +44,7 @@ final class ListUserAuditsUseCaseTest extends TestCase
             page: IntegerMother::random()
         );
         $collectionResponse = AuditCollectionResponseMother::random();
-        $expectedResponse = (new AuditListConverter(new AuditResponseItemConverter()))->toResponse($collectionResponse);
+        $expectedResponse = (new AuditListConverter(new AuditResponseItemConverter))->toResponse($collectionResponse);
 
         $this->auditRepository
             ->expects($this->once())

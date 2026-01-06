@@ -63,8 +63,14 @@ qa:
 	else \
 		docker compose exec api composer lint || echo "Define composer script 'lint' o instala phpstan"; \
 	fi
+	@if [ -f backend/vendor/bin/pint ]; then \
+		docker compose exec api vendor/bin/pint --test; \
+	else \
+		echo "Laravel Pint no está instalado."; \
+	fi
 	@if [ -f frontend/package.json ]; then \
 		docker compose exec nuxt npm run lint || echo "Define npm script 'lint'"; \
+		docker compose exec nuxt npx vue-tsc --noEmit; \
 	fi
 
 phpstan:

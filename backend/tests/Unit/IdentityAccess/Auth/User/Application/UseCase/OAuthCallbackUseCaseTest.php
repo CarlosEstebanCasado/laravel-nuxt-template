@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Auth\User\Application\UseCase;
@@ -21,7 +22,9 @@ use Tests\Unit\Shared\Mother\WordMother;
 final class OAuthCallbackUseCaseTest extends TestCase
 {
     private MockObject $users;
+
     private MockObject $random;
+
     private OAuthCallbackUseCase $useCase;
 
     protected function setUp(): void

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Security\Reauth\UI\Controllers\Api;
@@ -18,8 +19,7 @@ class DeleteAccountController extends Controller
     public function __construct(
         private readonly DeleteAccountUseCase $deleteAccountUseCase,
         private readonly Translator $translator
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {

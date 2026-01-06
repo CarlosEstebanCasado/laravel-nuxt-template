@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Fortify;
@@ -16,8 +17,7 @@ class UpdateUserProfileInformationAction implements UpdatesUserProfileInformatio
     public function __construct(
         private readonly UpdateUserProfileUseCase $updateUserProfileUseCase,
         private readonly Translator $translator
-    ) {
-    }
+    ) {}
 
     /**
      * Validate and update the given user's profile information.

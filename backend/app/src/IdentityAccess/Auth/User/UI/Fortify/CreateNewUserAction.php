@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Fortify;
@@ -18,8 +19,7 @@ class CreateNewUserAction implements CreatesNewUsers
     public function __construct(
         private readonly CreateUserUseCase $createUserUseCase,
         private readonly Translator $translator
-    ) {
-    }
+    ) {}
 
     /**
      * Validate and create a newly registered user.

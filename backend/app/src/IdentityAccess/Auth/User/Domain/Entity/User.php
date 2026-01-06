@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Domain\Entity;
@@ -22,8 +23,7 @@ final class User
         private readonly TwoFactorStatus $twoFactorStatus,
         private readonly ?DateTimeValue $createdAt,
         private readonly ?DateTimeValue $updatedAt,
-    ) {
-    }
+    ) {}
 
     public function id(): UserId
     {

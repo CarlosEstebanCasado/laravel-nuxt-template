@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\Infrastructure;
@@ -8,7 +9,7 @@ use App\Src\Shared\Domain\Service\Translator;
 final class LaravelTranslator implements Translator
 {
     /**
-     * @param array<string, mixed> $replace
+     * @param  array<string, mixed>  $replace
      */
     public function translate(string $key, array $replace = [], ?string $locale = null): string
     {
@@ -26,7 +27,7 @@ final class LaravelTranslator implements Translator
     }
 
     /**
-     * @param array<string, mixed> $replace
+     * @param  array<string, mixed>  $replace
      */
     public function choice(string $key, int|float $number, array $replace = [], ?string $locale = null): string
     {

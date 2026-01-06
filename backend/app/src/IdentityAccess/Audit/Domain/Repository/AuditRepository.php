@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Audit\Domain\Repository;
@@ -14,6 +15,3 @@ interface AuditRepository
         int $page
     ): AuditCollectionResponse;
 }
-
-
-

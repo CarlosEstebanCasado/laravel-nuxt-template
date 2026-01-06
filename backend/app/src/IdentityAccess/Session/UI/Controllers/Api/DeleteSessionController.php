@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\UI\Controllers\Api;
@@ -16,8 +17,7 @@ class DeleteSessionController extends Controller
     public function __construct(
         private readonly RevokeSessionUseCase $revokeSessionUseCase,
         private readonly Translator $translator
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request, string $id): JsonResponse
     {

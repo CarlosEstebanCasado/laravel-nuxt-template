@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\Converter;
@@ -13,8 +14,7 @@ final class UserResponseConverter
 {
     public function __construct(
         private readonly UserResponseItemConverter $userResponseItemConverter
-    ) {
-    }
+    ) {}
 
     public function toResponse(User $user, ?UserPreferences $preferences = null): GetCurrentUserUseCaseResponse
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Domain\Response;
@@ -9,8 +10,7 @@ final class SessionCollectionResponse
 {
     public function __construct(
         private readonly SessionCollection $items
-    ) {
-    }
+    ) {}
 
     public function items(): SessionCollection
     {

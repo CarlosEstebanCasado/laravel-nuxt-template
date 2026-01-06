@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Domain\Collection;
@@ -13,4 +14,3 @@ final class SessionCollection extends Collection
         return SessionInfo::class;
     }
 }
-

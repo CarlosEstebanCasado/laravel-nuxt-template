@@ -1,11 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Security\Reauth\UI\Middleware;
 
-use Closure;
 use App\Src\Shared\Domain\Service\ConfigProvider;
 use App\Src\Shared\Domain\Service\Translator;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -16,8 +17,8 @@ class ThrottleAuthEndpoints
     public function __construct(
         private readonly ConfigProvider $configProvider,
         private readonly Translator $translator
-    ) {
-    }
+    ) {}
+
     /**
      * Apply conservative rate limits to Fortify POST endpoints that are common abuse targets.
      *

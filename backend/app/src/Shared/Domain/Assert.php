@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\Shared\Domain;
@@ -8,7 +9,7 @@ use InvalidArgumentException;
 final class Assert
 {
     /**
-     * @param array<int, mixed> $items
+     * @param  array<int, mixed>  $items
      */
     public static function arrayOf(string $class, array $items): void
     {
@@ -25,6 +26,6 @@ final class Assert
                 is_object($item) ? $item::class : gettype($item),
                 $class
             ));
-       }
-   }
+        }
+    }
 }

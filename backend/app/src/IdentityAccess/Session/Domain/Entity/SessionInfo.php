@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Session\Domain\Entity;
@@ -17,8 +18,7 @@ final class SessionInfo
         private readonly ?UserAgent $userAgent,
         private readonly SessionLastActivity $lastActivity,
         private readonly SessionCurrent $isCurrent,
-    ) {
-    }
+    ) {}
 
     public function id(): SessionId
     {
@@ -44,5 +44,4 @@ final class SessionInfo
     {
         return $this->isCurrent;
     }
-
 }

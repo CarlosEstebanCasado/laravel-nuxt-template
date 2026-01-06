@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Responses;
@@ -15,8 +16,7 @@ class LoginResponse implements LoginResponseContract
 {
     public function __construct(
         private readonly GetCurrentUserUseCase $getCurrentUserUseCase
-    ) {
-    }
+    ) {}
 
     public function toResponse($request): JsonResponse
     {
@@ -33,7 +33,7 @@ class LoginResponse implements LoginResponseContract
     }
 
     /**
-     * @param mixed $request
+     * @param  mixed  $request
      */
     private function assertRequestInstance($request): Request
     {

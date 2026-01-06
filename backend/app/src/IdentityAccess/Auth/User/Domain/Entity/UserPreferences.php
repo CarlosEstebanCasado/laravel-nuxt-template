@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Domain\Entity;
@@ -20,8 +21,7 @@ final class UserPreferences
         private readonly PrimaryColor $primaryColor,
         private readonly NeutralColor $neutralColor,
         private readonly Timezone $timezone,
-    ) {
-    }
+    ) {}
 
     public static function create(
         UserId $userId,

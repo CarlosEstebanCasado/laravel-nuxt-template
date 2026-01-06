@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\Converter;
@@ -11,8 +12,7 @@ final class TwoFactorRecoveryCodesConverter
 {
     public function __construct(
         private readonly TwoFactorRecoveryCodeConverter $twoFactorRecoveryCodeConverter
-    ) {
-    }
+    ) {}
 
     public function toResponse(RecoveryCodeCollection $recoveryCodeCollection): TwoFactorRecoveryCodesUseCaseResponse
     {

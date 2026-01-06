@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\UI\Controllers;
@@ -23,8 +24,7 @@ final class OAuthCallbackController extends Controller
     public function __construct(
         private readonly OAuthCallbackUseCase $oAuthCallbackUseCase,
         private readonly ConfigProvider $configProvider
-    ) {
-    }
+    ) {}
 
     public function __invoke(string $provider): RedirectResponse
     {

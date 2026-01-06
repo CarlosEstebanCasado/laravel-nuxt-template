@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Src\IdentityAccess\Auth\User\Application\UseCase;
@@ -24,8 +25,7 @@ final class UpdateUserPreferencesUseCase
         private readonly GetUserPreferencesUseCase $getUserPreferencesUseCase,
         private readonly UserPreferencesUpdater $userPreferencesUpdater,
         private readonly ConfigProvider $configProvider
-    ) {
-    }
+    ) {}
 
     public function execute(UpdateUserPreferencesUseCaseRequest $request): GetUserPreferencesUseCaseResponse
     {

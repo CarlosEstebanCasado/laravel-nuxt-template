@@ -13,7 +13,7 @@ return [
 
     'throttling' => [
         'auth' => [
-            'enabled' =>  true,
+            'enabled' => true,
 
             // POST /auth/forgot-password
             'forgot_password' => [
@@ -35,5 +35,3 @@ return [
         ],
     ],
 ];
-
-

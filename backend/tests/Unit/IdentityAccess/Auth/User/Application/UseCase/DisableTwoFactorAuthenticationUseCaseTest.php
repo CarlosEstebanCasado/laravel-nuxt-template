@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Tests\Unit\IdentityAccess\Auth\User\Application\UseCase;
@@ -14,6 +15,7 @@ use Tests\Unit\Shared\Mother\IntegerMother;
 final class DisableTwoFactorAuthenticationUseCaseTest extends TestCase
 {
     private MockObject $twoFactorAuthenticationService;
+
     private DisableTwoFactorAuthenticationUseCase $useCase;
 
     protected function setUp(): void
