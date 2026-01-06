@@ -161,10 +161,10 @@ ci-frontend:
 
 e2e:
 	docker compose exec api php artisan db:seed --force
-	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && npm run test:e2e'
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 npm run test:e2e'
 e2e-ui:
 	docker compose exec api php artisan db:seed --force
-	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && npm run test:e2e:ui'
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 npm run test:e2e:ui'
 .PHONY: e2e-ui-local
 e2e-ui-local:
 	$(MAKE) up
