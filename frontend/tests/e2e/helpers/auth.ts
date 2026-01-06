@@ -17,12 +17,7 @@ export const login = async (
 }
 
 export const logout = async (page: Page) => {
-  const menuButton = page.locator('button:has-text("Test User")')
-  if (await menuButton.isVisible()) {
-    await menuButton.click()
-  } else {
-    await page.getByRole('button', { name: /test user/i }).click()
-  }
+  await page.getByTestId('user-menu-trigger').click()
 
   await page.getByRole('menuitem', { name: /cerrar sesión|logout/i }).click()
   await expect(page).toHaveURL(/\/login/)
