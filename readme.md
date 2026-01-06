@@ -132,7 +132,7 @@ backend/app/src/
 - Respuestas consistentes `{ data, meta, errors }` inspiradas en JSON:API.
 - Paginación `{ meta: { page, per_page, total } }`.
 - Versionado por prefijo `/api/v1`.
-- Contrato OpenAPI en `docs/` (generado vía anotaciones l5-swagger o YAML).
+- Contrato OpenAPI en `docs/openapi.yaml` (YAML) con visor local en `https://api.project.dev/docs/openapi` (solo `APP_ENV=local`).
 - Header `Idempotency-Key` soportado en POST críticos (hash + TTL en Redis).
 - Rate limiting personalizado para endpoints sensibles.
 
@@ -239,7 +239,8 @@ backend/app/src/
 7. `make seed` para crear usuario + household demo (credenciales mostradas en consola).
 8. Accede a `https://project.dev`, `https://app.project.dev` y `https://api.project.dev/api/v1/health`.
 9. Usa `https://app.project.dev/auth/register` para crear una cuenta, confirma el correo desde Mailhog (`http://localhost:8025`) y entra al dashboard (`/dashboard`).
-10. Actualiza branding, módulos y documentación OpenAPI según tu caso de uso.
+10. Actualiza branding, módulos y `docs/openapi.yaml` según tu caso de uso.
+11. Para ver el contrato en interfaz gráfica, abre `https://api.project.dev/docs/openapi` (solo en entorno local).
 
 ---
 
