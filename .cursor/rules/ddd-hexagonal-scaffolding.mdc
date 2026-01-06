@@ -108,6 +108,7 @@ backend/app/src/{Context}/{Module}/
 - **Eloquent models**: todos los modelos Eloquent deben estar auditados para registrar cualquier modificación.
 
 ## Localization + User Preferences
+- **Config access**: dentro de `/src` está prohibido usar `config()` directamente. Usa siempre el puerto `Shared/Domain/Service/ConfigProvider` y su implementación `Shared/Infrastructure/LaravelConfigProvider`. Esto evita acoplar Domain/Application a Laravel y permite tests puros con mocks.
 - **Locales soportados** se declaran en `config/app.php` (`supported_locales`) y cualquier servicio que los necesite deberá leerlos desde configuración (nunca hardcodearlos). Cuando el contenedor no está bootstrapped (tests unitarios puros) debemos proveer un fallback seguro en el propio servicio.
 - El switch de idioma se resuelve a través del middleware `Shared/UI/Middleware/SetLocaleFromRequest`, que consulta cabecera `X-Locale`, preferencia del usuario (`UserPreferencesRepository`) y por último `Request::getPreferredLanguage`. Cualquier endpoint expuesto debe incluir el alias `locale` para garantizar que la request se procesa en el idioma correcto.
 - Las preferencias del usuario (idioma, tema, etc.) se tratan como un módulo de Auth/User:

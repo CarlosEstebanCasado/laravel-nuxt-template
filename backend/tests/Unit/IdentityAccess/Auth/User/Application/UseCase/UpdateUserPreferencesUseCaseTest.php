@@ -22,7 +22,7 @@ use Tests\TestCase as BaseTestCase;
 final class UpdateUserPreferencesUseCaseTest extends BaseTestCase
 {
     private MockObject $repository;
-    private MockObject $configProvider;
+    private ConfigProvider&MockObject $configProvider;
     private UpdateUserPreferencesUseCase $useCase;
 
     protected function setUp(): void

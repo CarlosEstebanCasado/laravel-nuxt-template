@@ -20,7 +20,7 @@ use Tests\TestCase as BaseTestCase;
 final class GetUserPreferencesUseCaseTest extends BaseTestCase
 {
     private MockObject $repository;
-    private MockObject $configProvider;
+    private ConfigProvider&MockObject $configProvider;
     private GetUserPreferencesUseCase $useCase;
 
     protected function setUp(): void
