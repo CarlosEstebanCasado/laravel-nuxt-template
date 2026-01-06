@@ -6,6 +6,7 @@ namespace App\Src\IdentityAccess\Auth\User\UI\Controllers;
 use App\Src\IdentityAccess\Auth\User\Application\Request\OAuthCallbackUseCaseRequest;
 use App\Src\IdentityAccess\Auth\User\Application\UseCase\OAuthCallbackUseCase;
 use App\Src\IdentityAccess\Auth\User\Infrastructure\Eloquent\Model\User;
+use App\Src\Shared\Domain\Service\ConfigProvider;
 use App\Src\Shared\UI\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -20,7 +21,8 @@ final class OAuthCallbackController extends Controller
     private array $providers = ['google', 'github'];
 
     public function __construct(
-        private readonly OAuthCallbackUseCase $oAuthCallbackUseCase
+        private readonly OAuthCallbackUseCase $oAuthCallbackUseCase,
+        private readonly ConfigProvider $configProvider
     ) {
     }
 
@@ -59,8 +61,8 @@ final class OAuthCallbackController extends Controller
 
     private function redirectToFrontend(string $provider, string $status, ?string $error = null): RedirectResponse
     {
-        $frontendConfig = config('app.frontend_url');
-        $defaultUrl = config('app.url');
+        $frontendConfig = $this->configProvider->get('app.frontend_url');
+        $defaultUrl = $this->configProvider->get('app.url');
         $frontendUrl = is_string($frontendConfig) && $frontendConfig !== ''
             ? $frontendConfig
             : (is_string($defaultUrl) ? $defaultUrl : '/');

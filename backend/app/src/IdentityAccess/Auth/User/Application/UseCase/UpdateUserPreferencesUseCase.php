@@ -15,13 +15,15 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Shared\Domain\Service\ConfigProvider;
 
 final class UpdateUserPreferencesUseCase
 {
     public function __construct(
         private readonly UserPreferencesRepository $userPreferencesRepository,
         private readonly GetUserPreferencesUseCase $getUserPreferencesUseCase,
-        private readonly UserPreferencesUpdater $userPreferencesUpdater
+        private readonly UserPreferencesUpdater $userPreferencesUpdater,
+        private readonly ConfigProvider $configProvider
     ) {
     }
 
@@ -30,7 +32,7 @@ final class UpdateUserPreferencesUseCase
         $userId = new UserId($request->userId);
 
         $preferences = $this->userPreferencesRepository->find($userId)
-            ?? UserPreferences::default($userId);
+            ?? UserPreferences::default($userId, $this->configProvider);
 
         $updatedPreferences = $this->userPreferencesUpdater->update(
             $preferences,

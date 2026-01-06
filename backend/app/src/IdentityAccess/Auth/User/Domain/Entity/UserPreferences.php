@@ -9,6 +9,7 @@ use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\PrimaryColor;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Theme;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\Timezone;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Shared\Domain\Service\ConfigProvider;
 
 final class UserPreferences
 {
@@ -33,21 +34,21 @@ final class UserPreferences
         return new self($userId, $locale, $theme, $primaryColor, $neutralColor, $timezone);
     }
 
-    public static function default(UserId $userId): self
+    public static function default(UserId $userId, ConfigProvider $configProvider): self
     {
-        $configLocale = config('app.locale');
+        $configLocale = $configProvider->get('app.locale');
         $defaultLocale = is_string($configLocale) && $configLocale !== ''
             ? $configLocale
             : 'es';
 
-        $configTheme = config('preferences.default_theme');
+        $configTheme = $configProvider->get('preferences.default_theme');
         $defaultTheme = is_string($configTheme) && $configTheme !== ''
             ? $configTheme
             : 'system';
 
-        $defaultPrimary = self::configString('preferences.default_primary_color', 'blue');
-        $defaultNeutral = self::configString('preferences.default_neutral_color', 'slate');
-        $defaultTimezone = self::configString('preferences.default_timezone', 'UTC');
+        $defaultPrimary = self::configString($configProvider, 'preferences.default_primary_color', 'blue');
+        $defaultNeutral = self::configString($configProvider, 'preferences.default_neutral_color', 'slate');
+        $defaultTimezone = self::configString($configProvider, 'preferences.default_timezone', 'UTC');
 
         return new self(
             $userId,
@@ -89,9 +90,9 @@ final class UserPreferences
         return $this->timezone;
     }
 
-    private static function configString(string $key, string $fallback): string
+    private static function configString(ConfigProvider $configProvider, string $key, string $fallback): string
     {
-        $value = config($key, $fallback);
+        $value = $configProvider->get($key, $fallback);
 
         return is_string($value) && $value !== ''
             ? $value

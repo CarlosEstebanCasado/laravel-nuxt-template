@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Src\IdentityAccess\Security\Reauth\UI\Middleware;
 
 use Closure;
+use App\Src\Shared\Domain\Service\ConfigProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -11,6 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ThrottleAuthEndpoints
 {
+    public function __construct(
+        private readonly ConfigProvider $configProvider
+    ) {
+    }
     /**
      * Apply conservative rate limits to Fortify POST endpoints that are common abuse targets.
      *
@@ -85,14 +90,14 @@ class ThrottleAuthEndpoints
 
     private function boolFromConfig(string $key, bool $default): bool
     {
-        $value = config($key);
+        $value = $this->configProvider->get($key);
 
         return is_bool($value) ? $value : $default;
     }
 
     private function intFromConfig(string $key, int $default): int
     {
-        $value = config($key);
+        $value = $this->configProvider->get($key);
 
         if (is_int($value)) {
             return $value;
@@ -105,4 +110,3 @@ class ThrottleAuthEndpoints
         return $default;
     }
 }
-

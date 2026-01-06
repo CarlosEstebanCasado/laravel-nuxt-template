@@ -17,7 +17,9 @@ use App\Src\IdentityAccess\Security\Reauth\Infrastructure\Eloquent\Repository\El
 use App\Src\IdentityAccess\Session\Domain\Repository\SessionRepository;
 use App\Src\IdentityAccess\Session\Infrastructure\DatabaseSessionRepository;
 use App\Src\Shared\Domain\Service\AuditEventRecorder;
+use App\Src\Shared\Domain\Service\ConfigProvider;
 use App\Src\Shared\Domain\Service\RandomStringGenerator;
+use App\Src\Shared\Infrastructure\LaravelConfigProvider;
 use App\Src\Shared\Infrastructure\OwenItAuditEventRecorder;
 use App\Src\Shared\Infrastructure\LaravelRandomStringGenerator;
 use Illuminate\Support\ServiceProvider;
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepository::class, EloquentUserRepository::class);
         $this->app->bind(RandomStringGenerator::class, LaravelRandomStringGenerator::class);
         $this->app->bind(AuditEventRecorder::class, OwenItAuditEventRecorder::class);
+        $this->app->bind(ConfigProvider::class, LaravelConfigProvider::class);
         $this->app->bind(SessionRepository::class, DatabaseSessionRepository::class);
         $this->app->bind(AccountRepository::class, EloquentAccountRepository::class);
         $this->app->bind(AuditRepository::class, EloquentAuditRepository::class);

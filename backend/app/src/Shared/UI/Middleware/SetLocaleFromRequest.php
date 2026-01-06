@@ -5,6 +5,7 @@ namespace App\Src\Shared\UI\Middleware;
 
 use App\Src\IdentityAccess\Auth\User\Domain\Repository\UserPreferencesRepository;
 use App\Src\IdentityAccess\Auth\User\Domain\ValueObject\UserId;
+use App\Src\Shared\Domain\Service\ConfigProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -13,7 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 final class SetLocaleFromRequest
 {
     public function __construct(
-        private readonly UserPreferencesRepository $userPreferencesRepository
+        private readonly UserPreferencesRepository $userPreferencesRepository,
+        private readonly ConfigProvider $configProvider
     ) {
     }
 
@@ -34,7 +36,7 @@ final class SetLocaleFromRequest
     {
         $supportedLocales = array_map(
             static fn ($locale) => (string) $locale,
-            array_keys((array) config('app.supported_locales', []))
+            array_keys((array) $this->configProvider->get('app.supported_locales', []))
         );
 
         $headerLocale = $request->header('X-Locale');
@@ -67,7 +69,7 @@ final class SetLocaleFromRequest
 
     private function defaultLocale(): string
     {
-        $value = config('app.locale');
+        $value = $this->configProvider->get('app.locale');
 
         return is_string($value) && $value !== '' ? $value : 'es';
     }
