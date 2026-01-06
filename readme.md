@@ -199,7 +199,7 @@ backend/app/src/
 
 - `make ci`: ejecuta backend + frontend (audit + lint/typecheck + build + tests).
 - `make ci-parallel`: lo mismo, pero en paralelo.
-- `make ci-backend`: solo backend (Postgres/Redis del docker-compose) usando una **DB de tests** (`<DB_DATABASE>_test`) para no borrar tu DB de desarrollo.
+- `make ci-backend`: solo backend (Postgres/Redis del docker-compose) usando una **DB de tests** (`<DB_DATABASE>_test`) para no borrar tu DB de desarrollo. Incluye PHPStan + Pint.
 - `make ci-frontend`: solo frontend.
 - `make test`: alias de `make ci` (por compatibilidad con el README).
 
