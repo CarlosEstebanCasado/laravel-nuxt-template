@@ -14,6 +14,7 @@ help:
 	@echo "  make refresh-db - Refrescar BD (migrate:fresh) y ejecutar seed"
 	@echo "  make config-clear-backend - Limpiar cache de config en backend"
 	@echo "  make qa       - Ejecutar linting/análisis estático definidos"
+	@echo "  make qa-e2e   - Ejecutar QA + tests E2E (incluye seed)"
 	@echo "  make test     - Alias de CI local (equivalente a make ci)"
 	@echo "  make ci       - Ejecutar CI local (backend + frontend)"
 	@echo "  make ci-backend   - Backend CI local (composer audit + tests con Postgres/Redis)"
@@ -75,6 +76,8 @@ qa:
 		docker compose exec nuxt npm run lint || echo "Define npm script 'lint'"; \
 		docker compose exec nuxt npx vue-tsc --noEmit; \
 	fi
+
+qa-e2e: qa
 	$(MAKE) e2e
 
 phpstan:
@@ -162,16 +165,19 @@ ci-frontend:
 
 e2e:
 	docker compose exec api php artisan db:seed --force
+	docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-set-preferences.php preferencesuser@example.com es dark green slate Europe/Madrid'
 	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com' | tr -d '\r\n') && \
-	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 E2E_RESET_EMAIL=resetuser@example.com E2E_RESET_TOKEN='"$$RESET_TOKEN"' npm run test:e2e'
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 PLAYWRIGHT_API_BASE_URL=https://api.project.dev E2E_RESET_EMAIL=resetuser@example.com E2E_RESET_TOKEN='"$$RESET_TOKEN"' npm run test:e2e'
 e2e-ui:
 	docker compose exec api php artisan db:seed --force
+	docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-set-preferences.php preferencesuser@example.com es dark green slate Europe/Madrid'
 	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com' | tr -d '\r\n') && \
-	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 E2E_RESET_EMAIL=resetuser@example.com E2E_RESET_TOKEN='"$$RESET_TOKEN"' npm run test:e2e:ui'
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 PLAYWRIGHT_API_BASE_URL=https://api.project.dev E2E_RESET_EMAIL=resetuser@example.com E2E_RESET_TOKEN='"$$RESET_TOKEN"' npm run test:e2e:ui'
 .PHONY: e2e-ui-local
 e2e-ui-local:
 	$(MAKE) up
 	docker compose exec api php artisan db:seed --force
+	docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-set-preferences.php preferencesuser@example.com es dark green slate Europe/Madrid'
 	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com' | tr -d '\r\n') && \
 	cd frontend && \
 	NM_PERM_FILE=$$(mktemp) && \
@@ -184,9 +190,9 @@ e2e-ui-local:
 			stat -f "%u:%g" "$$1"; \
 		fi; \
 	}; \
-	( [ -e node_modules ] && get_owner_group node_modules > "$$NM_PERM_FILE" || true ) && \
-	( [ -e test-results ] && get_owner_group test-results > "$$TR_PERM_FILE" || true ) && \
-	( [ -e package-lock.json ] && get_owner_group package-lock.json > "$$PL_PERM_FILE" || true ) && \
+	if [ -e node_modules ]; then get_owner_group node_modules > "$$NM_PERM_FILE" || true; fi; \
+	if [ -e test-results ]; then get_owner_group test-results > "$$TR_PERM_FILE" || true; fi; \
+	if [ -e package-lock.json ]; then get_owner_group package-lock.json > "$$PL_PERM_FILE" || true; fi; \
 	sudo chown -R $${USER}:$${USER} node_modules package-lock.json || true && \
 	sudo chown -R $${USER}:$${USER} test-results || true && \
 	sudo chmod -R u+rwX node_modules || true && \
@@ -195,6 +201,7 @@ e2e-ui-local:
 	npx playwright install && \
 	PLAYWRIGHT_APP_BASE_URL=https://app.project.dev \
 	PLAYWRIGHT_PUBLIC_BASE_URL=https://project.dev \
+	PLAYWRIGHT_API_BASE_URL=https://api.project.dev \
 	E2E_RESET_EMAIL=resetuser@example.com \
 	E2E_RESET_TOKEN="$$RESET_TOKEN" \
 	npm run test:e2e:ui; \

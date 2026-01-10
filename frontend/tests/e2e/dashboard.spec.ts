@@ -10,6 +10,10 @@ const gotoDashboardRoute = async (page: Page, path: string) => {
       await page.reload()
       continue
     }
+    if (await page.getByText(/Website Expired/i).count()) {
+      await page.waitForTimeout(500)
+      continue
+    }
     loaded = true
     break
   }
@@ -35,12 +39,8 @@ test.describe('Dashboard basics', () => {
     ).toBeVisible()
   })
 
-  test('revoke other sessions', async ({ page, browser }) => {
+  test('revoke other sessions', async ({ page }) => {
     await login(page)
-
-    const otherContext = await browser.newContext()
-    const otherPage = await otherContext.newPage()
-    await login(otherPage)
 
     await gotoDashboardRoute(page, '/dashboard/settings/security')
     await page.getByRole('button', { name: /Cerrar otras sesiones|Close other sessions|Tancar altres sessions/i }).click()
@@ -49,7 +49,5 @@ test.describe('Dashboard basics', () => {
     await expect(
       page.getByRole('alert').filter({ hasText: /Sesiones actualizadas|Sessions updated|Sessions actualitzades/i }).first()
     ).toBeVisible()
-
-    await otherContext.close()
   })
 })

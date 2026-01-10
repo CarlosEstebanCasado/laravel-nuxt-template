@@ -73,5 +73,61 @@ class DatabaseSeeder extends Seeder
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
         ])->save();
+
+        $unverifiedUser = User::query()->updateOrCreate(
+            ['email' => 'unverified@example.com'],
+            [
+                'name' => 'Unverified User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $unverifiedUser->forceFill([
+            'email_verified_at' => null,
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
+
+        $passwordUser = User::query()->updateOrCreate(
+            ['email' => 'passworduser@example.com'],
+            [
+                'name' => 'Password User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $passwordUser->forceFill([
+            'email_verified_at' => now(),
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
+
+        $profileUser = User::query()->updateOrCreate(
+            ['email' => 'profileuser@example.com'],
+            [
+                'name' => 'Profile User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $profileUser->forceFill([
+            'email_verified_at' => now(),
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
+
+        $preferencesUser = User::query()->updateOrCreate(
+            ['email' => 'preferencesuser@example.com'],
+            [
+                'name' => 'Preferences User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $preferencesUser->forceFill([
+            'email_verified_at' => now(),
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
     }
 }

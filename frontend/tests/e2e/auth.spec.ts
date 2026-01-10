@@ -7,6 +7,27 @@ const resetEmail = process.env.E2E_RESET_EMAIL ?? 'resetuser@example.com'
 const resetToken = process.env.E2E_RESET_TOKEN ?? ''
 const apiBaseUrl = process.env.PLAYWRIGHT_API_BASE_URL ?? 'https://api.project.dev'
 
+const gotoDashboardRoute = async (page: Page, path: string) => {
+  let loaded = false
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await page.goto(path)
+    await page.waitForTimeout(500)
+    if (await page.getByText(/Failed to fetch dynamically imported module/i).count()) {
+      await page.reload()
+      continue
+    }
+    if (await page.getByText(/Website Expired/i).count()) {
+      await page.waitForTimeout(500)
+      continue
+    }
+    loaded = true
+    break
+  }
+  if (!loaded) {
+    throw new Error('No se pudo cargar la ruta del dashboard tras varios intentos.')
+  }
+}
+
 const requestPasswordReset = async (
   page: Page,
   payload: { token: string; email: string; password: string; password_confirmation: string }
@@ -82,7 +103,7 @@ test.describe('Auth flows', () => {
 
   test('delete account', async ({ page }) => {
     await login(page, { email: deleteEmail, password: deletePassword })
-    await page.goto('/dashboard/settings/security')
+    await gotoDashboardRoute(page, '/dashboard/settings/security')
     await page.getByRole('button', { name: /Eliminar cuenta|Delete account|Eliminar compte/i }).click()
     await page.locator('input[placeholder="DELETE"]').fill('DELETE')
     await page
