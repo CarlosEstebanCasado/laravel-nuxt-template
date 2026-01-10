@@ -34,4 +34,22 @@ test.describe('Dashboard basics', () => {
       page.getByRole('button', { name: /Cerrar otras sesiones|Revoke other sessions|Close other sessions/i })
     ).toBeVisible()
   })
+
+  test('revoke other sessions', async ({ page, browser }) => {
+    await login(page)
+
+    const otherContext = await browser.newContext()
+    const otherPage = await otherContext.newPage()
+    await login(otherPage)
+
+    await gotoDashboardRoute(page, '/dashboard/settings/security')
+    await page.getByRole('button', { name: /Cerrar otras sesiones|Close other sessions|Tancar altres sessions/i }).click()
+    await page.getByRole('button', { name: /Cerrar otras sesiones|Close other sessions|Tancar altres sessions/i }).last().click()
+
+    await expect(
+      page.getByRole('alert').filter({ hasText: /Sesiones actualizadas|Sessions updated|Sessions actualitzades/i }).first()
+    ).toBeVisible()
+
+    await otherContext.close()
+  })
 })

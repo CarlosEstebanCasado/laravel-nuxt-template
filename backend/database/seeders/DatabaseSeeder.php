@@ -59,5 +59,19 @@ class DatabaseSeeder extends Seeder
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
         ])->save();
+
+        $resetUser = User::query()->updateOrCreate(
+            ['email' => 'resetuser@example.com'],
+            [
+                'name' => 'Reset User',
+                'password' => Hash::make('password'),
+            ]
+        );
+        $resetUser->forceFill([
+            'email_verified_at' => now(),
+            'two_factor_secret' => null,
+            'two_factor_recovery_codes' => null,
+            'two_factor_confirmed_at' => null,
+        ])->save();
     }
 }

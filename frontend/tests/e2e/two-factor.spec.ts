@@ -23,7 +23,7 @@ const gotoDashboardRoute = async (page: Page, path: string) => {
 }
 
 test.describe('Two-factor authentication', () => {
-  test('enable, confirm, and disable 2FA', async ({ page }) => {
+  test('enable, confirm, login with recovery code, and disable 2FA', async ({ page }) => {
     await login(page, { email, password })
     for (let attempt = 0; attempt < 3; attempt += 1) {
       await gotoDashboardRoute(page, '/dashboard/settings/security')
@@ -58,6 +58,24 @@ test.describe('Two-factor authentication', () => {
     await page.getByRole('button', { name: /Confirmar|Confirm/i }).click()
     await expect(page.getByText(/está activa|enabled/i).first()).toBeVisible()
 
+    const recoveryCode = await page.locator('div.font-mono span').first().innerText()
+
+    await page.getByTestId('user-menu-trigger').click()
+    await page.getByRole('menuitem', { name: /cerrar sesión|logout/i }).click()
+    await expect(page).toHaveURL(/\/login/)
+
+    await page.getByRole('textbox', { name: /email/i }).fill(email)
+    await page.locator('input[name="password"]').fill(password)
+    await page.getByRole('button', { name: /continuar|continue|iniciar|acceder/i }).click()
+    await expect(page).toHaveURL(/\/auth\/two-factor/)
+
+    await page.getByRole('combobox').click()
+    await page.getByRole('option', { name: /Recovery code|Código de recuperación|Codi de recuperació/i }).click()
+    await page.getByPlaceholder(/recovery code|código de recuperación|codi de recuperació/i).fill(recoveryCode)
+    await page.getByRole('button', { name: /Verify|Verificar|Confirmar/i }).click()
+    await expect(page).toHaveURL(/\/dashboard/)
+
+    await gotoDashboardRoute(page, '/dashboard/settings/security')
     await page.getByRole('button', { name: /Desactivar|Disable/i }).click()
     await page.getByPlaceholder(/Tu contraseña actual|current password/i).fill(password)
     await page.getByRole('button', { name: /Confirmar|Confirm/i }).click()

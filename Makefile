@@ -162,14 +162,17 @@ ci-frontend:
 
 e2e:
 	docker compose exec api php artisan db:seed --force
-	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 npm run test:e2e'
+	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com' | tr -d '\r\n') && \
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 E2E_RESET_EMAIL=resetuser@example.com E2E_RESET_TOKEN='"$$RESET_TOKEN"' npm run test:e2e'
 e2e-ui:
 	docker compose exec api php artisan db:seed --force
-	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 npm run test:e2e:ui'
+	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com' | tr -d '\r\n') && \
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 E2E_RESET_EMAIL=resetuser@example.com E2E_RESET_TOKEN='"$$RESET_TOKEN"' npm run test:e2e:ui'
 .PHONY: e2e-ui-local
 e2e-ui-local:
 	$(MAKE) up
 	docker compose exec api php artisan db:seed --force
+	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com' | tr -d '\r\n') && \
 	cd frontend && \
 	NM_PERM_FILE=$$(mktemp) && \
 	TR_PERM_FILE=$$(mktemp) && \
@@ -192,6 +195,8 @@ e2e-ui-local:
 	npx playwright install && \
 	PLAYWRIGHT_APP_BASE_URL=https://app.project.dev \
 	PLAYWRIGHT_PUBLIC_BASE_URL=https://project.dev \
+	E2E_RESET_EMAIL=resetuser@example.com \
+	E2E_RESET_TOKEN="$$RESET_TOKEN" \
 	npm run test:e2e:ui; \
 	STATUS=$$?; \
 	if [ -s "$$NM_PERM_FILE" ] && [ -e node_modules ]; then \

@@ -1,13 +1,36 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 import { login, logout } from './helpers/auth'
 
 const deleteEmail = process.env.E2E_DELETE_EMAIL ?? 'deleteuser@example.com'
 const deletePassword = process.env.E2E_DELETE_PASSWORD ?? 'password'
+const resetEmail = process.env.E2E_RESET_EMAIL ?? 'resetuser@example.com'
+const resetToken = process.env.E2E_RESET_TOKEN ?? ''
+const apiBaseUrl = process.env.PLAYWRIGHT_API_BASE_URL ?? 'https://api.project.dev'
+
+const requestPasswordReset = async (
+  page: Page,
+  payload: { token: string; email: string; password: string; password_confirmation: string }
+) => {
+  await page.request.get(`${apiBaseUrl}/sanctum/csrf-cookie`)
+  const cookies = await page.context().cookies(apiBaseUrl)
+  const xsrfToken = cookies.find((cookie) => cookie.name === 'XSRF-TOKEN')
+  const xsrfHeader = xsrfToken ? decodeURIComponent(xsrfToken.value) : ''
+
+  return page.request.post(`${apiBaseUrl}/auth/reset-password`, {
+    data: payload,
+    headers: {
+      Accept: 'application/json',
+      'X-XSRF-TOKEN': xsrfHeader
+    }
+  })
+}
 
 test.describe('Auth flows', () => {
   test('login and logout', async ({ page }) => {
     await login(page)
     await logout(page)
+    await page.goto('/dashboard')
+    await expect(page).toHaveURL(/\/login/)
   })
 
   test('signup', async ({ page }) => {
@@ -15,8 +38,12 @@ test.describe('Auth flows', () => {
     await page.goto('/signup')
     await page.getByRole('textbox', { name: /nombre|name/i }).fill(`E2E User ${unique}`)
     await page.getByRole('textbox', { name: /email/i }).fill(`e2e_${unique}@example.com`)
-    await page.getByLabel(/contraseña|password/i).first().fill('password')
-    await page.getByLabel(/confirmar contraseña|confirm password/i).fill('password')
+    const passwordField = page.locator('input[name="password"]')
+    const passwordConfirmationField = page.locator('input[name="password_confirmation"]')
+    await passwordField.fill('')
+    await passwordField.type('password123')
+    await passwordConfirmationField.fill('')
+    await passwordConfirmationField.type('password123')
     await page.getByRole('button', { name: /crear cuenta|create account/i }).click()
     await expect(page).toHaveURL(/verify-email/)
   })
@@ -26,6 +53,31 @@ test.describe('Auth flows', () => {
     await page.getByRole('textbox', { name: /email/i }).fill('test@example.com')
     await page.getByRole('button', { name: /restablecimiento|reset|enviar/i }).click()
     await expect(page.getByText(/Revisa tu bandeja|Check your inbox/i)).toBeVisible()
+  })
+
+  test('reset password with invalid token', async ({ page }) => {
+    const response = await requestPasswordReset(page, {
+      token: 'invalid-token',
+      email: resetEmail,
+      password: 'password123',
+      password_confirmation: 'password123'
+    })
+
+    expect(response.status()).toBe(422)
+  })
+
+  test('reset password with valid token', async ({ page }) => {
+    if (!resetToken) {
+      throw new Error('Missing E2E_RESET_TOKEN for reset password test.')
+    }
+    const response = await requestPasswordReset(page, {
+      token: resetToken,
+      email: resetEmail,
+      password: 'password123',
+      password_confirmation: 'password123'
+    })
+
+    expect(response.ok()).toBeTruthy()
   })
 
   test('delete account', async ({ page }) => {

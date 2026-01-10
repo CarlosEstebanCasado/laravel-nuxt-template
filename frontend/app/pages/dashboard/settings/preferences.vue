@@ -135,6 +135,7 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
         color="neutral"
         :loading="isSaving || isLoading"
         class="w-fit lg:ms-auto"
+        data-testid="preferences-save"
       />
     </UPageCard>
 
@@ -151,6 +152,7 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
           label-key="label"
           value-key="value"
           :disabled="isLoading"
+          data-testid="preferences-locale"
         />
       </UFormField>
 
@@ -171,6 +173,7 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
           searchable
           :search-placeholder="t('preferences.timezone_search_placeholder')"
           class="min-w-48"
+          data-testid="preferences-timezone"
         />
       </UFormField>
 
@@ -188,6 +191,7 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
           label-key="label"
           value-key="value"
           :disabled="isLoading"
+          data-testid="preferences-theme"
         />
       </UFormField>
 
@@ -206,6 +210,7 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
           value-key="value"
           :disabled="isLoading"
           class="min-w-35"
+          data-testid="preferences-primary-color"
         />
       </UFormField>
 
@@ -223,6 +228,7 @@ const onSubmit = async (event: FormSubmitEvent<typeof form>) => {
           label-key="label"
           value-key="value"
           :disabled="isLoading"
+          data-testid="preferences-neutral-color"
         />
       </UFormField>
     </UPageCard>
