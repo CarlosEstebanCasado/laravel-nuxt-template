@@ -14,6 +14,10 @@ const gotoDashboardRoute = async (page: Page, path: string) => {
       await page.reload()
       continue
     }
+    if (await page.getByText(/Website Expired/i).count()) {
+      await page.waitForTimeout(500)
+      continue
+    }
     loaded = true
     break
   }
