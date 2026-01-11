@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed refresh-db config-clear-backend qa phpstan test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db
+.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed refresh-db config-clear-backend qa phpstan test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db e2e e2e-ui
 
 help:
 	@echo "Available targets:"
@@ -14,6 +14,7 @@ help:
 	@echo "  make refresh-db - Refrescar BD (migrate:fresh) y ejecutar seed"
 	@echo "  make config-clear-backend - Limpiar cache de config en backend"
 	@echo "  make qa       - Ejecutar linting/análisis estático definidos"
+	@echo "  make qa-e2e   - Ejecutar QA + tests E2E (incluye seed)"
 	@echo "  make test     - Alias de CI local (equivalente a make ci)"
 	@echo "  make ci       - Ejecutar CI local (backend + frontend)"
 	@echo "  make ci-backend   - Backend CI local (composer audit + tests con Postgres/Redis)"
@@ -24,6 +25,9 @@ help:
 	@echo "  make hosts    - Añadir dominios locales al archivo hosts"
 	@echo "  make logs     - Ver logs del gateway nginx"
 	@echo "  make test-db  - Crear DB de tests (<DB_DATABASE>_test) en Postgres si no existe"
+	@echo "  make e2e      - Ejecutar tests E2E de Playwright"
+	@echo "  make e2e-ui   - Ejecutar tests E2E de Playwright en modo UI"
+	@echo "  make e2e-ui-local - Ejecutar Playwright UI fuera de Docker (requiere npm install en frontend)"
 
 up:
 	docker compose up -d
@@ -72,6 +76,9 @@ qa:
 		docker compose exec nuxt npm run lint || echo "Define npm script 'lint'"; \
 		docker compose exec nuxt npx vue-tsc --noEmit; \
 	fi
+
+qa-e2e: qa
+	$(MAKE) e2e
 
 phpstan:
 	docker compose exec api vendor/bin/phpstan analyse
@@ -155,3 +162,64 @@ ci-frontend:
 		npm test && \
 		npm run build \
 	'
+
+e2e:
+	docker compose exec api php artisan db:seed --force
+	docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-set-preferences.php preferencesuser@example.com es dark green slate Europe/Madrid'
+	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'set -o pipefail; cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com | tr -d "\r\n"') && \
+	[ -n "$$RESET_TOKEN" ] && \
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 PLAYWRIGHT_API_BASE_URL=https://api.project.dev E2E_RESET_EMAIL=resetuser@example.com E2E_RESET_TOKEN='"$$RESET_TOKEN"' npm run test:e2e'
+e2e-ui:
+	docker compose exec api php artisan db:seed --force
+	docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-set-preferences.php preferencesuser@example.com es dark green slate Europe/Madrid'
+	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'set -o pipefail; cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com | tr -d "\r\n"') && \
+	[ -n "$$RESET_TOKEN" ] && \
+	docker compose exec nuxt sh -lc 'cd /usr/src/app && npx playwright install --with-deps chromium && PLAYWRIGHT_APP_BASE_URL=https://app.project.dev PLAYWRIGHT_PUBLIC_BASE_URL=http://127.0.0.1:3000 PLAYWRIGHT_API_BASE_URL=https://api.project.dev E2E_RESET_EMAIL=resetuser@example.com E2E_RESET_TOKEN='"$$RESET_TOKEN"' npm run test:e2e:ui'
+.PHONY: e2e-ui-local
+e2e-ui-local:
+	$(MAKE) up
+	docker compose exec api php artisan db:seed --force
+	docker compose exec -T api sh -lc 'cd /var/www/html && php scripts/e2e-set-preferences.php preferencesuser@example.com es dark green slate Europe/Madrid'
+	RESET_TOKEN=$$(docker compose exec -T api sh -lc 'set -o pipefail; cd /var/www/html && php scripts/e2e-reset-token.php resetuser@example.com | tr -d "\r\n"') && \
+	[ -n "$$RESET_TOKEN" ] && \
+	cd frontend && \
+	NM_PERM_FILE=$$(mktemp) && \
+	TR_PERM_FILE=$$(mktemp) && \
+	PL_PERM_FILE=$$(mktemp) && \
+	get_owner_group() { \
+		if stat -c "%u:%g" "$$1" >/dev/null 2>&1; then \
+			stat -c "%u:%g" "$$1"; \
+		elif stat -f "%u:%g" "$$1" >/dev/null 2>&1; then \
+			stat -f "%u:%g" "$$1"; \
+		fi; \
+	}; \
+	if [ -e node_modules ]; then get_owner_group node_modules > "$$NM_PERM_FILE" || true; fi; \
+	if [ -e test-results ]; then get_owner_group test-results > "$$TR_PERM_FILE" || true; fi; \
+	if [ -e package-lock.json ]; then get_owner_group package-lock.json > "$$PL_PERM_FILE" || true; fi; \
+	sudo chown -R $${USER}:$${USER} node_modules package-lock.json || true && \
+	sudo chown -R $${USER}:$${USER} test-results || true && \
+	sudo chmod -R u+rwX node_modules || true && \
+	sudo chmod -R u+rwX test-results || true && \
+	npm install --ignore-scripts && \
+	npx playwright install && \
+	PLAYWRIGHT_APP_BASE_URL=https://app.project.dev \
+	PLAYWRIGHT_PUBLIC_BASE_URL=https://project.dev \
+	PLAYWRIGHT_API_BASE_URL=https://api.project.dev \
+	E2E_RESET_EMAIL=resetuser@example.com \
+	E2E_RESET_TOKEN="$$RESET_TOKEN" \
+	npm run test:e2e:ui; \
+	STATUS=$$?; \
+	if [ -s "$$NM_PERM_FILE" ] && [ -e node_modules ]; then \
+		read -r OWNER < "$$NM_PERM_FILE"; \
+		sudo chown -R "$$OWNER" node_modules || true; \
+	fi; \
+	if [ -s "$$TR_PERM_FILE" ] && [ -e test-results ]; then \
+		read -r OWNER < "$$TR_PERM_FILE"; \
+		sudo chown -R "$$OWNER" test-results || true; \
+	fi; \
+	if [ -s "$$PL_PERM_FILE" ] && [ -e package-lock.json ]; then \
+		read -r OWNER < "$$PL_PERM_FILE"; \
+		sudo chown "$$OWNER" package-lock.json || true; \
+	fi; \
+	rm -f "$$NM_PERM_FILE" "$$TR_PERM_FILE" "$$PL_PERM_FILE"; \
+	exit $$STATUS

@@ -68,16 +68,21 @@ const items = computed(() => [{
     />
 
     <template #right>
-      <USelect
-        v-model="activeLocale"
-        :items="localeOptions"
-        value-key="value"
-        label-key="label"
-        color="neutral"
-        size="xs"
+      <div
         class="hidden md:inline-flex min-w-28"
-        :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
-      />
+        data-testid="public-locale-select"
+      >
+        <USelect
+          v-model="activeLocale"
+          :items="localeOptions"
+          value-key="value"
+          label-key="label"
+          color="neutral"
+          size="xs"
+          class="w-full"
+          :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
+        />
+      </div>
       <UColorModeButton />
 
       <UButton
@@ -131,16 +136,18 @@ const items = computed(() => [{
       />
 
       <USeparator class="my-6" />
-      <USelect
-        v-model="activeLocale"
-        :items="localeOptions"
-        value-key="value"
-        label-key="label"
-        color="neutral"
-        size="sm"
-        class="w-full"
-        :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
-      />
+      <div data-testid="public-locale-select">
+        <USelect
+          v-model="activeLocale"
+          :items="localeOptions"
+          value-key="value"
+          label-key="label"
+          color="neutral"
+          size="sm"
+          class="w-full"
+          :ui="{ trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200' }"
+        />
+      </div>
     </template>
   </UHeader>
 </template>
