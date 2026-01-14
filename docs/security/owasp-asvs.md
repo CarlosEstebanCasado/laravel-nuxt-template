@@ -37,7 +37,7 @@ Atajos
 - [ ] API: Regeneración de session IDs en login/logout (`auth()->login`/`logout`).
 - [ ] API: Cookies marcadas `HttpOnly`, `Secure`, `SameSite=lax`.
 - [ ] FRONT: Se invoca `/api/me` al cargar la app y se invalida el estado local al detectar sesión expirada.
-- [ ] API: Hay endpoint de logout que invalida tokens/cookies activos (`/api/v1/auth/logout`).
+- [ ] API: Hay endpoint de logout que invalida tokens/cookies activos (`/auth/logout`).
 
 ### V4 — Control de Acceso
 

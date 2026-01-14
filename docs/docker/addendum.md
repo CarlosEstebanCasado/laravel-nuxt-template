@@ -416,27 +416,34 @@ server {
 # DB
 DB_DATABASE=app
 DB_USERNAME=app
-DB_PASSWORD=secret
+DB_PASSWORD=change_me
 
 # MinIO
 MINIO_ROOT_USER=minio
-MINIO_ROOT_PASSWORD=miniosecret
+MINIO_ROOT_PASSWORD=change_me
 
 # Laravel
-APP_KEY=base64:GENERAR_EN_RUNTIME
+APP_KEY=base64:GENERATE_AT_RUNTIME
 APP_URL=https://api.project.dev
 FRONTEND_URL=https://app.project.dev
 SESSION_DOMAIN=.project.dev
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=lax
 SANCTUM_STATEFUL_DOMAINS=app.project.dev
 CORS_ALLOWED_ORIGINS=https://app.project.dev,https://project.dev
+FORTIFY_PREFIX=auth
+FORTIFY_HOME=/dashboard
 SESSION_DRIVER=cookie
 QUEUE_CONNECTION=redis
 CACHE_DRIVER=redis
 
 # Nuxt
-NUXT_PUBLIC_API_BASE=https://api.project.dev/api/v1
+NUXT_PUBLIC_API_BASE=https://api.project.dev
+NUXT_PUBLIC_API_PREFIX=/api/v1
+NUXT_PUBLIC_AUTH_PREFIX=/auth
+NUXT_PUBLIC_INTERNAL_API_BASE=http://gateway-api
 NUXT_PUBLIC_APP_BASE_URL=https://app.project.dev
-NUXT_PUBLIC_SITE_BASE_URL=https://project.dev
 ```
 
 > Genera `APP_KEY` dentro del contenedor `api`: `docker compose exec api php artisan key:generate --show` y guárdalo solo en tu `.env` local.

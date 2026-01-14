@@ -63,7 +63,8 @@ Frontend (Nuxt 3)
 -----------------
 
 - **Sesiones y estado**:
-  - Obtén sesión mediante `/api/me` en SSR middleware. Maneja expiración limpiando stores/cookies propias.
+  - En este template el dashboard es CSR: obtiene sesión con `/api/me` en middleware cliente y limpia estado al expirar.
+  - Si se habilita SSR en rutas privadas, mover el chequeo de sesión a SSR middleware y propagar cookies.
   - No almacenar tokens o datos sensibles en `localStorage`. Usa cookies seguras gestionadas por Sanctum.
 - **XSS / CSRF**:
   - Evita `v-html` salvo contenidos auditados; usa sanitizadores cuando sea imprescindible.
@@ -104,7 +105,7 @@ Herramientas recomendadas
 -------------------------
 
 - **Static analysis**: PHPStan (L8), Larastan, ESLint con reglas de seguridad (`no-eval`, `vue/no-v-html`).
-- **Testing**: PHPUnit con pruebas de autorización, rate limits y edge cases. Playwright para SSR auth flows.
+- **Testing**: PHPUnit con pruebas de autorización, rate limits y edge cases. Playwright para flujos de auth (CSR por defecto; SSR si se habilita).
 - **Auditoría**: `securityheaders.com`, Mozilla Observatory, scans OWASP ZAP en pipelines opcionales.
 - **Dependencias**: Configura Renovate/Dependabot, ejecuta `composer audit`, `npm audit` y revisa CVEs relevantes.
 
