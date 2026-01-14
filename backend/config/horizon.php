@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'middleware' => ['web', 'auth:sanctum', 'verified', 'horizon.access'],
+    'middleware' => ['web', 'auth:web', 'verified', 'horizon.access'],
 
     /*
     |--------------------------------------------------------------------------
