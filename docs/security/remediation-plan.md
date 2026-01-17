@@ -14,7 +14,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 - [x] Verificar que `.env` y `backend/.env` no estan trackeados por git.
 - [x] Alinear keys de `.env.example` con `.env` real (anadir las faltantes).
 - [x] Revisar valores de ejemplo para asegurar que no son secretos reales.
-- [ ] Rotar credenciales y `APP_KEY` en entornos reales.
+- [ ] Rotar credenciales y `APP_KEY` en entornos reales (ver `docs/security/manual-verification.md`).
 - [x] Documentar setup seguro en README/SECURITY.
 
 ## 3) Sesiones y cookies
@@ -24,14 +24,14 @@ Este plan recoge las tareas necesarias para alinear el template con
   - `SESSION_HTTP_ONLY=true`
   - `SESSION_SAME_SITE=lax`
 - [x] Asegurar regeneracion de sesion en login/logout y revisar flows.
-- [ ] Verificar cookies de Sanctum en local y prod.
+- [ ] Verificar cookies de Sanctum en local y prod (ver `docs/security/manual-verification.md`).
 
 ## 4) Cabeceras de seguridad y CSP
 
 - [x] Añadir HSTS en el vhost de API.
-- [ ] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval` (report-only añadido en app/web).
+- [ ] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval` (report-only añadido en app/web). Ver `docs/security/manual-verification.md`.
   - Si es necesario, introducir nonces/hashes en build y documentar.
-- [ ] Validar headers con scanners (Mozilla Observatory / securityheaders.com).
+- [ ] Validar headers con scanners (Mozilla Observatory / securityheaders.com). Ver `docs/security/manual-verification.md`.
 
 ## 5) Logging, trazabilidad y PII
 

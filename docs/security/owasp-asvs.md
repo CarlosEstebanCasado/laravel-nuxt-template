@@ -29,7 +29,7 @@ Atajos
 
 - [x] API: Registro, login y recuperación de cuenta usan flujos antifraude (rate limiting, bloqueo tras intentos fallidos). Evidencia: `backend/app/Providers/FortifyServiceProvider.php`, `backend/app/src/IdentityAccess/Security/Reauth/UI/Middleware/ThrottleAuthEndpoints.php`.
 - [ ] FRONT: Formularios de auth con validaciones en cliente y mensajes genéricos que no revelan si el usuario existe.
-- [ ] API: Tokens de Sanctum configurados con `SameSite=lax`, HTTPS y expiración controlada.
+- [ ] API: Tokens de Sanctum configurados con `SameSite=lax`, HTTPS y expiración controlada (ver `docs/security/manual-verification.md`).
 - [x] API: Rutas de autenticación en Laravel aplican middleware `throttle` y verifican CSRF cuando corresponda. Evidencia: `backend/config/fortify.php`, `backend/app/Providers/FortifyServiceProvider.php`, `backend/app/src/IdentityAccess/Security/Reauth/UI/Middleware/ThrottleAuthEndpoints.php`.
 
 ### V3 — Manejo de Sesiones
@@ -62,7 +62,7 @@ Atajos
 
 ### V7 — Criptografía
 
-- [ ] API: `APP_KEY` generado en producción y girado periódicamente.
+- [ ] API: `APP_KEY` generado en produccion y girado periodicamente (ver `docs/security/manual-verification.md`).
 - [ ] API: Uso exclusivo de hashing seguro (`bcrypt`/`argon2id`) para contraseñas.
 - [x] INFRA: TLS 1.2+ obligatorio en todos los entornos; certificados gestionados (ACME, Let's Encrypt). Evidencia: `docker/nginx/nginx.conf`.
 - [ ] API: Cualquier cifrado simétrico usa claves almacenadas en secret manager (no en código).
@@ -78,7 +78,7 @@ Atajos
 
 - [ ] FRONT: Se fuerza HTTPS y HSTS desde Traefik/Reverse proxy.
 - [x] API: Respuestas incluyen `Content-Security-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`. Evidencia: `docker/nginx/conf.d/api.conf`.
-- [ ] SHARED: Seguridad de cabeceras validada con escáneres (Mozilla Observatory, securityheaders.com).
+- [ ] SHARED: Seguridad de cabeceras validada con escaneres (Mozilla Observatory, securityheaders.com). Ver `docs/security/manual-verification.md`.
 - [ ] INFRA: Conexiones a base de datos y Redis cifradas en producción/residencias remotas.
 
 ### V10 — Gestión de Recursos y DoS
