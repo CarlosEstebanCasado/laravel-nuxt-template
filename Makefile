@@ -164,7 +164,11 @@ ci-frontend:
 	docker compose run --rm -T nuxt sh -lc '\
 		cd /usr/src/app && \
 		npm ci && \
-		npm audit --audit-level=high && \
+		if [ "$${CI:-}" = "true" ]; then \
+			npm audit --audit-level=high; \
+		else \
+			npm audit --audit-level=high || echo "npm audit failed (ignored in dev)"; \
+		fi && \
 		npx eslint . && \
 		npx vue-tsc --noEmit && \
 		npm test && \
