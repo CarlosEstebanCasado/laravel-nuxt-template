@@ -343,7 +343,9 @@ server {
   add_header X-Frame-Options "DENY";
   add_header X-Content-Type-Options "nosniff";
   add_header Referrer-Policy "strict-origin-when-cross-origin";
-  add_header Content-Security-Policy "default-src 'self'";
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  add_header Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.bunny.net; style-src-elem 'self' 'unsafe-inline' https://fonts.bunny.net; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; font-src 'self' data: https://fonts.bunny.net; connect-src 'self'; frame-ancestors 'none';";
+  add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
   root /var/www/html/public;
   index index.php;
@@ -355,6 +357,7 @@ server {
   location ~ \.php$ {
     include fastcgi_params;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param HTTP_X_REQUEST_ID $request_id_header;
     fastcgi_pass php_fpm;
     fastcgi_read_timeout 300;
   }
@@ -376,9 +379,13 @@ server {
   ssl_certificate     /etc/nginx/certs/app.project.dev.crt;
   ssl_certificate_key /etc/nginx/certs/app.project.dev.key;
 
-  add_header X-Frame-Options "DENY";
+  add_header X-Frame-Options "SAMEORIGIN";
   add_header X-Content-Type-Options "nosniff";
   add_header Referrer-Policy "strict-origin-when-cross-origin";
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self';" always;
+  add_header Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none';" always;
+  add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
   location / {
     proxy_pass http://nuxt_upstream;
@@ -388,6 +395,27 @@ server {
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Request-Id $request_id_header;
+  }
+
+  location /_nuxt/ {
+    proxy_pass http://nuxt_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Request-Id $request_id_header;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self';" always;
+    add_header Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none';" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    add_header Cache-Control "no-store";
   }
 }
 ```
@@ -403,9 +431,13 @@ server {
   ssl_certificate     /etc/nginx/certs/project.dev.crt;
   ssl_certificate_key /etc/nginx/certs/project.dev.key;
 
-  add_header X-Frame-Options "DENY";
+  add_header X-Frame-Options "SAMEORIGIN";
   add_header X-Content-Type-Options "nosniff";
   add_header Referrer-Policy "strict-origin-when-cross-origin";
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self';" always;
+  add_header Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none';" always;
+  add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
   location / {
     proxy_pass http://nuxt_upstream;
@@ -415,6 +447,27 @@ server {
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Request-Id $request_id_header;
+  }
+
+  location /_nuxt/ {
+    proxy_pass http://nuxt_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Request-Id $request_id_header;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self';" always;
+    add_header Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none';" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    add_header Cache-Control "no-store";
   }
 }
 ```

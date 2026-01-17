@@ -29,7 +29,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 ## 4) Cabeceras de seguridad y CSP
 
 - [x] Añadir HSTS en el vhost de API.
-- [ ] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval`.
+- [ ] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval` (report-only añadido en app/web).
   - Si es necesario, introducir nonces/hashes en build y documentar.
 - [ ] Validar headers con scanners (Mozilla Observatory / securityheaders.com).
 
