@@ -79,8 +79,8 @@ export function useApi() {
 
     return $fetch<T>(url, {
       credentials: 'include',
-      headers,
       ...options,
+      headers,
     })
   }
 
