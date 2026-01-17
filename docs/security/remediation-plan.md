@@ -12,7 +12,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 ## 2) Secretos y variables de entorno
 
 - [x] Verificar que `.env` y `backend/.env` no estan trackeados por git.
-- [x] Alinear keys de `.env.example` con `.env` real (anadir las faltantes).
+- [x] Alinear keys de `.env.example` con `.env` real (anadir las faltantes). Validable con `scripts/check-env-examples.sh`.
 - [x] Revisar valores de ejemplo para asegurar que no son secretos reales.
 - [ ] Rotar credenciales y `APP_KEY` en entornos reales (ver `docs/security/manual-verification.md`).
 - [x] Documentar setup seguro en README/SECURITY.
