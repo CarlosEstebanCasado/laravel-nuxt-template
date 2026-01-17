@@ -4,6 +4,7 @@ use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 use Monolog\Formatter\JsonFormatter;
+use App\Src\Shared\Infrastructure\Logging\RedactSensitiveDataProcessor;
 use Monolog\Processor\PsrLogMessageProcessor;
 
 return [
@@ -68,6 +69,10 @@ return [
                 'batch_mode' => JsonFormatter::BATCH_MODE_NEWLINES,
                 'append_newline' => true,
             ],
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
             'replace_placeholders' => true,
         ],
 
@@ -80,6 +85,10 @@ return [
             'formatter_with' => [
                 'batch_mode' => JsonFormatter::BATCH_MODE_NEWLINES,
                 'append_newline' => true,
+            ],
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
             ],
             'replace_placeholders' => true,
         ],
@@ -117,19 +126,30 @@ return [
                 'batch_mode' => JsonFormatter::BATCH_MODE_NEWLINES,
                 'append_newline' => true,
             ],
-            'processors' => [PsrLogMessageProcessor::class],
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
         ],
 
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),
             'facility' => env('LOG_SYSLOG_FACILITY', LOG_USER),
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
             'replace_placeholders' => true,
         ],
 
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => env('LOG_LEVEL', 'debug'),
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
             'replace_placeholders' => true,
         ],
 

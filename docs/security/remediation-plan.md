@@ -38,7 +38,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 - [x] Implementar `X-Request-Id` end-to-end (frontend -> backend -> logs; pendiente unificar llamadas con `useApi`).
 - [x] Propagar `X-Request-Id` desde nginx a los upstreams.
 - [x] Configurar logging en JSON (Monolog formatter).
-- [ ] Asegurar que logs no incluyan PII o secretos.
+- [x] Asegurar que logs no incluyan PII o secretos (redaccion configurable).
 - [ ] Documentar integracion con Sentry si aplica.
 
 ## 6) Frontend API access

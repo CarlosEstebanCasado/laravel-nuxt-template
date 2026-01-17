@@ -19,3 +19,4 @@ This repository is a template. Security support depends on the fork that uses it
 
 - Do not commit `.env` files. Use `.env.example` as placeholders only.
 - Generate a unique `APP_KEY` per environment and rotate credentials before production use.
+- Application logs redact sensitive keys via `LOG_REDACT_KEYS`; avoid logging PII directly in messages.
