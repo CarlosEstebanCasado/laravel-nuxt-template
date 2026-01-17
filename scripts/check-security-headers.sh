@@ -40,10 +40,15 @@ require_header() {
 check_url() {
   local url="$1"
   local label="$2"
+  local follow="${3:-}"
   local headers
 
   echo "Checking $label: $url"
-  headers="$(curl -sS -I -k "$url" || true)"
+  if [[ "$follow" == "follow" ]]; then
+    headers="$(curl -sS -I -k -L "$url" || true)"
+  else
+    headers="$(curl -sS -I -k "$url" || true)"
+  fi
   if [[ -z "$headers" ]]; then
     echo "ERROR: no response from $url"
     fail=1
@@ -62,7 +67,7 @@ check_url() {
   fi
 }
 
-check_url "$app_url" "app/web"
+check_url "$app_url" "app/web" "follow"
 check_url "${api_url%/}/api/v1/health" "api"
 
 if [[ "$fail" -ne 0 ]]; then

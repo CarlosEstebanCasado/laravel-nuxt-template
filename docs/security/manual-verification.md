@@ -27,10 +27,14 @@ Tip CLI (local):
 
 ## 3) CSP hardening (eliminar unsafe-inline/unsafe-eval)
 
+- El CSP para app/web se sirve desde Nuxt con nonces en scripts inline.
 - Revisa los reportes del `Content-Security-Policy-Report-Only` en consola del navegador.
 - Identifica scripts inline o evaluados; migra a nonces/hashes.
 - En Nuxt, `unsafe-eval` suele ser necesario en dev (Vite). Apunta a eliminarlo en builds de produccion.
+- Las `style` inline siguen permitidas (`style-src 'unsafe-inline'`) hasta migrarlas a CSS.
+- Decision template: mantener `style-src 'unsafe-inline'` y aceptar avisos en report-only.
 - Cuando no haya violaciones, reemplaza el CSP enforced por la version estricta.
+- Verifica que `script-src` incluye `nonce-...` y no usa `unsafe-eval`.
 
 ## 4) Validacion de cabeceras
 
@@ -38,6 +42,6 @@ Tip CLI (local):
   - https://securityheaders.com/
   - https://observatory.mozilla.org/
 - En local, verifica con:
-  `curl -I https://app.project.dev` y `curl -I https://api.project.dev/api/v1/health`
+  `curl -I -L https://app.project.dev` y `curl -I https://api.project.dev/api/v1/health`
 - Alternativa local rapida: `make headers-check`
 - Esperado: `Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`.

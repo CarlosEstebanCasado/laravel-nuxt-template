@@ -383,8 +383,6 @@ server {
   add_header X-Content-Type-Options "nosniff";
   add_header Referrer-Policy "strict-origin-when-cross-origin";
   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-  add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self';" always;
-  add_header Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none';" always;
   add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
   location / {
@@ -412,13 +410,13 @@ server {
     add_header X-Content-Type-Options "nosniff" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self';" always;
-    add_header Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none';" always;
     add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
     add_header Cache-Control "no-store";
   }
 }
 ```
+
+Nota: El CSP para app/web se aplica en Nuxt con nonces por request (ver `frontend/server/plugins/csp.ts`). Nginx solo mantiene headers estaticos.
 
 ### `docker/nginx/conf.d/web.conf`
 
@@ -435,8 +433,6 @@ server {
   add_header X-Content-Type-Options "nosniff";
   add_header Referrer-Policy "strict-origin-when-cross-origin";
   add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-  add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self';" always;
-  add_header Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none';" always;
   add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
   location / {
@@ -464,8 +460,6 @@ server {
     add_header X-Content-Type-Options "nosniff" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self';" always;
-    add_header Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.project.dev https://api.iconify.design ws:; media-src 'self' https://res.cloudinary.com; frame-ancestors 'self'; base-uri 'self'; object-src 'none';" always;
     add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
     add_header Cache-Control "no-store";
   }
