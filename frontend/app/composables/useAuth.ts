@@ -1,6 +1,7 @@
 import { joinURL } from 'ufo'
 import type { AuthResponse, AuthUser, TwoFactorChallengeResponse } from '~/types/auth'
 import type { PreferencesResponse, UserPreferencesPayload } from '~/types/preferences'
+import { createRequestId } from '~/utils/request-id'
 
 type SupportedLocale = 'es' | 'en' | 'ca'
 
@@ -163,6 +164,10 @@ export function useAuth() {
     const headers: Record<string, string> = {
       Accept: 'application/json',
       ...(options?.headers as Record<string, string> | undefined),
+    }
+
+    if (!headers['X-Request-Id']) {
+      headers['X-Request-Id'] = createRequestId()
     }
 
     const preferredLocale = preferences.value?.locale || getActiveLocale().value || localeState.value

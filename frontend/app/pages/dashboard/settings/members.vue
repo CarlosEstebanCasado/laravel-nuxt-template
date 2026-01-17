@@ -10,6 +10,7 @@ definePageMeta({
 
 const { t } = useI18n()
 
+// Demo data served by Nuxt server routes. Replace with useApi() when backend is wired.
 const { data: members } = await useFetch<Member[]>('/api/members', { default: () => [] })
 
 const q = ref('')

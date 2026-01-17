@@ -209,7 +209,7 @@ services:
     networks: [internal]
 
   minio:
-    image: minio/minio:latest
+    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
     container_name: minio
     command: server /data --console-address ":9001"
     environment:
@@ -298,6 +298,16 @@ pid       /var/run/nginx.pid;
 events { worker_connections 1024; }
 
 http {
+  map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+  }
+
+  map $http_x_request_id $request_id_header {
+    default $http_x_request_id;
+    '' $request_id;
+  }
+
   include       /etc/nginx/mime.types;
   default_type  application/octet-stream;
   sendfile      on;
@@ -305,11 +315,13 @@ http {
   keepalive_timeout  65;
   gzip on;
 
-  log_format main '{"time":"$time_iso8601","remote":"$remote_addr","host":"$host","req":"$request","status":$status,"ua":"$http_user_agent"}';
+  log_format main '{"time":"$time_iso8601","remote":"$remote_addr","host":"$host","req":"$request","status":$status,"ua":"$http_user_agent","request_id":"$request_id_header"}';
   access_log /dev/stdout main;
 
   ssl_session_cache shared:SSL:10m;
   ssl_session_timeout 10m;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_session_tickets off;
 
   include /etc/nginx/conf.d/*.conf;
 }
@@ -331,7 +343,9 @@ server {
   add_header X-Frame-Options "DENY";
   add_header X-Content-Type-Options "nosniff";
   add_header Referrer-Policy "strict-origin-when-cross-origin";
-  add_header Content-Security-Policy "default-src 'self'";
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  add_header Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.bunny.net; style-src-elem 'self' 'unsafe-inline' https://fonts.bunny.net; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; font-src 'self' data: https://fonts.bunny.net; connect-src 'self'; frame-ancestors 'none';";
+  add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
   root /var/www/html/public;
   index index.php;
@@ -343,6 +357,7 @@ server {
   location ~ \.php$ {
     include fastcgi_params;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param HTTP_X_REQUEST_ID $request_id_header;
     fastcgi_pass php_fpm;
     fastcgi_read_timeout 300;
   }
@@ -364,9 +379,11 @@ server {
   ssl_certificate     /etc/nginx/certs/app.project.dev.crt;
   ssl_certificate_key /etc/nginx/certs/app.project.dev.key;
 
-  add_header X-Frame-Options "DENY";
+  add_header X-Frame-Options "SAMEORIGIN";
   add_header X-Content-Type-Options "nosniff";
   add_header Referrer-Policy "strict-origin-when-cross-origin";
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
   location / {
     proxy_pass http://nuxt_upstream;
@@ -376,9 +393,30 @@ server {
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Request-Id $request_id_header;
+  }
+
+  location /_nuxt/ {
+    proxy_pass http://nuxt_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Request-Id $request_id_header;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    add_header Cache-Control "no-store";
   }
 }
 ```
+
+Nota: El CSP para app/web se aplica en Nuxt con nonces por request (ver `frontend/server/plugins/csp.ts`). Nginx solo mantiene headers estaticos.
 
 ### `docker/nginx/conf.d/web.conf`
 
@@ -391,9 +429,11 @@ server {
   ssl_certificate     /etc/nginx/certs/project.dev.crt;
   ssl_certificate_key /etc/nginx/certs/project.dev.key;
 
-  add_header X-Frame-Options "DENY";
+  add_header X-Frame-Options "SAMEORIGIN";
   add_header X-Content-Type-Options "nosniff";
   add_header Referrer-Policy "strict-origin-when-cross-origin";
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+  add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
   location / {
     proxy_pass http://nuxt_upstream;
@@ -403,6 +443,25 @@ server {
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Request-Id $request_id_header;
+  }
+
+  location /_nuxt/ {
+    proxy_pass http://nuxt_upstream;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Request-Id $request_id_header;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    add_header Cache-Control "no-store";
   }
 }
 ```
@@ -416,27 +475,34 @@ server {
 # DB
 DB_DATABASE=app
 DB_USERNAME=app
-DB_PASSWORD=secret
+DB_PASSWORD=change_me
 
 # MinIO
 MINIO_ROOT_USER=minio
-MINIO_ROOT_PASSWORD=miniosecret
+MINIO_ROOT_PASSWORD=change_me
 
 # Laravel
-APP_KEY=base64:GENERAR_EN_RUNTIME
+APP_KEY=base64:GENERATE_AT_RUNTIME
 APP_URL=https://api.project.dev
 FRONTEND_URL=https://app.project.dev
 SESSION_DOMAIN=.project.dev
+SESSION_SECURE_COOKIE=true
+SESSION_HTTP_ONLY=true
+SESSION_SAME_SITE=lax
 SANCTUM_STATEFUL_DOMAINS=app.project.dev
 CORS_ALLOWED_ORIGINS=https://app.project.dev,https://project.dev
+FORTIFY_PREFIX=auth
+FORTIFY_HOME=/dashboard
 SESSION_DRIVER=cookie
 QUEUE_CONNECTION=redis
 CACHE_DRIVER=redis
 
 # Nuxt
-NUXT_PUBLIC_API_BASE=https://api.project.dev/api/v1
+NUXT_PUBLIC_API_BASE=https://api.project.dev
+NUXT_PUBLIC_API_PREFIX=/api/v1
+NUXT_PUBLIC_AUTH_PREFIX=/auth
+NUXT_PUBLIC_INTERNAL_API_BASE=http://gateway-api
 NUXT_PUBLIC_APP_BASE_URL=https://app.project.dev
-NUXT_PUBLIC_SITE_BASE_URL=https://project.dev
 ```
 
 > Genera `APP_KEY` dentro del contenedor `api`: `docker compose exec api php artisan key:generate --show` y guárdalo solo en tu `.env` local.

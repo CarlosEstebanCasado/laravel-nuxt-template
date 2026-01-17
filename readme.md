@@ -13,7 +13,7 @@ SaaS Template — Laravel 12 API + Nuxt 4 (SSR público + SPA privado)
 - **API REST contract-first** (`/api/v1`) documentada con OpenAPI.
 - **Frontend híbrido** con Nuxt 4: SSR público (SEO) + SPA privada (`/dashboard/**`).
 - **Auth fullstack** lista para producción (Laravel Fortify + Sanctum + Nuxt) con login, registro, verificación de email y logout via cookies `SameSite=None`.
-- **Tooling DevOps**: Docker Compose, Horizon, Sentry, Prometheus, GitHub Actions base.
+- **Tooling DevOps**: Docker Compose, Horizon, Sentry (opcional), Prometheus, GitHub Actions base.
 - **Calidad integrada**: PHPStan máx nivel, Laravel Pint, ESLint, Vitest, Playwright (E2E).
 
 ---
@@ -59,7 +59,7 @@ Si vas a usar esto como template, sigue el checklist en `docs/forking.md` para r
 - **Base de datos**: PostgreSQL 16+ con `UUID`, `JSONB`, índices parciales.
 - **Cache/Queue**: Redis 7, retries exponenciales, tagging por household.
 - **Storage**: S3-compatible (MinIO local, S3/Wasabi en prod).
-- **Observabilidad**: logs JSON, Sentry, exporter Prometheus.
+- **Observabilidad**: logs JSON, Sentry (opcional), exporter Prometheus.
 - **Infra**: Docker Compose con gateway Nginx/Traefik (ver `docs/docker/addendum.md`); despliegue en Fly.io/Render/Kubernetes según fase.
 - **Frontend**: Nuxt 4 (SSR público + SPA privado), TypeScript strict, Pinia, Vue Query opcional, Tailwind + Radix/HeadlessUI, i18n.
 - **Auth**: Laravel Sanctum con cookies, CSRF automático, dominios configurables.
@@ -156,9 +156,10 @@ backend/app/src/
 - HTTPS, HSTS, CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`.
 - Sanitización/validación estricta, límites de tamaño (`max_input_vars`, `post_max_size`).
 - Alineado OWASP: baseline en OWASP Top 10, ASVS nivel 2 y cheatsheets de referencia para cada módulo (auth, storage, logging). Checklist operativa en `docs/security/owasp-asvs.md` y regla detallada para Cursor en `.cursor/rules/security.md`.
-- Secretos via `.env` (12-factor). Sin secretos en el repo. Compatibilidad con Doppler/Vault.
+- Secretos via `.env` (12-factor). Sin secretos en el repo; los `.env.example` usan placeholders y deben ajustarse. Compatibilidad con Doppler/Vault.
+- Logs JSON con redacción de PII/secretos configurable via `LOG_REDACT_KEYS`.
 - Auditoría con `owen-it/laravel-auditing` ([docs](https://laravel-auditing.com/guide/introduction.html)).
-- Logs JSON con correlación `X-Request-Id`. Integrado con Sentry (frontend + backend).
+- Logs JSON con correlación `X-Request-Id`. Sentry es opcional y requiere configurar el SDK/DSN.
 
 **Nota importante (dev)**:
 
@@ -237,7 +238,7 @@ backend/app/src/
 -------------------
 
 1. Duplica este repo como plantilla (`Use this template`).
-2. Copia `.env.example` → `.env` en la raíz y configura credenciales (Postgres, MinIO). Configura `.env` en backend/frontend (`backend/.env`, `frontend/.env`).
+2. Copia `.env.example` → `.env` en la raíz y configura credenciales (Postgres, MinIO). Configura `.env` en backend/frontend (`backend/.env`, `frontend/.env`). No commitees `.env`; cambia placeholders y genera `APP_KEY` por entorno.
 3. Sigue `docs/docker/addendum.md` para preparar hosts locales (`project.dev`, `app.project.dev`, `api.project.dev`).
 4. `make hosts` para añadir los dominios al archivo `/etc/hosts` (Windows/macOS/Linux).
 5. `make certs` para generar certificados TLS de desarrollo (`make trust-ca` instala mkcert/certutil y confía la CA en Chrome/Firefox/Brave).

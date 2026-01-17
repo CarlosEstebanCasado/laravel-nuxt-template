@@ -7,6 +7,7 @@ const dashboardBase = '/dashboard'
 
 const { t } = useI18n()
 
+// Demo data served by Nuxt server routes. Replace with useApi() when backend is wired.
 const { data: notifications } = await useFetch<Notification[]>('/api/notifications', {
   default: () => []
 })

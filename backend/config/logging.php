@@ -1,5 +1,7 @@
 <?php
 
+use App\Src\Shared\Infrastructure\Logging\RedactSensitiveDataProcessor;
+use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -38,6 +40,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Redacted Log Keys
+    |--------------------------------------------------------------------------
+    |
+    | These keys are removed from log context/extra arrays. Customize the list
+    | with LOG_REDACT_KEYS to match your application's sensitive fields.
+    |
+    */
+
+    'redact_keys' => env('LOG_REDACT_KEYS', 'password,password_confirmation,current_password,token,access_token,refresh_token,api_key,api-key,secret,client_secret,authorization,cookie,set-cookie,xsrf-token,csrf-token,session,ssn,credit_card,card_number,cvc,email'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Log Channels
     |--------------------------------------------------------------------------
     |
@@ -62,6 +76,15 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            'formatter' => JsonFormatter::class,
+            'formatter_with' => [
+                'batch_mode' => JsonFormatter::BATCH_MODE_NEWLINES,
+                'append_newline' => true,
+            ],
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
             'replace_placeholders' => true,
         ],
 
@@ -70,6 +93,15 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => env('LOG_DAILY_DAYS', 14),
+            'formatter' => JsonFormatter::class,
+            'formatter_with' => [
+                'batch_mode' => JsonFormatter::BATCH_MODE_NEWLINES,
+                'append_newline' => true,
+            ],
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
             'replace_placeholders' => true,
         ],
 
@@ -101,20 +133,35 @@ return [
             'handler_with' => [
                 'stream' => 'php://stderr',
             ],
-            'formatter' => env('LOG_STDERR_FORMATTER'),
-            'processors' => [PsrLogMessageProcessor::class],
+            'formatter' => env('LOG_STDERR_FORMATTER', JsonFormatter::class),
+            'formatter_with' => [
+                'batch_mode' => JsonFormatter::BATCH_MODE_NEWLINES,
+                'append_newline' => true,
+            ],
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
         ],
 
         'syslog' => [
             'driver' => 'syslog',
             'level' => env('LOG_LEVEL', 'debug'),
             'facility' => env('LOG_SYSLOG_FACILITY', LOG_USER),
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
             'replace_placeholders' => true,
         ],
 
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => env('LOG_LEVEL', 'debug'),
+            'processors' => [
+                PsrLogMessageProcessor::class,
+                RedactSensitiveDataProcessor::class,
+            ],
             'replace_placeholders' => true,
         ],
 

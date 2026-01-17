@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed refresh-db config-clear-backend qa phpstan test certs trust-ca hosts logs ci ci-backend ci-frontend ci-parallel test-db e2e e2e-ui
+.PHONY: help up up-build down down-v install install-backend install-frontend migrate seed refresh-db config-clear-backend qa phpstan test certs trust-ca hosts env-check headers-check logs ci ci-backend ci-frontend ci-parallel test-db e2e e2e-ui
 
 help:
 	@echo "Available targets:"
@@ -23,6 +23,8 @@ help:
 	@echo "  make certs    - Generar certificados TLS de desarrollo"
 	@echo "  make trust-ca - Instalar mkcert/certutil y confiar la CA local (Chrome/Firefox/Brave)"
 	@echo "  make hosts    - Añadir dominios locales al archivo hosts"
+	@echo "  make env-check - Verificar que .env.example tenga todas las keys de .env"
+	@echo "  make headers-check - Verificar headers de seguridad en app/api"
 	@echo "  make logs     - Ver logs del gateway nginx"
 	@echo "  make test-db  - Crear DB de tests (<DB_DATABASE>_test) en Postgres si no existe"
 	@echo "  make e2e      - Ejecutar tests E2E de Playwright"
@@ -95,6 +97,12 @@ trust-ca:
 hosts:
 	./scripts/add-hosts-entries.sh
 
+env-check:
+	./scripts/check-env-examples.sh
+
+headers-check:
+	./scripts/check-security-headers.sh
+
 logs:
 	docker compose logs -f nginx
 
@@ -156,7 +164,11 @@ ci-frontend:
 	docker compose run --rm -T nuxt sh -lc '\
 		cd /usr/src/app && \
 		npm ci && \
-		npm audit --audit-level=high && \
+		if [ "$${CI:-}" = "true" ]; then \
+			npm audit --audit-level=high; \
+		else \
+			npm audit --audit-level=high || echo "npm audit failed (ignored in dev)"; \
+		fi && \
 		npx eslint . && \
 		npx vue-tsc --noEmit && \
 		npm test && \

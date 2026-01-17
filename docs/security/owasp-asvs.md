@@ -27,17 +27,17 @@ Atajos
 
 ### V2 — Autenticación
 
-- [ ] API: Registro, login y recuperación de cuenta usan flujos antifraude (rate limiting, bloqueo tras intentos fallidos).
+- [x] API: Registro, login y recuperación de cuenta usan flujos antifraude (rate limiting, bloqueo tras intentos fallidos). Evidencia: `backend/app/Providers/FortifyServiceProvider.php`, `backend/app/src/IdentityAccess/Security/Reauth/UI/Middleware/ThrottleAuthEndpoints.php`.
 - [ ] FRONT: Formularios de auth con validaciones en cliente y mensajes genéricos que no revelan si el usuario existe.
-- [ ] API: Tokens de Sanctum configurados con `SameSite=lax`, HTTPS y expiración controlada.
-- [ ] API: Rutas de autenticación en Laravel aplican middleware `throttle` y verifican CSRF cuando corresponda.
+- [ ] API: Tokens de Sanctum configurados con `SameSite=lax`, HTTPS y expiración controlada (ver `docs/security/manual-verification.md`).
+- [x] API: Rutas de autenticación en Laravel aplican middleware `throttle` y verifican CSRF cuando corresponda. Evidencia: `backend/config/fortify.php`, `backend/app/Providers/FortifyServiceProvider.php`, `backend/app/src/IdentityAccess/Security/Reauth/UI/Middleware/ThrottleAuthEndpoints.php`.
 
 ### V3 — Manejo de Sesiones
 
 - [ ] API: Regeneración de session IDs en login/logout (`auth()->login`/`logout`).
-- [ ] API: Cookies marcadas `HttpOnly`, `Secure`, `SameSite=lax`.
-- [ ] FRONT: Se invoca `/api/me` al cargar la app y se invalida el estado local al detectar sesión expirada.
-- [ ] API: Hay endpoint de logout que invalida tokens/cookies activos (`/api/v1/auth/logout`).
+- [x] API: Cookies marcadas `HttpOnly`, `Secure`, `SameSite=lax`. Evidencia: `backend/config/session.php`, `.env.example`, `backend/.env.example`.
+- [x] FRONT: Se invoca `/api/me` al cargar la app y se invalida el estado local al detectar sesión expirada. Evidencia: `frontend/app/composables/useAuth.ts`, `backend/routes/api.php`.
+- [x] API: Hay endpoint de logout que invalida tokens/cookies activos (`/auth/logout`). Evidencia: `backend/config/fortify.php`, `backend/app/src/IdentityAccess/Auth/User/UI/Responses/LogoutResponse.php`.
 
 ### V4 — Control de Acceso
 
@@ -62,28 +62,28 @@ Atajos
 
 ### V7 — Criptografía
 
-- [ ] API: `APP_KEY` generado en producción y girado periódicamente.
+- [ ] API: `APP_KEY` generado en produccion y girado periodicamente (ver `docs/security/manual-verification.md`).
 - [ ] API: Uso exclusivo de hashing seguro (`bcrypt`/`argon2id`) para contraseñas.
-- [ ] INFRA: TLS 1.2+ obligatorio en todos los entornos; certificados gestionados (ACME, Let's Encrypt).
+- [x] INFRA: TLS 1.2+ obligatorio en todos los entornos; certificados gestionados (ACME, Let's Encrypt). Evidencia: `docker/nginx/nginx.conf`.
 - [ ] API: Cualquier cifrado simétrico usa claves almacenadas en secret manager (no en código).
 
 ### V8 — Gestión de Errores y Logging
 
 - [ ] API: Errores regresan mensajes genéricos; detalles solo en logs (JSON).
-- [ ] SHARED: No se loguean contraseñas, tokens ni PII; sanitizar payloads antes de enviarlos a Sentry.
+- [x] SHARED: No se loguean contraseñas, tokens ni PII; sanitizar payloads antes de enviarlos a Sentry. Evidencia: `backend/app/src/Shared/Infrastructure/Logging/RedactSensitiveDataProcessor.php`, `backend/config/logging.php`, `SECURITY.md`.
 - [ ] INFRA: Monitoreo de Horizon, Redis y DB con alertas por p95/p99, colas atrasadas, tasa de errores.
-- [ ] SHARED: Correlación `X-Request-Id` propagada del frontend al backend y a los logs.
+- [x] SHARED: Correlación `X-Request-Id` propagada del frontend al backend y a los logs. Evidencia: `frontend/app/utils/request-id.ts`, `frontend/app/composables/useAuth.ts`, `backend/app/src/Shared/UI/Middleware/AttachRequestId.php`, `docker/nginx/nginx.conf`.
 
 ### V9 — Protección de Datos y Comunicación
 
 - [ ] FRONT: Se fuerza HTTPS y HSTS desde Traefik/Reverse proxy.
-- [ ] API: Respuestas incluyen `Content-Security-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`.
-- [ ] SHARED: Seguridad de cabeceras validada con escáneres (Mozilla Observatory, securityheaders.com).
+- [x] API: Respuestas incluyen `Content-Security-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`. Evidencia: `docker/nginx/conf.d/api.conf`.
+- [ ] SHARED: Seguridad de cabeceras validada con escaneres (Mozilla Observatory, securityheaders.com). Ver `docs/security/manual-verification.md`.
 - [ ] INFRA: Conexiones a base de datos y Redis cifradas en producción/residencias remotas.
 
 ### V10 — Gestión de Recursos y DoS
 
-- [ ] API: Rate limiting en endpoints críticos (`throttle:api`, `throttle:login`).
+- [x] API: Rate limiting en endpoints críticos (`throttle:api`, `throttle:login`). Evidencia: `backend/app/Providers/FortifyServiceProvider.php`, `backend/app/src/IdentityAccess/Security/Reauth/UI/Middleware/ThrottleAuthEndpoints.php`.
 - [ ] INFRA: Auto-scaling o alertas cuando CPU/memoria superan umbrales definidos.
 - [ ] API: Evitar paginaciones sin límite (máximo `per_page` razonable).
 - [ ] SHARED: Validaciones de tamaño (`max_input_vars`, `post_max_size`) documentadas y testeadas.
@@ -110,7 +110,7 @@ Atajos
 
 ### V14 — Configuración y Deploy
 
-- [ ] INFRA: Docker Compose y manifests definen imágenes con versiones fijas (sin `latest`).
+- [x] INFRA: Docker Compose y manifests definen imágenes con versiones fijas (sin `latest`). Evidencia: `docker-compose.yml`.
 - [ ] INFRA: CI/CD protege secretos (GitHub Actions secrets, OIDC); no se exponen en logs.
 - [ ] INFRA: Artesanos de despliegue (`php artisan down --secret`) usados para migraciones críticas.
 - [ ] INFRA: Backups automatizados y probados (restore tests) para base de datos y almacenamiento.
