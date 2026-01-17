@@ -15,6 +15,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 - [x] Alinear keys de `.env.example` con `.env` real (anadir las faltantes). Validable con `scripts/check-env-examples.sh`.
 - [x] Revisar valores de ejemplo para asegurar que no son secretos reales.
 - [ ] Rotar credenciales y `APP_KEY` en entornos reales (ver `docs/security/manual-verification.md`).
+  - Estado: diferido hasta disponer de staging/produccion.
 - [x] Documentar setup seguro en README/SECURITY.
 
 ## 3) Sesiones y cookies
