@@ -1,10 +1,10 @@
 <?php
 
+use App\Src\Shared\Infrastructure\Logging\RedactSensitiveDataProcessor;
+use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
-use Monolog\Formatter\JsonFormatter;
-use App\Src\Shared\Infrastructure\Logging\RedactSensitiveDataProcessor;
 use Monolog\Processor\PsrLogMessageProcessor;
 
 return [
@@ -37,6 +37,18 @@ return [
         'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
         'trace' => env('LOG_DEPRECATIONS_TRACE', false),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Redacted Log Keys
+    |--------------------------------------------------------------------------
+    |
+    | These keys are removed from log context/extra arrays. Customize the list
+    | with LOG_REDACT_KEYS to match your application's sensitive fields.
+    |
+    */
+
+    'redact_keys' => env('LOG_REDACT_KEYS', 'password,password_confirmation,current_password,token,access_token,refresh_token,api_key,api-key,secret,client_secret,authorization,cookie,set-cookie,xsrf-token,csrf-token,session,ssn,credit_card,card_number,cvc,email'),
 
     /*
     |--------------------------------------------------------------------------

@@ -6,6 +6,8 @@ namespace App\Src\Shared\Infrastructure\Logging;
 
 final class RedactSensitiveDataProcessor
 {
+    private const DEFAULT_REDACT_KEYS = 'password,password_confirmation,current_password,token,access_token,refresh_token,api_key,api-key,secret,client_secret,authorization,cookie,set-cookie,xsrf-token,csrf-token,session,ssn,credit_card,card_number,cvc,email';
+
     /**
      * @var array<string, bool>
      */
@@ -13,14 +15,12 @@ final class RedactSensitiveDataProcessor
 
     public function __construct()
     {
-        $raw = env(
-            'LOG_REDACT_KEYS',
-            'password,password_confirmation,current_password,token,access_token,refresh_token,api_key,api-key,secret,client_secret,authorization,cookie,set-cookie,xsrf-token,csrf-token,session,ssn,credit_card,card_number,cvc,email'
-        );
+        $rawValue = config('logging.redact_keys');
+        $raw = is_string($rawValue) ? $rawValue : self::DEFAULT_REDACT_KEYS;
 
         $keys = array_filter(array_map(
             static fn (string $value): string => strtolower(trim($value)),
-            explode(',', (string) $raw)
+            explode(',', $raw)
         ));
 
         $mapped = [];
@@ -58,6 +58,7 @@ final class RedactSensitiveDataProcessor
         foreach ($value as $key => $item) {
             if (is_string($key) && $this->shouldRedactKey($key)) {
                 $redacted[$key] = '[REDACTED]';
+
                 continue;
             }
 
