@@ -38,5 +38,6 @@ Tip CLI (local):
   - https://securityheaders.com/
   - https://observatory.mozilla.org/
 - En local, verifica con:
-  `curl -I https://app.project.dev` y `curl -I https://api.project.dev`
+  `curl -I https://app.project.dev` y `curl -I https://api.project.dev/api/v1/health`
+- Alternativa local rapida: `make headers-check`
 - Esperado: `Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`.

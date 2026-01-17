@@ -24,14 +24,14 @@ Este plan recoge las tareas necesarias para alinear el template con
   - `SESSION_HTTP_ONLY=true`
   - `SESSION_SAME_SITE=lax`
 - [x] Asegurar regeneracion de sesion en login/logout y revisar flows.
-- [ ] Verificar cookies de Sanctum en local y prod (ver `docs/security/manual-verification.md`).
+- [x] Verificar cookies de Sanctum en local (prod pendiente). Ver `docs/security/manual-verification.md`.
 
 ## 4) Cabeceras de seguridad y CSP
 
 - [x] Añadir HSTS en el vhost de API.
 - [ ] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval` (report-only añadido en app/web). Ver `docs/security/manual-verification.md`.
   - Si es necesario, introducir nonces/hashes en build y documentar.
-- [ ] Validar headers con scanners (Mozilla Observatory / securityheaders.com). Ver `docs/security/manual-verification.md`.
+- [x] Validar headers en local con `make headers-check` (scanners pendientes). Ver `docs/security/manual-verification.md`.
 
 ## 5) Logging, trazabilidad y PII
 
