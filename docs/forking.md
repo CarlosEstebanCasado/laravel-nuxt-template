@@ -67,3 +67,14 @@ Recomendado en el fork:
 - Verificar el flujo:
   - Login con challenge (redirección a `/auth/two-factor`)
   - Activación/desactivación desde `/dashboard/settings/security`
+
+## 8) Checklist post-fork (arranque de proyecto)
+
+- **Repo/branding**: actualiza nombre, descripcion y copy del producto.
+- **Dominios**: revisa `project.dev` y regenera certificados si cambian (`make certs`, `make hosts`).
+- **Secrets (SOPS)**: añade tu clave `age1...` a `.sops.yaml` y ejecuta `make secrets-decrypt`.
+- **Secrets (manual)**: si no usas SOPS, copia `.env.example` a `.env` en root/backend/frontend.
+- **APP_KEY**: genera una key por entorno (`docker compose exec api php artisan key:generate`).
+- **Arranque local**: `make up`, `make seed` y valida URLs base.
+- **CI local**: ejecuta `make ci` antes de empezar desarrollo.
+- **Pendientes template**: endurecer CSP (`style-src` sin `unsafe-inline`) y rotar keys en entornos reales.
