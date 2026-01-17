@@ -19,6 +19,7 @@ const tabItems = [{
 }]
 const selectedTab = ref('all')
 
+// Demo data served by Nuxt server routes. Replace with useApi() when backend is wired.
 const { data: mails } = await useFetch<Mail[]>('/api/mails', { default: () => [] })
 
 // Filter mails based on the selected tab

@@ -43,8 +43,8 @@ Este plan recoge las tareas necesarias para alinear el template con
 
 ## 6) Frontend API access
 
-- [ ] Implementar `useApi` con `credentials: 'include'`.
-- [ ] Reemplazar `useFetch` directo o marcar endpoints como mock/demo.
+- [x] Implementar `useApi` con `credentials: 'include'`.
+- [x] Reemplazar `useFetch` directo o marcar endpoints como mock/demo.
 - [ ] Alinear `useAuth` con el flujo elegido (SSR o CSR).
 
 ## 7) Infra hardening

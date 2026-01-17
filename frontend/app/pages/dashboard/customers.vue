@@ -28,6 +28,7 @@ const columnFilters = ref([{
 const columnVisibility = ref()
 const rowSelection = ref({ 1: true })
 
+// Demo data served by Nuxt server routes. Replace with useApi() when backend is wired.
 const { data, status } = await useFetch<User[]>('/api/customers', {
   lazy: true
 })

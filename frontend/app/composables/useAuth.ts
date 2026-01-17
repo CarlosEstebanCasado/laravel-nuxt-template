@@ -1,6 +1,7 @@
 import { joinURL } from 'ufo'
 import type { AuthResponse, AuthUser, TwoFactorChallengeResponse } from '~/types/auth'
 import type { PreferencesResponse, UserPreferencesPayload } from '~/types/preferences'
+import { createRequestId } from '~/utils/request-id'
 
 type SupportedLocale = 'es' | 'en' | 'ca'
 
@@ -63,14 +64,6 @@ const getCsrfHeader = () => {
   } catch {
     return raw
   }
-}
-
-const createRequestId = () => {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID()
-  }
-
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
 }
 
 export function useAuth() {
