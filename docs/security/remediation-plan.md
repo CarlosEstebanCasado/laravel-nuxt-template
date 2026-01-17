@@ -50,7 +50,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 ## 7) Infra hardening
 
 - [x] Fijar versiones en Docker images (evitar `latest`).
-- [ ] Revisar TLS/certificados en nginx y docs de despliegue.
+- [x] Revisar TLS/certificados en nginx y docs de despliegue.
 
 ## 8) Evidencia y checklist ASVS
 
