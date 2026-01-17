@@ -13,7 +13,7 @@ SaaS Template — Laravel 12 API + Nuxt 4 (SSR público + SPA privado)
 - **API REST contract-first** (`/api/v1`) documentada con OpenAPI.
 - **Frontend híbrido** con Nuxt 4: SSR público (SEO) + SPA privada (`/dashboard/**`).
 - **Auth fullstack** lista para producción (Laravel Fortify + Sanctum + Nuxt) con login, registro, verificación de email y logout via cookies `SameSite=None`.
-- **Tooling DevOps**: Docker Compose, Horizon, Sentry, Prometheus, GitHub Actions base.
+- **Tooling DevOps**: Docker Compose, Horizon, Sentry (opcional), Prometheus, GitHub Actions base.
 - **Calidad integrada**: PHPStan máx nivel, Laravel Pint, ESLint, Vitest, Playwright (E2E).
 
 ---
@@ -59,7 +59,7 @@ Si vas a usar esto como template, sigue el checklist en `docs/forking.md` para r
 - **Base de datos**: PostgreSQL 16+ con `UUID`, `JSONB`, índices parciales.
 - **Cache/Queue**: Redis 7, retries exponenciales, tagging por household.
 - **Storage**: S3-compatible (MinIO local, S3/Wasabi en prod).
-- **Observabilidad**: logs JSON, Sentry, exporter Prometheus.
+- **Observabilidad**: logs JSON, Sentry (opcional), exporter Prometheus.
 - **Infra**: Docker Compose con gateway Nginx/Traefik (ver `docs/docker/addendum.md`); despliegue en Fly.io/Render/Kubernetes según fase.
 - **Frontend**: Nuxt 4 (SSR público + SPA privado), TypeScript strict, Pinia, Vue Query opcional, Tailwind + Radix/HeadlessUI, i18n.
 - **Auth**: Laravel Sanctum con cookies, CSRF automático, dominios configurables.
@@ -159,7 +159,7 @@ backend/app/src/
 - Secretos via `.env` (12-factor). Sin secretos en el repo; los `.env.example` usan placeholders y deben ajustarse. Compatibilidad con Doppler/Vault.
 - Logs JSON con redacción de PII/secretos configurable via `LOG_REDACT_KEYS`.
 - Auditoría con `owen-it/laravel-auditing` ([docs](https://laravel-auditing.com/guide/introduction.html)).
-- Logs JSON con correlación `X-Request-Id`. Integrado con Sentry (frontend + backend).
+- Logs JSON con correlación `X-Request-Id`. Sentry es opcional y requiere configurar el SDK/DSN.
 
 **Nota importante (dev)**:
 

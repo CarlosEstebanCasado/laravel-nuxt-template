@@ -1,28 +1,8 @@
-## Resumen
+# Summary
 
-- Objetivo de la PR:
-- Contexto/tickets:
+# Security Impact
+- [ ] No security impact
+- [ ] Security-related change (describe risks, controls, and manual validation)
 
-## Testing
-
-- [ ] `make test`
-- [ ] `make qa`
-- [ ] `make up` + smoke manual
-- [ ] Otros (especificar):
-
-## Seguridad
-
-- [ ] Checklist OWASP actualizada en `docs/security/owasp-asvs.md` (adjuntar diff/enlace).
-- [ ] Reglas de Cursor cumplidas (`.cursor/rules/security.md`). Evidencia:
-
-### Security Impact
-
-- Riesgos mitigados:
-- Controles OWASP afectados:
-- Pruebas manuales ejecutadas:
-
-## Checklist adicional
-
-- [ ] Documentación actualizada (README/OpenAPI/scripts).
-- [ ] Seeds/factories sincronizados si aplica.
-- [ ] Revisión de QA/UX completada cuando corresponda.
+# Checklist
+- [ ] ASVS checklist updated (`docs/security/owasp-asvs.md`)

@@ -39,13 +39,13 @@ Este plan recoge las tareas necesarias para alinear el template con
 - [x] Propagar `X-Request-Id` desde nginx a los upstreams.
 - [x] Configurar logging en JSON (Monolog formatter).
 - [x] Asegurar que logs no incluyan PII o secretos (redaccion configurable).
-- [ ] Documentar integracion con Sentry si aplica.
+- [x] Documentar integracion con Sentry si aplica.
 
 ## 6) Frontend API access
 
 - [x] Implementar `useApi` con `credentials: 'include'`.
 - [x] Reemplazar `useFetch` directo o marcar endpoints como mock/demo.
-- [ ] Alinear `useAuth` con el flujo elegido (SSR o CSR).
+- [x] Alinear `useAuth` con el flujo elegido (CSR).
 
 ## 7) Infra hardening
 
@@ -54,6 +54,6 @@ Este plan recoge las tareas necesarias para alinear el template con
 
 ## 8) Evidencia y checklist ASVS
 
-- [ ] Marcar items aplicables en `docs/security/owasp-asvs.md`.
-- [ ] Enlazar evidencia (commits, tests, configs).
-- [ ] Incluir seccion "Security Impact" en PRs.
+- [x] Marcar items aplicables en `docs/security/owasp-asvs.md`.
+- [x] Enlazar evidencia (commits, tests, configs).
+- [x] Incluir seccion "Security Impact" en PRs.

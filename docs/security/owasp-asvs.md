@@ -70,7 +70,7 @@ Atajos
 ### V8 — Gestión de Errores y Logging
 
 - [ ] API: Errores regresan mensajes genéricos; detalles solo en logs (JSON).
-- [ ] SHARED: No se loguean contraseñas, tokens ni PII; sanitizar payloads antes de enviarlos a Sentry.
+- [x] SHARED: No se loguean contraseñas, tokens ni PII; sanitizar payloads antes de enviarlos a Sentry. Evidencia: `backend/app/src/Shared/Infrastructure/Logging/RedactSensitiveDataProcessor.php`, `backend/config/logging.php`, `SECURITY.md`.
 - [ ] INFRA: Monitoreo de Horizon, Redis y DB con alertas por p95/p99, colas atrasadas, tasa de errores.
 - [x] SHARED: Correlación `X-Request-Id` propagada del frontend al backend y a los logs. Evidencia: `frontend/app/utils/request-id.ts`, `frontend/app/composables/useAuth.ts`, `backend/app/src/Shared/UI/Middleware/AttachRequestId.php`, `docker/nginx/nginx.conf`.
 
