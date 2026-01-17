@@ -4,6 +4,7 @@ use App\Providers\AppServiceProvider;
 use App\Providers\FortifyServiceProvider;
 use App\Providers\HorizonServiceProvider;
 use App\Src\IdentityAccess\Security\Reauth\UI\Middleware\ThrottleAuthEndpoints;
+use App\Src\Shared\UI\Middleware\AttachRequestId;
 use App\Src\Shared\UI\Middleware\EnsureHorizonAccess;
 use App\Src\Shared\UI\Middleware\SetLocaleFromRequest;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->prepend(AttachRequestId::class);
         $middleware->statefulApi();
 
         // Keep the current session active but invalidate other browser sessions

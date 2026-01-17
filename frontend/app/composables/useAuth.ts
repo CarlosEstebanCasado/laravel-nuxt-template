@@ -65,6 +65,14 @@ const getCsrfHeader = () => {
   }
 }
 
+const createRequestId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+}
+
 export function useAuth() {
   const config = useRuntimeConfig()
   const apiBase = config.public.apiBase
@@ -163,6 +171,10 @@ export function useAuth() {
     const headers: Record<string, string> = {
       Accept: 'application/json',
       ...(options?.headers as Record<string, string> | undefined),
+    }
+
+    if (!headers['X-Request-Id']) {
+      headers['X-Request-Id'] = createRequestId()
     }
 
     const preferredLocale = preferences.value?.locale || getActiveLocale().value || localeState.value

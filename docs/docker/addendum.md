@@ -209,7 +209,7 @@ services:
     networks: [internal]
 
   minio:
-    image: minio/minio:latest
+    image: minio/minio:RELEASE.2024-11-07T00-52-20Z
     container_name: minio
     command: server /data --console-address ":9001"
     environment:

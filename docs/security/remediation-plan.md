@@ -28,15 +28,16 @@ Este plan recoge las tareas necesarias para alinear el template con
 
 ## 4) Cabeceras de seguridad y CSP
 
-- [ ] Añadir HSTS en el vhost de API.
+- [x] Añadir HSTS en el vhost de API.
 - [ ] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval`.
   - Si es necesario, introducir nonces/hashes en build y documentar.
 - [ ] Validar headers con scanners (Mozilla Observatory / securityheaders.com).
 
 ## 5) Logging, trazabilidad y PII
 
-- [ ] Implementar `X-Request-Id` end-to-end (frontend -> backend -> logs).
-- [ ] Configurar logging en JSON (Monolog formatter).
+- [x] Implementar `X-Request-Id` end-to-end (frontend -> backend -> logs; pendiente unificar llamadas con `useApi`).
+- [x] Propagar `X-Request-Id` desde nginx a los upstreams.
+- [x] Configurar logging en JSON (Monolog formatter).
 - [ ] Asegurar que logs no incluyan PII o secretos.
 - [ ] Documentar integracion con Sentry si aplica.
 
@@ -48,7 +49,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 
 ## 7) Infra hardening
 
-- [ ] Fijar versiones en Docker images (evitar `latest`).
+- [x] Fijar versiones en Docker images (evitar `latest`).
 - [ ] Revisar TLS/certificados en nginx y docs de despliegue.
 
 ## 8) Evidencia y checklist ASVS
