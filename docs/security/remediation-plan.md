@@ -31,7 +31,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 - [x] Añadir HSTS en el vhost de API.
 - [ ] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval`. Script-src ya usa nonces (sin `unsafe-eval`), pero `style-src` sigue con `unsafe-inline`. Ver `docs/security/manual-verification.md`.
   - Decision template: mantener `style-src 'unsafe-inline'` para evitar romper estilos; endurecer en proyectos reales.
-  - Si es necesario, introducir nonces/hashes en build y documentar.
+  - Estado: diferido en este template. Se resuelve en proyectos reales al eliminar estilos inline o usar hashes/nonces.
 - [x] Validar headers en local con `make headers-check` (scanners pendientes). Ver `docs/security/manual-verification.md`.
 
 ## 5) Logging, trazabilidad y PII
