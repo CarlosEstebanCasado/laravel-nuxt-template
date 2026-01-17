@@ -1,0 +1,7 @@
+# Copy to .sops.yaml and replace the AGE_PUBLIC_KEY_* entries with your team's
+# age public keys (one per developer).
+creation_rules:
+  - path_regex: ^secrets/.*\.enc$
+    key_groups:
+      - age:
+          - age1jv6fwsv5ah3ey6hx6yg9v3j7jppw96ukmjy07pdyv7kjya5hf92q93crjr

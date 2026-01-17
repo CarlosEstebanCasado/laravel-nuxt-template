@@ -2,6 +2,9 @@
 .DS_Store
 node_modules
 vendor
+secrets/*
+!secrets/*.enc
+!secrets/README.md
 
 backend/vendor
 backend/storage/logs

@@ -156,7 +156,7 @@ backend/app/src/
 - HTTPS, HSTS, CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`.
 - Sanitización/validación estricta, límites de tamaño (`max_input_vars`, `post_max_size`).
 - Alineado OWASP: baseline en OWASP Top 10, ASVS nivel 2 y cheatsheets de referencia para cada módulo (auth, storage, logging). Checklist operativa en `docs/security/owasp-asvs.md` y regla detallada para Cursor en `.cursor/rules/security.md`.
-- Secretos via `.env` (12-factor). Sin secretos en el repo; los `.env.example` usan placeholders y deben ajustarse. Compatibilidad con Doppler/Vault.
+- Secretos via `.env` (12-factor). Sin secretos en el repo; los `.env.example` usan placeholders y deben ajustarse. Compatibilidad con Doppler/Vault. Opcion equipo: SOPS + age (ver `docs/security/secrets.md`).
 - Logs JSON con redacción de PII/secretos configurable via `LOG_REDACT_KEYS`.
 - Auditoría con `owen-it/laravel-auditing` ([docs](https://laravel-auditing.com/guide/introduction.html)).
 - Logs JSON con correlación `X-Request-Id`. Sentry es opcional y requiere configurar el SDK/DSN.
@@ -238,7 +238,7 @@ backend/app/src/
 -------------------
 
 1. Duplica este repo como plantilla (`Use this template`).
-2. Copia `.env.example` → `.env` en la raíz y configura credenciales (Postgres, MinIO). Configura `.env` en backend/frontend (`backend/.env`, `frontend/.env`). No commitees `.env`; cambia placeholders y genera `APP_KEY` por entorno.
+2. Copia `.env.example` → `.env` en la raíz y configura credenciales (Postgres, MinIO). Configura `.env` en backend/frontend (`backend/.env`, `frontend/.env`). No commitees `.env`; cambia placeholders y genera `APP_KEY` por entorno. Si tu equipo usa SOPS, revisa `docs/security/secrets.md`.
 3. Sigue `docs/docker/addendum.md` para preparar hosts locales (`project.dev`, `app.project.dev`, `api.project.dev`).
 4. `make hosts` para añadir los dominios al archivo `/etc/hosts` (Windows/macOS/Linux).
 5. `make certs` para generar certificados TLS de desarrollo (`make trust-ca` instala mkcert/certutil y confía la CA en Chrome/Firefox/Brave).
