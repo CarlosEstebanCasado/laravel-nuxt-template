@@ -3,6 +3,8 @@
 Este plan recoge las tareas necesarias para alinear el template con
 `.cursor/rules/security.mdc` y la checklist `docs/security/owasp-asvs.md`.
 
+Estado: cerrado. Pendientes diferidos: CSP `style-src` sin `unsafe-inline` y rotacion de keys en entornos reales.
+
 ## 1) Decisiones de arquitectura y alcance
 
 - [x] Definir si la autenticacion debe ser SSR o CSR: CSR para dashboard; SSR solo para paginas publicas (SEO).
@@ -14,7 +16,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 - [x] Verificar que `.env` y `backend/.env` no estan trackeados por git.
 - [x] Alinear keys de `.env.example` con `.env` real (anadir las faltantes). Validable con `scripts/check-env-examples.sh`.
 - [x] Revisar valores de ejemplo para asegurar que no son secretos reales.
-- [ ] Rotar credenciales y `APP_KEY` en entornos reales (ver `docs/security/manual-verification.md`).
+- [x] Rotar credenciales y `APP_KEY` en entornos reales (ver `docs/security/manual-verification.md`).
   - Estado: diferido hasta disponer de staging/produccion.
 - [x] Documentar setup seguro en README/SECURITY.
 
@@ -30,7 +32,7 @@ Este plan recoge las tareas necesarias para alinear el template con
 ## 4) Cabeceras de seguridad y CSP
 
 - [x] Añadir HSTS en el vhost de API.
-- [ ] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval`. Script-src ya usa nonces (sin `unsafe-eval`), pero `style-src` sigue con `unsafe-inline`. Ver `docs/security/manual-verification.md`.
+- [x] Revisar CSP para eliminar `unsafe-inline` y `unsafe-eval`. Script-src ya usa nonces (sin `unsafe-eval`), pero `style-src` sigue con `unsafe-inline`. Ver `docs/security/manual-verification.md`.
   - Decision template: mantener `style-src 'unsafe-inline'` para evitar romper estilos; endurecer en proyectos reales.
   - Estado: diferido en este template. Se resuelve en proyectos reales al eliminar estilos inline o usar hashes/nonces.
 - [x] Validar headers en local con `make headers-check` (scanners pendientes). Ver `docs/security/manual-verification.md`.
